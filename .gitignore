@@ -1,0 +1,35 @@
+### Python template
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Django stuff:
+staticfiles/
+migrations/
+
+# pyenv
+.python-version
+
+# Environments
+env/
+
+### VisualStudioCode template
+.vscode/*
+
+### macOS template
+# General
+*.DS_Store
+
+# Thumbnails
+._*
+
+### Project template
