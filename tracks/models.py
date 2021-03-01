@@ -18,6 +18,9 @@ class CategoryType(models.Model):
     category = models.ManyToManyField(Category, related_name='types')
     type = models.CharField(max_length=30, unique=True) #type = 'Genomic'|'Expression'|'Variation'
 
+    def __str__(self):
+        return str(self.type)
+
 class Track(models.Model):
     category = models.ForeignKey(Category, related_name='track_list', on_delete=models.CASCADE)
     colour = models.CharField(max_length=30, blank=True, default='')

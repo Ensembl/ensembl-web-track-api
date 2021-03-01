@@ -9,12 +9,6 @@ class TrackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Track
         fields = ['colour', 'label', 'track_id', 'additional_info']
-
-#class CategoryTypeSerializer(serializers.ModelSerializer):
-#    class Meta:
-#        model = CategoryType
-#        fields = ['type']
-
 class CategorySerializer(serializers.ModelSerializer):
     types = serializers.StringRelatedField(many=True, read_only=True)
     track_list = TrackSerializer(many=True, read_only=True)

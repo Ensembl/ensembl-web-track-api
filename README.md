@@ -10,7 +10,7 @@ Sample dataset: ./data/track_categories.yaml
 1. Start the endpoint:
 - `$ git clone https://gitlab.ebi.ac.uk/ensembl-web/ensembl-track-api.git`
 - `$ cd ensembl-track-api`
-- `$ sudo docker-compose -f docker-compose.yml up` #add '-d' to run in background
+- `$ sudo docker-compose -f docker-compose.yaml up` #add '-d' to run in background
 
 2. Build the database:
 - `$ sudo docker-compose run web python manage.py makemigrations`
