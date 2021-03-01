@@ -1,8 +1,8 @@
 ## Track API endpoint.
 
-A Django app for serving the available annotation tracks for Ensembl 2020 client.
-Expects: genome ID (URL param)
-Returns: list of track categories and tracks for a given genome (JSON)
+A Django app for serving the available annotation tracks for Ensembl 2020 client.  
+Expects: genome ID (URL param)  
+Returns: list of track categories and tracks for a given genome (JSON)  
 Current dataset: ./data/track_categories.yaml
 
 ### Quick Start
