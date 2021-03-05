@@ -15,8 +15,8 @@ Reference dataset: ./data/track_categories.yaml
 
 2. Build the database:
 
-- `$ docker-compose run web ./manage.py migrate`
-- `$ docker-compose run web ./utils/import_data.py`
+- `$ docker-compose run web python manage.py migrate`
+- `$ docker-compose run web python ./utils/import_data.py`
 
 3. Use the endpoint:
 
