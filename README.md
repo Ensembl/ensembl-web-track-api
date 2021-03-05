@@ -9,7 +9,7 @@ Reference dataset: ./data/track_categories.yaml
 
 1. Start the endpoint:
 
-- `$ git clone https://gitlab.ebi.ac.uk/andres/ensembl-track-api.git`
+- `$ git clone https://gitlab.ebi.ac.uk/ensembl-web/ensembl-track-api.git`
 - `$ cd ensembl-track-api`
 - `$ docker-compose up` #add '-d' to run in background
 

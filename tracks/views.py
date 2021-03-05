@@ -24,20 +24,3 @@ def genome_tracks(request, genome_id):
         return JsonResponse(serializer.data)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-"""
-    For the future: views for updating and deleting existing track lists.
-
-    elif request.method == 'PUT':
-        incoming = JSONParser().parse(request)
-        serializer = GenomeTracksSerializer(genome_tracks, data=incoming)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        tracks.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT
-"""
