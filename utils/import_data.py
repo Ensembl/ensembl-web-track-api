@@ -1,13 +1,21 @@
 #!/usr/bin/env python
-import django, sys, yaml
+import django
+import os
+import sys
+import yaml
 
-django.setup()  # to use data models in standalone scripts
+# import modules from parent directory
+sys.path.insert(1, os.path.join(sys.path[0], ".."))
+if __name__ == "__main__":
+    # use data models outside the Django app
+    django.setup()
+
 from tracks.models import Genome, Category, CategoryType, Track
 
 """
 Script for importing track categories data from a yaml file.
-Sample input: data/track_categories.yaml
-Target data models: tracks/models.py
+Sample input: ./data/track_categories.yaml
+Target data models: ./tracks/models.py
 Data structure: Genome => [Category => [Track, ...], ...], Genome => ...
 Clean existing database before data import: python manage.py flush
 """
@@ -35,9 +43,8 @@ with open(yaml_file) as f:
         data = data["genome_track_categories"]
         for genome_id in data.keys():
             print("Adding genome", genome_id)
-            genome_obj, created = Genome.objects.get_or_create(
-                genome_id=genome_id
-            )  # get() => [create() => save()]
+            # does get() => [create() => save()]
+            genome_obj, created = Genome.objects.get_or_create(genome_id=genome_id)
             if not created:
                 sys.exit(
                     "Genome ID '%s' already imported!\nEmpty the database before running data import: ./manage.py flush"
@@ -51,19 +58,20 @@ with open(yaml_file) as f:
                     genome=genome_obj,
                 )
                 for type in category["types"]:
+                    # reuse stored category types
                     category_type_obj, created = CategoryType.objects.get_or_create(
                         type=type
-                    )  # reuse stored category types
-                    category_obj.types.add(
-                        category_type_obj
-                    )  # link Category => CategoryType
+                    )
+                    # link Category to CategoryType
+                    category_obj.types.add(category_type_obj)
                 for track in category["track_list"]:
                     track_obj = Track.objects.create(
                         label=track["label"],
                         track_id=track["track_id"],
                         category=category_obj,
                     )
-                    for field in ["colour", "additional_info"]:  # fill optional fields
+                    # fill optional fields
+                    for field in ["colour", "additional_info"]:
                         if field in track:
                             setattr(track_obj, field, track[field])
                     track_obj.save()
