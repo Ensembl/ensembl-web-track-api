@@ -15,7 +15,6 @@ Current dataset: ./data/track_categories.yaml
 
 2. Build the database (on first startup only):
 
-- `$ docker-compose run web python manage.py makemigrations tracks`
 - `$ docker-compose run web python manage.py migrate`
 - `$ docker-compose run web python import_data.py`
 

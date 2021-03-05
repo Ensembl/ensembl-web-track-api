@@ -2,7 +2,7 @@ version: '3.5'
 services:
   db:
     image: postgres:latest
-    container_name: db
+    container_name: tracks_db
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
