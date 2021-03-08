@@ -8,6 +8,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path("tracks_list/", include("tracks.urls", namespace="tracks")),
+    path("track_categories/", include("tracks.urls", namespace="tracks")),
     path("admin/", admin.site.urls),
 ]
