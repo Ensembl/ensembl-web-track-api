@@ -24,7 +24,7 @@ variables:
     image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:0.1
     script: 
         - sed -i "s#<DOCKER_IMAGE>#${CONTAINER_IMAGE}#g" k8s/ensembl_track_api_deployment.yaml
-        - kubectl apply -f k8s/ensembl_search_survey_deployment.yaml
+        - kubectl apply -f k8s/ensembl_track_api_deployment.yaml
 
 # Build docker image 
 Docker:
