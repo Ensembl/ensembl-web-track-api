@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -78,14 +79,21 @@ REST_FRAMEWORK = {"DEFAULT_RENDERER_CLASSES": ["rest_framework.parsers.JSONParse
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# Read database settings from environment
+DATABASE_NAME = os.getenv("DATABASE_NAME", "postgres")
+DATABASE_HOST = os.getenv("DATABASE_HOST", "db")
+DATABASE_PORT = os.getenv("DATABASE_PORT", 5432)
+DATABASE_USER = os.getenv("DATABASE_USER", "postgres")
+DATABASE_PASS = os.getenv("DATABASE_PASS", "postgres")
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
-        "HOST": "db",
-        "PORT": 5432,
+        "NAME": DATABASE_NAME,
+        "USER": DATABASE_USER,
+        "PASSWORD": DATABASE_PASS,
+        "HOST": DATABASE_HOST,
+        "PORT": DATABASE_PORT,
     }
 }
 

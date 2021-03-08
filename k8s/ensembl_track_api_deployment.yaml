@@ -1,0 +1,24 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: ensembl-track-api-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ensembl-track-api
+    spec:
+      imagePullSecrets:
+        - name: ensemblweb-pull-secret
+      containers:
+      - name: ensembl-track-api
+        image: <DOCKER_IMAGE>
+        command: ["gunicorn"]
+        args: ["--bind=0.0.0.0:8012", "--preload", "ensembl_track_api.wsgi:application"]
+        ports:
+        - containerPort: 8012
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: ensembl-track-api-configmap
