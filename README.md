@@ -20,7 +20,7 @@ Reference dataset: ./data/track_categories.yaml
 
 3. Use the endpoint:
 
-- `http://localhost:8000/tracks_list/<genome_id>` #e.g. /tracks_list/homo_sapiens_GCA_000001405_28
+- `http://localhost:8000/track_categories/<genome_id>` #e.g. /track_categories/homo_sapiens_GCA_000001405_28
 
 4. Stop the endpoint:
 
