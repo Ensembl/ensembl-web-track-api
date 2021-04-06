@@ -21,12 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "yt%+y7vy=1oqmjpv$wntb_d*tw96ju=q^sm(+kwn30!gpl7*vx"
+SECRET_KEY = os.getenv(
+    "DJANGO_SECRET_KEY", "yt%+y7vy=1oqmjpv$wntb_d*tw96ju=q^sm(+kwn30!gpl7*vx"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG", False)
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
 
 
 # Application definition
@@ -114,9 +116,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = os.getenv("LANGUAGE_CODE", "en-gb")
 
-TIME_ZONE = "UTC"
+TIME_ZONE = os.getenv("TIMEZONE", "UTC")
 
 USE_I18N = True
 
@@ -129,3 +131,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
+ADMIN_URL = os.getenv("ADMIN_URL", "admin")

@@ -6,8 +6,9 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 """
 from django.contrib import admin
 from django.urls import path, include
+from .settings import ADMIN_URL
 
 urlpatterns = [
     path("track_categories/", include("tracks.urls", namespace="tracks")),
-    path("admin/", admin.site.urls),
+    path(f"{ADMIN_URL}/", admin.site.urls),
 ]
