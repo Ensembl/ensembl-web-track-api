@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "yt%+y7vy=1oqmjpv$wntb_d*tw96ju=q^sm(+kwn30!gpl7*vx"
+SECRET_KEY = os.getenv(
+    "DJANGO_SECRET_KEY", "yt%+y7vy=1oqmjpv$wntb_d*tw96ju=q^sm(+kwn30!gpl7*vx"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG", False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
 
 
 # Application definition
@@ -78,14 +81,21 @@ REST_FRAMEWORK = {"DEFAULT_RENDERER_CLASSES": ["rest_framework.parsers.JSONParse
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# Read database settings from environment
+DATABASE_NAME = os.getenv("DATABASE_NAME", "postgres")
+DATABASE_HOST = os.getenv("DATABASE_HOST", "db")
+DATABASE_PORT = os.getenv("DATABASE_PORT", 5432)
+DATABASE_USER = os.getenv("DATABASE_USER", "postgres")
+DATABASE_PASS = os.getenv("DATABASE_PASS", "postgres")
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
-        "HOST": "db",
-        "PORT": 5432,
+        "NAME": DATABASE_NAME,
+        "USER": DATABASE_USER,
+        "PASSWORD": DATABASE_PASS,
+        "HOST": DATABASE_HOST,
+        "PORT": DATABASE_PORT,
     }
 }
 
@@ -106,9 +116,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = os.getenv("LANGUAGE_CODE", "en-gb")
 
-TIME_ZONE = "UTC"
+TIME_ZONE = os.getenv("TIMEZONE", "UTC")
 
 USE_I18N = True
 
@@ -121,3 +131,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
+ADMIN_URL = os.getenv("ADMIN_URL", "admin")

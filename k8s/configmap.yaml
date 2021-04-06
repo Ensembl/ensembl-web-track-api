@@ -1,0 +1,19 @@
+apiVersion: v1
+data:
+  # HTTP Proxy needed to connect to EBI Search
+  # hx : for Hinxton k8s 
+  # hl : for Harlow k8s
+  HTTP_PROXY: http://hx-wwwcache.ebi.ac.uk:3128
+  HTTPS_PROXY: http://hx-wwwcache.ebi.ac.uk:3128
+  http_proxy: http://hx-wwwcache.ebi.ac.uk:3128
+  https_proxy: http://hx-wwwcache.ebi.ac.uk:3128
+
+  # Database connection details
+  DATABASE_HOST: <DATABASE_HOST>
+  DATABASE_PORT: <DATABASE_PORT>
+  DATABASE_USER: <DATABASE_USER>
+  DATABASE_PASS: <DATABASE_PASS>
+  DATABASE_NAME: <DATABASE_NAME>
+kind: ConfigMap
+metadata:
+    name: ensembl-track-api-configmap

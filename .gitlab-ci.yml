@@ -1,0 +1,37 @@
+stages:
+    - build
+    - deploy
+
+variables:
+  CONTAINER_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
+  DOCKER_TLS_CERTDIR: ""
+
+.build:
+    stage: build
+    image: docker
+    services:
+        - docker:dind
+    before_script:
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    script:
+        - docker build -t ${CONTAINER_IMAGE} --no-cache -f Dockerfile .
+        - docker push ${CONTAINER_IMAGE}
+        - docker rmi ${CONTAINER_IMAGE}
+        - docker logout $CI_REGISTRY
+
+.deploy:
+    stage: deploy
+    image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:0.1
+    script: 
+        - sed -i "s#<DOCKER_IMAGE>#${CONTAINER_IMAGE}#g" k8s/ensembl_track_api_deployment.yaml
+        - kubectl apply -f k8s/ensembl_track_api_deployment.yaml
+
+# Build docker image 
+Docker:
+    extends: .build
+
+# Deploy to kubernetes
+Deploy:WP-HX:
+    extends: .deploy
+    environment:
+        name : wp-hx-dev
