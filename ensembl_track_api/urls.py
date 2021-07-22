@@ -10,5 +10,4 @@ from .settings import ADMIN_URL
 
 urlpatterns = [
     path("track_categories/", include("tracks.urls", namespace="tracks")),
-    path(f"{ADMIN_URL}/", admin.site.urls),
 ]

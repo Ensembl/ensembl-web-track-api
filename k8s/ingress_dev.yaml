@@ -1,0 +1,16 @@
+#Ingress for routing Track API review app URL
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+  name: ensembl-track-api-<BRANCH_NAME>-ingress #Filled by CI/CD job
+spec:
+  rules:
+  - host: <BRANCH_NAME>.review.ensembl.org  #Filled by CI/CD job
+    http:
+      paths:
+      - backend:
+          serviceName: ensembl-track-api-svc
+          servicePort: 8012
+        path: /api/tracks/(.*)

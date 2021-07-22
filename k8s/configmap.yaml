@@ -1,19 +1,16 @@
+#Environment variables for Track API k8s deployment
 apiVersion: v1
 data:
-  # HTTP Proxy needed to connect to EBI Search
-  # hx : for Hinxton k8s 
-  # hl : for Harlow k8s
-  HTTP_PROXY: http://hx-wwwcache.ebi.ac.uk:3128
-  HTTPS_PROXY: http://hx-wwwcache.ebi.ac.uk:3128
-  http_proxy: http://hx-wwwcache.ebi.ac.uk:3128
-  https_proxy: http://hx-wwwcache.ebi.ac.uk:3128
-
-  # Database connection details
-  DATABASE_HOST: <DATABASE_HOST>
-  DATABASE_PORT: <DATABASE_PORT>
+  #Django settings
+  DJANGO_ALLOWED_HOSTS: "*"
+  DJANGO_SECRET_KEY: <DJANGO_SECRET_KEY>
+  #DJANGO_DEBUG: "True"
+  #Database access (filled & applied manually)
+  DATABASE_HOST: ensweb-trackapi-db-svc
+  DATABASE_PORT: "5432"
   DATABASE_USER: <DATABASE_USER>
   DATABASE_PASS: <DATABASE_PASS>
   DATABASE_NAME: <DATABASE_NAME>
 kind: ConfigMap
 metadata:
-    name: ensembl-track-api-configmap
+  name: ensembl-track-api-configmap

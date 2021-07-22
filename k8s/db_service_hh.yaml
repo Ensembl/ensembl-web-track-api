@@ -1,0 +1,8 @@
+#Kubernetes service for exposing Track API database host in HH cluster
+kind: Service
+apiVersion: v1
+metadata:
+  name: ensweb-trackapi-db-svc
+spec:
+  type: ExternalName
+  externalName: pgsql-hlvm-011.ebi.ac.uk

@@ -1,0 +1,16 @@
+#Ingress for routing Track API staging URL
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+  name: ensembl-track-api-ingress
+spec:
+  rules:
+  - host: staging-2020.ensembl.org
+    http:
+      paths:
+      - backend:
+          serviceName: ensembl-track-api-svc
+          servicePort: 8012
+        path: /api/tracks/(.*)
