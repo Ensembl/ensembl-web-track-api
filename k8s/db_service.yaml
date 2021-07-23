@@ -5,4 +5,4 @@ metadata:
   name: ensweb-trackapi-db-svc
 spec:
   type: ExternalName
-  externalName: pgsql-hlvm-011.ebi.ac.uk
+  externalName: <DB_HOST> #Filled/applied manually
