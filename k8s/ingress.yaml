@@ -7,7 +7,7 @@ metadata:
   name: ensembl-track-api-ingress
 spec:
   rules:
-  - host: 2020.ensembl.org #edit for internal/staging (filled/applied manually)
+  - host: 2020.ensembl.org #edit for internal/staging (applied manually)
     http:
       paths:
       - backend:

@@ -11,6 +11,6 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: ensembl-track-api-svc
+          serviceName: ensembl-track-api-<BRANCH_NAME>-svc
           servicePort: 8012
         path: /api/tracks/(.*)

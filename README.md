@@ -34,8 +34,8 @@ Reference dataset: ./data/track_categories.yaml
 
 The GitLab CI/CD configuration file and the Kubernetes manifests in `k8s` dir define the deployment accross 2 clusters and 4 namespaces.
 For each of the 8 environments, 5 manifest files are applied to deploy the app:
-- Applied manually: `configmap.yaml`, `app_service.yaml`, `db_service.yaml`, `ingress.yaml`
-- Applied by CI/CD jobs: `deployment(_dev).yaml`, `ingress_dev.yaml` (only for review app)
+- Applied manually: `configmap.yaml`, `service.yaml`, `db_service.yaml`, `ingress.yaml`
+- Applied by CI/CD jobs: `deployment.yaml`; for review apps, also: `review/service.yaml`, `review/ingress.yaml` 
 
 The data is served from a dedicated postgres database in both k8s clusters (defined in `db_service.yaml`).
 Since the database user for k8s cluster is read-only, the database building is done from a local computer with a read/write database user.

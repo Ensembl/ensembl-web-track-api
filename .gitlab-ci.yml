@@ -34,11 +34,13 @@ variables:
     stage: deploy
     image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:0.1
     script: #Fill placeholders and apply manifest files
-        - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/deployment_dev.yaml
-        - sed -i "s#<DOCKER_IMAGE>#${CONTAINER_IMAGE}#g" k8s/deployment_dev.yaml
-        - kubectl apply -f k8s/deployment_dev.yaml
-        - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/ingress_dev.yaml
-        - kubectl apply -f k8s/ingress_dev.yaml
+        - sed -i "s#<DOCKER_IMAGE>#${CONTAINER_IMAGE}#g" k8s/review/deployment.yaml
+        - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/deployment.yaml
+        - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/service.yaml
+        - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/ingress.yaml
+        - kubectl apply -f k8s/review/deployment.yaml
+        - kubectl apply -f k8s/review/service.yaml
+        - kubectl apply -f k8s/review/ingress.yaml
 
 # Stop review app (cleanup resources) 
 .stop-review:
@@ -49,7 +51,8 @@ variables:
     when: manual
     script:
         - kubectl delete ingress ensembl-track-api-${CI_COMMIT_REF_SLUG}-ingress
-        - kubectl delete deploy ensembl-track-api-deployment-${CI_COMMIT_REF_SLUG}
+        - kubectl delete service ensembl-track-api-${CI_COMMIT_REF_SLUG}-service
+        - kubectl delete deploy ensembl-track-api-${CI_COMMIT_REF_SLUG}-deployment
 
 #Build docker image 
 Docker:

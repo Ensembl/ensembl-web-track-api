@@ -2,13 +2,13 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: ensembl-track-api-deployment-<BRANCH_NAME> #Filled by CI/CD job
+  name: ensembl-track-api-<BRANCH_NAME>-deployment #Filled by CI/CD job
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: ensembl-track-api
+        app: ensembl-track-api-<BRANCH_NAME>
     spec:
       imagePullSecrets:
         - name: ensemblweb-pull-secret
