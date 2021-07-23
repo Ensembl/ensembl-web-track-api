@@ -1,19 +1,20 @@
+#Kubernetes deployment for Track API application pods
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: ensembl-track-api-deployment
+  name: ensembl-track-api-<BRANCH_NAME>-deployment #Filled by CI/CD job
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: ensembl-track-api
+        app: ensembl-track-api-<BRANCH_NAME>
     spec:
       imagePullSecrets:
         - name: ensemblweb-pull-secret
       containers:
       - name: ensembl-track-api
-        image: <DOCKER_IMAGE>
+        image: <DOCKER_IMAGE> #Filled by GitLab CI/CD job
         command: ["gunicorn"]
         args: ["--bind=0.0.0.0:8012", "--preload", "ensembl_track_api.wsgi:application"]
         ports:

@@ -1,0 +1,15 @@
+#Kubernetes service for exposing incoming port for Track API app pods
+apiVersion: v1
+kind: Service
+metadata:
+  name: ensembl-track-api-<BRANCH_NAME>-svc
+  labels:
+    app: ensembl-track-api-<BRANCH_NAME>-svc
+spec:
+  selector:
+    app: ensembl-track-api-<BRANCH_NAME>
+  type: ClusterIP
+  ports:
+    - port: 8012
+      protocol: TCP
+      targetPort: 8012

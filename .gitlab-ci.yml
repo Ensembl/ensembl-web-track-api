@@ -3,9 +3,11 @@ stages:
     - deploy
 
 variables:
-  CONTAINER_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
-  DOCKER_TLS_CERTDIR: ""
+    CONTAINER_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
+    DOCKER_TLS_CERTDIR: ""
 
+#Base templates
+#Build & upload new Docker image
 .build:
     stage: build
     image: docker
@@ -19,19 +21,118 @@ variables:
         - docker rmi ${CONTAINER_IMAGE}
         - docker logout $CI_REGISTRY
 
+#Deploy to k8s cluster (for main/dev branch)
 .deploy:
     stage: deploy
     image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:0.1
-    script: 
-        - sed -i "s#<DOCKER_IMAGE>#${CONTAINER_IMAGE}#g" k8s/ensembl_track_api_deployment.yaml
-        - kubectl apply -f k8s/ensembl_track_api_deployment.yaml
+    script:
+        - sed -i "s#<DOCKER_IMAGE>#${CONTAINER_IMAGE}#g" k8s/deployment.yaml
+        - kubectl apply -f k8s/deployment.yaml
 
-# Build docker image 
+# Deploy review app (for feature branch)
+.deploy-review:
+    stage: deploy
+    image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:0.1
+    script: #Fill placeholders and apply manifest files
+        - sed -i "s#<DOCKER_IMAGE>#${CONTAINER_IMAGE}#g" k8s/review/deployment.yaml
+        - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/deployment.yaml
+        - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/service.yaml
+        - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/ingress.yaml
+        - kubectl apply -f k8s/review/deployment.yaml
+        - kubectl apply -f k8s/review/service.yaml
+        - kubectl apply -f k8s/review/ingress.yaml
+
+# Stop review app (cleanup resources) 
+.stop-review:
+    stage: deploy
+    image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:0.1
+    variables:
+        GIT_STRATEGY: none
+    when: manual
+    script:
+        - kubectl delete ingress ensembl-track-api-${CI_COMMIT_REF_SLUG}-ingress
+        - kubectl delete service ensembl-track-api-${CI_COMMIT_REF_SLUG}-service
+        - kubectl delete deploy ensembl-track-api-${CI_COMMIT_REF_SLUG}-deployment
+
+#Build docker image 
 Docker:
     extends: .build
 
-# Deploy to kubernetes
-Deploy:WP-HX:
+#Deploy review app (from feature branch to HX k8s cluster)
+Review:WP-HX:
+    extends: .deploy-review
+    environment:
+        name: wp-hx-dev-ing
+        url: http://$CI_COMMIT_REF_SLUG.review.ensembl.org
+        on_stop: Stop_review
+    except:
+        - main
+        - dev
+
+#Stop review appp
+Stop_review:
+    extends: .stop-review
+    environment:
+        name: wp-hx-dev-ing
+        action: stop
+    except:
+        - main
+        - dev
+
+#Deploy main branch to dev environment (in HX cluster)
+Dev:WP-HX:
     extends: .deploy
     environment:
-        name : wp-hx-dev
+        name: wp-hx-dev
+    only:
+        - main
+
+#Deploy dev branch to staging in HX
+Staging:WP-HX:
+    extends: .deploy
+    environment:
+        name: wp-hx-staging
+    only:
+        - dev
+
+
+#Deploy dev branch to staging in HH
+Staging:WP-HH:
+    extends: .deploy
+    environment:
+        name: wp-hh-staging
+    only:
+        - dev
+
+
+#Deploy main branch to internal in HX
+Internal:WP-HX:
+    extends: .deploy
+    environment:
+        name: wp-hx-internal
+    only:
+        - main
+
+#Deploy main branch to internal in HH
+Internal:WP-HH:
+    extends: .deploy
+    environment:
+        name: wp-hh-internal
+    only:
+        - main
+
+#Deploy to live in HX
+Live:WP-HX:
+    extends: .deploy
+    environment:
+        name: wp-hx-live
+    only:
+        - main
+
+#Deploy to live in HH
+Live:WP-HH:
+    extends: .deploy
+    environment:
+        name: wp-hh-live
+    only:
+        - main

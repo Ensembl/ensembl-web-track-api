@@ -1,10 +1,10 @@
 ### Python template
-# Byte-compiled / optimized / DLL files
+# Byte-compiled/optimized/DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Distribution / packaging
+# Distribution/packaging
 build/
 dist/
 
@@ -12,8 +12,10 @@ dist/
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Django stuff:
+# Django stuff
 staticfiles/
+**/migrations/**
+!**/migrations/__init__.py
 
 # pyenv
 .python-version
@@ -25,10 +27,9 @@ env/
 .vscode/*
 
 ### macOS template
-# General
 *.DS_Store
-
-# Thumbnails
 ._*
 
 ### Project template
+# Hidden environment values
+k8s/configmap_wp.yaml
