@@ -18,6 +18,9 @@ class Category(models.Model):
     label = models.CharField(max_length=100)
     track_category_id = models.CharField(max_length=100, blank=True, default="")
 
+    class Meta:
+        ordering = ['id']
+
 
 class CategoryType(models.Model):
     category = models.ManyToManyField(Category, related_name="types")
@@ -37,3 +40,6 @@ class Track(models.Model):
     label = models.CharField(max_length=100)
     track_id = models.CharField(max_length=100)
     additional_info = models.TextField(blank=True, default="")
+
+    class Meta:
+        ordering = ['id']
