@@ -1,0 +1,94 @@
+#
+#    See the NOTICE file distributed with this work for additional information
+#    regarding copyright ownership.
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#
+
+openapi: 3.0.3
+info:
+  title: Ensembl Track API
+  description: Backend service for Ensembl 2020 client, serving a list of available tracks and track categories.
+  contact:
+    email: andres@ebi.ac.uk
+  version: 0.0.1
+servers:
+  - url: http://2020.ensembl.org/api/tracks
+    description: Production server
+  - url: http://staging-2020.ensembl.org/api/tracks
+    description: Internal staging server
+paths:
+  /track_categories/{genome_id}:
+    get:
+      summary: Returns a list of track categories for a given genome.
+      parameters:
+        - name: genome_id
+          in: path
+          required: true
+          description: Stable genome ID.
+          schema:
+            type : string
+          example: homo_sapiens_GCA_000001405_28
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  track_categories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TrackCategories'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Specified genome ID was not found.
+components:
+  schemas:
+    TrackCategories:
+      type: object
+      properties:
+        track_category_id:
+          type: string
+          example: genes-transcripts
+        label:
+          type: string
+          example: Genes & transcripts
+        track_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/Track'
+        types:
+          type: array
+          items:
+            type: string
+            enum:
+            - Genomic
+            - Variation
+            - Expression
+    Track:
+      type: object
+      properties:
+        track_id:
+          type: string
+          example: track:gene-pc-fwd
+        label:
+          type: string
+          example: Protein coding genes
+        color:
+          type: string
+          example: GREY
+        additional_info:
+          type: string
+          example: Forward strand
