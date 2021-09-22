@@ -58,20 +58,6 @@ genome_track_categories:
       types:
         - 'Variation'
 
-    - label: 'Experiment design'
-      track_category_id: 'experiment-design'
-      track_list: []
-      types:
-        - 'Genomic'
-        - 'Expression'
-        - 'Variation'
-
-    - label: 'References & evidence'
-      track_category_id: 'references-evidence'
-      track_list: []
-      types:
-        - 'Genomic'
-
     - label: 'Regulatory features'
       track_category_id: 'regulatory-features'
       track_list: []
@@ -148,20 +134,6 @@ genome_track_categories:
       types:
         - 'Variation'
 
-    - label: 'Experiment design'
-      track_category_id: 'experiment-design'
-      track_list: []
-      types:
-        - 'Genomic'
-        - 'Expression'
-        - 'Variation'
-
-    - label: 'References & evidence'
-      track_category_id: 'references-evidence'
-      track_list: []
-      types:
-        - 'Genomic'
-
     - label: 'Regulatory features'
       track_category_id: 'regulatory-features'
       track_list: []
@@ -235,20 +207,6 @@ genome_track_categories:
       track_list: []
       types:
         - 'Variation'
-
-    - label: 'Experiment design'
-      track_category_id: 'experiment-design'
-      track_list: []
-      types:
-        - 'Genomic'
-        - 'Expression'
-        - 'Variation'
-
-    - label: 'References & evidence'
-      track_category_id: 'references-evidence'
-      track_list: []
-      types:
-        - 'Genomic'
 
     - label: 'Regulatory features'
       track_category_id: 'regulatory-features'
@@ -324,20 +282,6 @@ genome_track_categories:
       types:
         - 'Variation'
 
-    - label: 'Experiment design'
-      track_category_id: 'experiment-design'
-      track_list: []
-      types:
-        - 'Genomic'
-        - 'Expression'
-        - 'Variation'
-
-    - label: 'References & evidence'
-      track_category_id: 'references-evidence'
-      track_list: []
-      types:
-        - 'Genomic'
-
     - label: 'Regulatory features'
       track_category_id: 'regulatory-features'
       track_list: []
@@ -411,20 +355,6 @@ genome_track_categories:
       track_list: []
       types:
         - 'Variation'
-
-    - label: 'Experiment design'
-      track_category_id: 'experiment-design'
-      track_list: []
-      types:
-        - 'Genomic'
-        - 'Expression'
-        - 'Variation'
-
-    - label: 'References & evidence'
-      track_category_id: 'references-evidence'
-      track_list: []
-      types:
-        - 'Genomic'
 
     - label: 'Regulatory features'
       track_category_id: 'regulatory-features'
@@ -500,20 +430,6 @@ genome_track_categories:
       types:
         - 'Variation'
 
-    - label: 'Experiment design'
-      track_category_id: 'experiment-design'
-      track_list: []
-      types:
-        - 'Genomic'
-        - 'Expression'
-        - 'Variation'
-
-    - label: 'References & evidence'
-      track_category_id: 'references-evidence'
-      track_list: []
-      types:
-        - 'Genomic'
-
     - label: 'Regulatory features'
       track_category_id: 'regulatory-features'
       track_list: []
@@ -587,20 +503,6 @@ genome_track_categories:
       track_list: []
       types:
         - 'Variation'
-
-    - label: 'Experiment design'
-      track_category_id: 'experiment-design'
-      track_list: []
-      types:
-        - 'Genomic'
-        - 'Expression'
-        - 'Variation'
-
-    - label: 'References & evidence'
-      track_category_id: 'references-evidence'
-      track_list: []
-      types:
-        - 'Genomic'
 
     - label: 'Regulatory features'
       track_category_id: 'regulatory-features'
