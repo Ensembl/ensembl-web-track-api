@@ -33,3 +33,4 @@ env/
 ### Project template
 # Hidden environment values
 k8s/configmap_wp.yaml
+prod.env
