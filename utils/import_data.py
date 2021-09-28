@@ -8,6 +8,7 @@ import yaml
 sys.path.insert(1, os.path.join(sys.path[0], ".."))
 if __name__ == "__main__":
     # use data models outside the Django app
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ensembl_track_api.settings')
     django.setup()
 
 from tracks.models import Genome, Category, CategoryType, Track
@@ -45,11 +46,18 @@ with open(yaml_file) as f:
             print("Adding genome", genome_id)
             # does get() => [create() => save()]
             genome_obj, created = Genome.objects.get_or_create(genome_id=genome_id)
+            # data update: clear the database
             if not created:
-                sys.exit(
-                    "Genome ID '%s' already imported!\nEmpty the database before running data import: ./manage.py flush"
-                    % genome_id
-                )
+                print("Genome ID '%s' already imported!\nNeed to clear the database. Proceeding to flush..."
+                    % genome_id)
+                ret = django.core.management.call_command('flush')
+                "Return code: %d" % ret
+                if ret:
+                    genome_obj, created = Genome.objects.get_or_create(genome_id=genome_id)
+                    if not created:
+                        sys.exit("Previous data still in the database, giving up.")
+                else:
+                    sys.exit("Flush failed, cancelling the data import.")
             categories = data[genome_id]
             for category in categories:
                 category_obj = Category.objects.create(
