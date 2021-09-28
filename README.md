@@ -38,5 +38,5 @@ For each of the 8 environments, 5 manifest files are applied to deploy the app:
 - Applied by CI/CD jobs: `deployment.yaml`; for review apps, also: `review/service.yaml`, `review/ingress.yaml` 
 
 The data is served from a dedicated postgres database in both k8s clusters (defined in `db_service.yaml`).
-Since the database user for k8s cluster is read-only, the database building is done from a local computer with a read/write database user.
-Follow the quick start guide above and don't forget to grant access to the r/o user (see `utils/grant_access.sh`). 
+Since the database user for k8s cluster is read-only, the database build and data import commands are run from a local computer with a read/write database user (specified in `settings.py`), followed by granting data access for the r/o user (`utils/grant_access.sh`).
+Use `./manage.py sqlflush` and `./manage.py dbshell` to address any database-related Django errors.
