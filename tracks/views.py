@@ -3,7 +3,7 @@ from tracks.serializers import GenomeTracksSerializer
 from rest_framework import generics
 
 
-class GenomeTrackList(generics.ListAPIView):
+class GenomeTrackList(generics.RetrieveAPIView):
     """
     Retrieve a list of tracks (in categories) linked to a genome id.
     """
