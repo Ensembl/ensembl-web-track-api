@@ -75,7 +75,11 @@ WSGI_APPLICATION = "ensembl_track_api.wsgi.application"
 
 # Django REST Framework settings
 
-REST_FRAMEWORK = {"DEFAULT_RENDERER_CLASSES": ["rest_framework.parsers.JSONParser"]}
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ]
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
