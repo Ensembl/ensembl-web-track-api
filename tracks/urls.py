@@ -10,5 +10,5 @@ from . import views
 app_name = "tracks"
 
 urlpatterns = [
-    path("<slug:genome_id>", views.genome_tracks, name="genome_tracks"),
+    path("<slug:genome_id>", views.GenomeTrackList.as_view(), name="genome_tracks"),
 ]
