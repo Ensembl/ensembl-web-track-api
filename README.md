@@ -25,6 +25,7 @@ Reference dataset: ./data/track_categories.yaml
 3. Usage:
 
 - `http://localhost:8000/track_categories/:genome_id` #e.g. /track_categories/homo_sapiens_GCA_000001405_28
+- `http://2020.ensembl.org/api/track/track_categories/:genome_id` #when deployed to production
 
 4. Stop the endpoint:
 
@@ -46,5 +47,5 @@ _Deployment stages:_
 _Data updates:_
 - The data is served from an external postgres database in both k8s clusters (defined in `db_service.yaml`).
 Since the database user for k8s cluster is read-only, the database build and data import commands are run from a local computer with a read/write database user (specified in `settings.py`), followed by granting data access for the r/o user (`utils/grant_access.sh`).
-- Review apps from feature branch use local database in k8s. Run `utils/import_data.py` in the review app pod to update the data (from `data/track_categories.yaml`)
+- Review apps from feature branch use local database in k8s. Run `python utils/import_data.py` in the review app pod to update the data (data source: `data/track_categories.yaml`)
 - Use `./manage.py sqlflush` and `./manage.py dbshell` to address any database-related Django errors.
