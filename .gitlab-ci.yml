@@ -58,7 +58,7 @@ variables:
 Docker:
     extends: .build
 
-#Deploy review app (from feature branch to HX k8s cluster)
+#Deploy feature branch to dev (review apps with database changes)
 Review:WP-HX:
     extends: .deploy-review
     environment:
@@ -79,30 +79,30 @@ Stop_review:
         - main
         - dev
 
-#Deploy main branch to dev environment (in HX cluster)
+#Deploy dev branch to dev (default review apps)
 Dev:WP-HX:
     extends: .deploy
     environment:
         name: wp-hx-dev
     only:
-        - main
+        - dev
 
-#Deploy dev branch to staging in HX
+#Deploy main branch to staging in HX (approved review apps)
 Staging:WP-HX:
     extends: .deploy
     environment:
         name: wp-hx-staging
     only:
-        - dev
+        - main
 
 
-#Deploy dev branch to staging in HH
+#Deploy main branch to staging in HH
 Staging:WP-HH:
     extends: .deploy
     environment:
         name: wp-hh-staging
     only:
-        - dev
+        - main
 
 
 #Deploy main branch to internal in HX
@@ -121,13 +121,14 @@ Internal:WP-HH:
     only:
         - main
 
-#Deploy to live in HX
+#Deploy to live in HX (manual confirmation in GitLab)
 Live:WP-HX:
     extends: .deploy
     environment:
         name: wp-hx-live
     only:
         - main
+    when: manual
 
 #Deploy to live in HH
 Live:WP-HH:
@@ -136,3 +137,4 @@ Live:WP-HH:
         name: wp-hh-live
     only:
         - main
+    when: manual
