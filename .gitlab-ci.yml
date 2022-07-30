@@ -77,7 +77,8 @@ Review_db:WP-HX:
         name: wp-hx-dev-ing
         url: http://update-track-api.review.ensembl.org
     after_script: #restart deployment with new env that points to internal track database
-      - kubectl set env deployment/ensembl-track-api-update-deployment --from configmap/ensembl-track-api-review-configmap
+        - kubectl set env deployment/ensembl-track-api-update-deployment  
+          --from configmap/ensembl-track-api-review-configmap
     only:
         - update
 
