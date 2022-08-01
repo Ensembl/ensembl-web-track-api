@@ -29,7 +29,7 @@ variables:
         - sed -i "s#<DOCKER_IMAGE>#${CONTAINER_IMAGE}#g" k8s/deployment.yaml
         - kubectl apply -f k8s/deployment.yaml
 
-# Deploy review app (for feature branch)
+#Deploy review app (for feature branch)
 .deploy-review:
     stage: deploy
     image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:0.1
@@ -37,12 +37,12 @@ variables:
         - sed -i "s#<DOCKER_IMAGE>#${CONTAINER_IMAGE}#g" k8s/review/deployment.yaml
         - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/deployment.yaml
         - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/service.yaml
-        - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/ingress.yaml
+        #- sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/ingress.yaml
         - kubectl apply -f k8s/review/deployment.yaml
         - kubectl apply -f k8s/review/service.yaml
-        - kubectl apply -f k8s/review/ingress.yaml
+        #- kubectl apply -f k8s/review/ingress.yaml #done by FE review app deployment
 
-# Stop review app (cleanup resources) 
+#Stop review app (cleanup resources) 
 .stop-review:
     stage: deploy
     image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:0.1
@@ -50,7 +50,7 @@ variables:
         GIT_STRATEGY: none
     when: manual
     script:
-        - kubectl delete ingress ensembl-track-api-${CI_COMMIT_REF_SLUG}-ingress
+        #- kubectl delete ingress ensembl-track-api-${CI_COMMIT_REF_SLUG}-ingress
         - kubectl delete service ensembl-track-api-${CI_COMMIT_REF_SLUG}-service
         - kubectl delete deploy ensembl-track-api-${CI_COMMIT_REF_SLUG}-deployment
 
@@ -58,7 +58,7 @@ variables:
 Docker:
     extends: .build
 
-#Deploy review app (from feature branch to HX k8s cluster)
+#Deploy feature branch to dev (review apps with custom BE and production DB)
 Review:WP-HX:
     extends: .deploy-review
     environment:
@@ -68,6 +68,20 @@ Review:WP-HX:
     except:
         - main
         - dev
+        - update
+
+#Deploy special feature branch to dev (review apps with custom BE and internal DB)
+Review_db:WP-HX:
+    extends: .deploy-review
+    environment:
+        name: wp-hx-dev-ing
+        url: http://update-track-api.review.ensembl.org
+    after_script: #restart deployment with new env that points to internal track database
+        - kubectl set env deployment/ensembl-track-api-update-deployment  
+          --from configmap/ensembl-track-api-review-configmap
+    only:
+        - update
+
 
 #Stop review appp
 Stop_review:
@@ -78,8 +92,9 @@ Stop_review:
     except:
         - main
         - dev
+        - update
 
-#Deploy main branch to dev environment (in HX cluster)
+#Deploy main branch to dev (default/production BE for review apps)
 Dev:WP-HX:
     extends: .deploy
     environment:
@@ -87,7 +102,7 @@ Dev:WP-HX:
     only:
         - main
 
-#Deploy dev branch to staging in HX
+#Deploy dev branch to staging in HX (approved review apps)
 Staging:WP-HX:
     extends: .deploy
     environment:
@@ -121,18 +136,20 @@ Internal:WP-HH:
     only:
         - main
 
-#Deploy to live in HX
+#Deploy main branch to live in HX (manual confirmation)
 Live:WP-HX:
     extends: .deploy
     environment:
         name: wp-hx-live
     only:
         - main
+    when: manual
 
-#Deploy to live in HH
+#Deploy main branch to live in HH (manual confirmation)
 Live:WP-HH:
     extends: .deploy
     environment:
         name: wp-hh-live
     only:
         - main
+    when: manual
