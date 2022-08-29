@@ -25,7 +25,7 @@ genome_track_categories:
     - label: 'Assembly'
       track_category_id: 'assembly'
       track_list:
-        - label: 'Contigs'
+        - label: 'Reference sequence'
           track_id: 'contig'
         - label: '%GC'
           track_id: 'gc'
@@ -101,7 +101,7 @@ genome_track_categories:
     - label: 'Assembly'
       track_category_id: 'assembly'
       track_list:
-        - label: 'Contigs'
+        - label: 'Reference sequence'
           track_id: 'contig'
         - label: '%GC'
           track_id: 'gc'
@@ -177,7 +177,7 @@ genome_track_categories:
     - label: 'Assembly'
       track_category_id: 'assembly'
       track_list:
-        - label: 'Contigs'
+        - label: 'Reference sequence'
           track_id: 'contig'
         - label: '%GC'
           track_id: 'gc'
@@ -192,7 +192,9 @@ genome_track_categories:
 
     - label: 'Short variants'
       track_category_id: 'short-variants'
-      track_list: []
+      track_list:
+        - label: 'Sequence variants (all sources)'
+          track_id: 'variant'
       types:
         - 'Variation'
 
@@ -251,7 +253,7 @@ genome_track_categories:
     - label: 'Assembly'
       track_category_id: 'assembly'
       track_list:
-        - label: 'Contigs'
+        - label: 'Reference sequence'
           track_id: 'contig'
         - label: '%GC'
           track_id: 'gc'
@@ -266,7 +268,9 @@ genome_track_categories:
 
     - label: 'Short variants'
       track_category_id: 'short-variants'
-      track_list: []
+      track_list:
+        - label: 'Sequence variants (all sources)'
+          track_id: 'variant'
       types:
         - 'Variation'
 
@@ -325,7 +329,7 @@ genome_track_categories:
     - label: 'Assembly'
       track_category_id: 'assembly'
       track_list:
-        - label: 'Contigs'
+        - label: 'Reference sequence'
           track_id: 'contig'
         - label: '%GC'
           track_id: 'gc'
@@ -399,7 +403,7 @@ genome_track_categories:
     - label: 'Assembly'
       track_category_id: 'assembly'
       track_list:
-        - label: 'Contigs'
+        - label: 'Reference sequence'
           track_id: 'contig'
         - label: '%GC'
           track_id: 'gc'
@@ -473,7 +477,7 @@ genome_track_categories:
     - label: 'Assembly'
       track_category_id: 'assembly'
       track_list:
-        - label: 'Contigs'
+        - label: 'Reference sequence'
           track_id: 'contig'
         - label: '%GC'
           track_id: 'gc'
@@ -547,7 +551,7 @@ genome_track_categories:
     - label: 'Assembly'
       track_category_id: 'assembly'
       track_list:
-        - label: 'Contigs'
+        - label: 'Reference sequence'
           track_id: 'contig'
         - label: '%GC'
           track_id: 'gc'
@@ -623,7 +627,7 @@ genome_track_categories:
     - label: 'Assembly'
       track_category_id: 'assembly'
       track_list:
-        - label: 'Contigs'
+        - label: 'Reference sequence'
           track_id: 'contig'
         - label: '%GC'
           track_id: 'gc'
@@ -699,7 +703,7 @@ genome_track_categories:
     - label: 'Assembly'
       track_category_id: 'assembly'
       track_list:
-        - label: 'Contigs'
+        - label: 'Reference sequence'
           track_id: 'contig'
         - label: '%GC'
           track_id: 'gc'
@@ -714,7 +718,9 @@ genome_track_categories:
 
     - label: 'Short variants'
       track_category_id: 'short-variants'
-      track_list: []
+      track_list:
+        - label: 'Sequence variants (all sources)'
+          track_id: 'variant'
       types:
         - 'Variation'
 
@@ -773,7 +779,7 @@ genome_track_categories:
     - label: 'Assembly'
       track_category_id: 'assembly'
       track_list:
-        - label: 'Contigs'
+        - label: 'Reference sequence'
           track_id: 'contig'
         - label: '%GC'
           track_id: 'gc'
@@ -788,7 +794,9 @@ genome_track_categories:
 
     - label: 'Short variants'
       track_category_id: 'short-variants'
-      track_list: []
+      track_list:
+        - label: 'Sequence variants (all sources)'
+          track_id: 'variant'
       types:
         - 'Variation'
 
@@ -847,7 +855,7 @@ genome_track_categories:
     - label: 'Assembly'
       track_category_id: 'assembly'
       track_list:
-        - label: 'Contigs'
+        - label: 'Reference sequence'
           track_id: 'contig'
         - label: '%GC'
           track_id: 'gc'
@@ -921,7 +929,7 @@ genome_track_categories:
     - label: 'Assembly'
       track_category_id: 'assembly'
       track_list:
-        - label: 'Contigs'
+        - label: 'Reference sequence'
           track_id: 'contig'
         - label: '%GC'
           track_id: 'gc'
@@ -995,7 +1003,7 @@ genome_track_categories:
     - label: 'Assembly'
       track_category_id: 'assembly'
       track_list:
-        - label: 'Contigs'
+        - label: 'Reference sequence'
           track_id: 'contig'
         - label: '%GC'
           track_id: 'gc'
