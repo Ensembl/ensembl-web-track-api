@@ -7,18 +7,34 @@ genome_track_categories:
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-fwd'
+          description: 'Shows all protein coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
         - additional_info: 'Forward strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-fwd'
+          description: 'Shows all non-coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
         - additional_info: 'Reverse strand'
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-rev'
+          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
         - additional_info: 'Reverse strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-rev'
+          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
       types:
         - 'Genomic'
 
@@ -27,8 +43,12 @@ genome_track_categories:
       track_list:
         - label: 'Reference sequence'
           track_id: 'contig'
+          description: 'Shows the contigs underlying the reference assembly.'
+          sources: []
         - label: '%GC'
           track_id: 'gc'
+          description: 'Shows the percentage of Gs and Cs in a region.'
+          sources: []
       types:
         - 'Genomic'
 
@@ -43,6 +63,8 @@ genome_track_categories:
       track_list:
         - label: '1000 Genomes all SNPs & indels'
           track_id: 'variant'
+          description: 'Shows the Variants genotyped by the 1000 Genomes project (phase 3).'
+          sources: []
       types:
         - 'Variation'
 
@@ -75,6 +97,7 @@ genome_track_categories:
       track_list: []
       types:
         - 'Expression'
+
   homo_sapiens_GCA_000001405_14:
     - label: 'Genes & transcripts'
       track_category_id: 'genes-transcripts'
@@ -83,18 +106,34 @@ genome_track_categories:
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-fwd'
+          description: 'Shows all protein coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
         - additional_info: 'Forward strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-fwd'
+          description: 'Shows all non-coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
         - additional_info: 'Reverse strand'
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-rev'
+          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
         - additional_info: 'Reverse strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-rev'
+          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
       types:
         - 'Genomic'
 
@@ -103,8 +142,12 @@ genome_track_categories:
       track_list:
         - label: 'Reference sequence'
           track_id: 'contig'
+          description: 'Shows the contigs underlying the reference assembly.'
+          sources: []
         - label: '%GC'
           track_id: 'gc'
+          description: 'Shows the percentage of Gs and Cs in a region.'
+          sources: []
       types:
         - 'Genomic'
 
@@ -119,6 +162,8 @@ genome_track_categories:
       track_list:
         - label: '1000 Genomes all SNPs & indels'
           track_id: 'variant'
+          description: 'Shows the Variants genotyped by the 1000 Genomes project (phase 3).'
+          sources: []
       types:
         - 'Variation'
 
@@ -151,6 +196,7 @@ genome_track_categories:
       track_list: []
       types:
         - 'Expression'
+
   triticum_aestivum_GCA_900519105_1:
     - label: 'Genes & transcripts'
       track_category_id: 'genes-transcripts'
@@ -159,18 +205,34 @@ genome_track_categories:
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-fwd'
+          description: 'Shows all protein coding genes on the forward strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+          sources:
+            - url: 'www.wheatgenome.org'
+              name: 'IWGSC'
         - additional_info: 'Forward strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-fwd'
+          description: 'Shows all non-coding genes on the forward strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+          sources:
+            - url: 'www.wheatgenome.org'
+              name: 'IWGSC'
         - additional_info: 'Reverse strand'
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-rev'
+          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+          sources:
+            - url: 'www.wheatgenome.org'
+              name: 'IWGSC'
         - additional_info: 'Reverse strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-rev'
+          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+          sources:
+            - url: 'www.wheatgenome.org'
+              name: 'IWGSC'
       types:
         - 'Genomic'
 
@@ -179,8 +241,12 @@ genome_track_categories:
       track_list:
         - label: 'Reference sequence'
           track_id: 'contig'
+          description: 'Shows the contigs underlying the reference assembly.'
+          sources: []
         - label: '%GC'
           track_id: 'gc'
+          description: 'Shows the percentage of Gs and Cs in a region.'
+          sources: []
       types:
         - 'Genomic'
 
@@ -195,6 +261,8 @@ genome_track_categories:
       track_list:
         - label: 'Sequence variants (all sources)'
           track_id: 'variant'
+          description: 'Sequence variants from all sources.'
+          sources: []
       types:
         - 'Variation'
 
@@ -227,6 +295,7 @@ genome_track_categories:
       track_list: []
       types:
         - 'Expression'
+
   saccharomyces_cerevisiae_GCA_000146045_2:
     - label: 'Genes & transcripts'
       track_category_id: 'genes-transcripts'
@@ -235,18 +304,34 @@ genome_track_categories:
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-fwd'
+          description: 'Shows all protein coding genes on the forward strand of this chromosome. Annotation imported from SGD.'
+          sources:
+            - url: 'www.yeastgenome.org'
+              name: 'SGD'
         - additional_info: 'Forward strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-fwd'
+          description: 'Shows all non-coding genes on the forward strand of this chromosome. Annotation imported from SGD.'
+          sources:
+            - url: 'www.yeastgenome.org'
+              name: 'SGD'
         - additional_info: 'Reverse strand'
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-rev'
+          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Annotation imported from SGD.'
+          sources:
+            - url: 'www.yeastgenome.org'
+              name: 'SGD'
         - additional_info: 'Reverse strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-rev'
+          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Annotation imported from SGD.'
+          sources:
+            - url: 'www.yeastgenome.org'
+              name: 'SGD'
       types:
         - 'Genomic'
 
@@ -255,8 +340,12 @@ genome_track_categories:
       track_list:
         - label: 'Reference sequence'
           track_id: 'contig'
+          description: 'Shows the contigs underlying the reference assembly.'
+          sources: []
         - label: '%GC'
           track_id: 'gc'
+          description: 'Shows the percentage of Gs and Cs in a region.'
+          sources: []
       types:
         - 'Genomic'
 
@@ -271,6 +360,8 @@ genome_track_categories:
       track_list:
         - label: 'Sequence variants (all sources)'
           track_id: 'variant'
+          description: 'Sequence variants from all sources.'
+          sources: []
       types:
         - 'Variation'
 
@@ -303,6 +394,7 @@ genome_track_categories:
       track_list: []
       types:
         - 'Expression'
+
   escherichia_coli_str_k_12_substr_mg1655_gca_000005845_GCA_000005845_2:
     - label: 'Genes & transcripts'
       track_category_id: 'genes-transcripts'
@@ -311,18 +403,34 @@ genome_track_categories:
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-fwd'
+          description: 'Shows all protein coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
         - additional_info: 'Forward strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-fwd'
+          description: 'Shows all non-coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
         - additional_info: 'Reverse strand'
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-rev'
+          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
         - additional_info: 'Reverse strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-rev'
+          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
       types:
         - 'Genomic'
 
@@ -331,8 +439,12 @@ genome_track_categories:
       track_list:
         - label: 'Reference sequence'
           track_id: 'contig'
+          description: 'Shows the contigs underlying the reference assembly.'
+          sources: []
         - label: '%GC'
           track_id: 'gc'
+          description: 'Shows the percentage of Gs and Cs in a region.'
+          sources: []
       types:
         - 'Genomic'
 
@@ -377,6 +489,7 @@ genome_track_categories:
       track_list: []
       types:
         - 'Expression'
+
   caenorhabditis_elegans_GCA_000002985_3:
     - label: 'Genes & transcripts'
       track_category_id: 'genes-transcripts'
@@ -385,18 +498,34 @@ genome_track_categories:
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-fwd'
+          description: 'Shows all protein coding genes on the forward strand of this chromosome. Protein coding model imported from Wormbase.'
+          sources:
+            - url: 'www.wormbase.org'
+              name: 'Wormbase'
         - additional_info: 'Forward strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-fwd'
+          description: 'Shows all non-coding genes on the forward strand of this chromosome. Protein coding model imported from Wormbase.'
+          sources:
+            - url: 'www.wormbase.org'
+              name: 'Wormbase'
         - additional_info: 'Reverse strand'
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-rev'
+          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Protein coding model imported from Wormbase.'
+          sources:
+            - url: 'www.wormbase.org'
+              name: 'Wormbase'
         - additional_info: 'Reverse strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-rev'
+          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Protein coding model imported from Wormbase.'
+          sources:
+            - url: 'www.wormbase.org'
+              name: 'Wormbase'
       types:
         - 'Genomic'
 
@@ -405,8 +534,12 @@ genome_track_categories:
       track_list:
         - label: 'Reference sequence'
           track_id: 'contig'
+          description: 'Shows the contigs underlying the reference assembly.'
+          sources: []
         - label: '%GC'
           track_id: 'gc'
+          description: 'Shows the percentage of Gs and Cs in a region.'
+          sources: []
       types:
         - 'Genomic'
 
@@ -451,6 +584,7 @@ genome_track_categories:
       track_list: []
       types:
         - 'Expression'
+
   plasmodium_falciparum_GCA_000002765_2:
     - label: 'Genes & transcripts'
       track_category_id: 'genes-transcripts'
@@ -459,18 +593,34 @@ genome_track_categories:
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-fwd'
+          description: 'Shows all protein coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
         - additional_info: 'Forward strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-fwd'
+          description: 'Shows all non-coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
         - additional_info: 'Reverse strand'
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-rev'
+          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
         - additional_info: 'Reverse strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-rev'
+          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
       types:
         - 'Genomic'
 
@@ -479,8 +629,12 @@ genome_track_categories:
       track_list:
         - label: 'Reference sequence'
           track_id: 'contig'
+          description: 'Shows the contigs underlying the reference assembly.'
+          sources: []
         - label: '%GC'
           track_id: 'gc'
+          description: 'Shows the percentage of Gs and Cs in a region.'
+          sources: []
       types:
         - 'Genomic'
 
@@ -525,6 +679,7 @@ genome_track_categories:
       track_list: []
       types:
         - 'Expression'
+
   a7335667-93e7-11ec-a39d-005056b38ce3:
     - label: 'Genes & transcripts'
       track_category_id: 'genes-transcripts'
@@ -533,18 +688,34 @@ genome_track_categories:
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-fwd'
+          description: 'Shows all protein coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
         - additional_info: 'Forward strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-fwd'
+          description: 'Shows all non-coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
         - additional_info: 'Reverse strand'
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-rev'
+          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
         - additional_info: 'Reverse strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-rev'
+          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
       types:
         - 'Genomic'
 
@@ -553,8 +724,12 @@ genome_track_categories:
       track_list:
         - label: 'Reference sequence'
           track_id: 'contig'
+          description: 'Shows the contigs underlying the reference assembly.'
+          sources: []
         - label: '%GC'
           track_id: 'gc'
+          description: 'Shows the percentage of Gs and Cs in a region.'
+          sources: []
       types:
         - 'Genomic'
 
@@ -569,6 +744,8 @@ genome_track_categories:
       track_list:
         - label: '1000 Genomes all SNPs & indels'
           track_id: 'variant'
+          description: 'Shows the Variants genotyped by the 1000 Genomes project (phase 3).'
+          sources: []
       types:
         - 'Variation'
 
@@ -601,6 +778,7 @@ genome_track_categories:
       track_list: []
       types:
         - 'Expression'
+
   3704ceb1-948d-11ec-a39d-005056b38ce3:
     - label: 'Genes & transcripts'
       track_category_id: 'genes-transcripts'
@@ -609,18 +787,34 @@ genome_track_categories:
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-fwd'
+          description: 'Shows all protein coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
         - additional_info: 'Forward strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-fwd'
+          description: 'Shows all non-coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
         - additional_info: 'Reverse strand'
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-rev'
+          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
         - additional_info: 'Reverse strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-rev'
+          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+          sources:
+            - url: 'www.gencodegenes.org'
+              name: 'GENCODE'
       types:
         - 'Genomic'
 
@@ -629,8 +823,12 @@ genome_track_categories:
       track_list:
         - label: 'Reference sequence'
           track_id: 'contig'
+          description: 'Shows the contigs underlying the reference assembly.'
+          sources: []
         - label: '%GC'
           track_id: 'gc'
+          description: 'Shows the percentage of Gs and Cs in a region.'
+          sources: []
       types:
         - 'Genomic'
 
@@ -645,6 +843,8 @@ genome_track_categories:
       track_list:
         - label: '1000 Genomes all SNPs & indels'
           track_id: 'variant'
+          description: 'Shows the Variants genotyped by the 1000 Genomes project (phase 3).'
+          sources: []
       types:
         - 'Variation'
 
@@ -677,6 +877,7 @@ genome_track_categories:
       track_list: []
       types:
         - 'Expression'
+
   a73357ab-93e7-11ec-a39d-005056b38ce3:
     - label: 'Genes & transcripts'
       track_category_id: 'genes-transcripts'
@@ -685,18 +886,34 @@ genome_track_categories:
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-fwd'
+          description: 'Shows all protein coding genes on the forward strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+          sources:
+            - url: 'www.wheatgenome.org'
+              name: 'IWGSC'
         - additional_info: 'Forward strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-fwd'
+          description: 'Shows all non-coding genes on the forward strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+          sources:
+            - url: 'www.wheatgenome.org'
+              name: 'IWGSC'
         - additional_info: 'Reverse strand'
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-rev'
+          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+          sources:
+            - url: 'www.wheatgenome.org'
+              name: 'IWGSC'
         - additional_info: 'Reverse strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-rev'
+          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+          sources:
+            - url: 'www.wheatgenome.org'
+              name: 'IWGSC'
       types:
         - 'Genomic'
 
@@ -705,8 +922,12 @@ genome_track_categories:
       track_list:
         - label: 'Reference sequence'
           track_id: 'contig'
+          description: 'Shows the contigs underlying the reference assembly.'
+          sources: []
         - label: '%GC'
           track_id: 'gc'
+          description: 'Shows the percentage of Gs and Cs in a region.'
+          sources: []
       types:
         - 'Genomic'
 
@@ -721,6 +942,8 @@ genome_track_categories:
       track_list:
         - label: 'Sequence variants (all sources)'
           track_id: 'variant'
+          description: 'Sequence variants from all sources.'
+          sources: []
       types:
         - 'Variation'
 
@@ -753,6 +976,7 @@ genome_track_categories:
       track_list: []
       types:
         - 'Expression'
+
   a733574a-93e7-11ec-a39d-005056b38ce3:
     - label: 'Genes & transcripts'
       track_category_id: 'genes-transcripts'
@@ -761,18 +985,34 @@ genome_track_categories:
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-fwd'
+          description: 'Shows all protein coding genes on the forward strand of this chromosome. Annotation imported from SGD.'
+          sources:
+            - url: 'www.yeastgenome.org'
+              name: 'SGD'
         - additional_info: 'Forward strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-fwd'
+          description: 'Shows all non-coding genes on the forward strand of this chromosome. Annotation imported from SGD.'
+          sources:
+            - url: 'www.yeastgenome.org'
+              name: 'SGD'
         - additional_info: 'Reverse strand'
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-rev'
+          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Annotation imported from SGD.'
+          sources:
+            - url: 'www.yeastgenome.org'
+              name: 'SGD'
         - additional_info: 'Reverse strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-rev'
+          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Annotation imported from SGD.'
+          sources:
+            - url: 'www.yeastgenome.org'
+              name: 'SGD'
       types:
         - 'Genomic'
 
@@ -781,8 +1021,12 @@ genome_track_categories:
       track_list:
         - label: 'Reference sequence'
           track_id: 'contig'
+          description: 'Shows the contigs underlying the reference assembly.'
+          sources: []
         - label: '%GC'
           track_id: 'gc'
+          description: 'Shows the percentage of Gs and Cs in a region.'
+          sources: []
       types:
         - 'Genomic'
 
@@ -797,6 +1041,8 @@ genome_track_categories:
       track_list:
         - label: 'Sequence variants (all sources)'
           track_id: 'variant'
+          description: 'Sequence variants from all sources.'
+          sources: []
       types:
         - 'Variation'
 
@@ -829,6 +1075,7 @@ genome_track_categories:
       track_list: []
       types:
         - 'Expression'
+
   a73351f7-93e7-11ec-a39d-005056b38ce3:
     - label: 'Genes & transcripts'
       track_category_id: 'genes-transcripts'
@@ -837,18 +1084,34 @@ genome_track_categories:
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-fwd'
+          description: 'Shows all protein coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
         - additional_info: 'Forward strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-fwd'
+          description: 'Shows all non-coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
         - additional_info: 'Reverse strand'
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-rev'
+          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
         - additional_info: 'Reverse strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-rev'
+          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
       types:
         - 'Genomic'
 
@@ -857,8 +1120,12 @@ genome_track_categories:
       track_list:
         - label: 'Reference sequence'
           track_id: 'contig'
+          description: 'Shows the contigs underlying the reference assembly.'
+          sources: []
         - label: '%GC'
           track_id: 'gc'
+          description: 'Shows the percentage of Gs and Cs in a region.'
+          sources: []
       types:
         - 'Genomic'
 
@@ -903,6 +1170,7 @@ genome_track_categories:
       track_list: []
       types:
         - 'Expression'
+
   a733550b-93e7-11ec-a39d-005056b38ce3:
     - label: 'Genes & transcripts'
       track_category_id: 'genes-transcripts'
@@ -911,18 +1179,34 @@ genome_track_categories:
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-fwd'
+          description: 'Shows all protein coding genes on the forward strand of this chromosome. Protein coding model imported from Wormbase.'
+          sources:
+            - url: 'www.wormbase.org'
+              name: 'Wormbase'
         - additional_info: 'Forward strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-fwd'
+          description: 'Shows all non-coding genes on the forward strand of this chromosome. Protein coding model imported from Wormbase.'
+          sources:
+            - url: 'www.wormbase.org'
+              name: 'Wormbase'
         - additional_info: 'Reverse strand'
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-rev'
+          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Protein coding model imported from Wormbase.'
+          sources:
+            - url: 'www.wormbase.org'
+              name: 'Wormbase'
         - additional_info: 'Reverse strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-rev'
+          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Protein coding model imported from Wormbase.'
+          sources:
+            - url: 'www.wormbase.org'
+              name: 'Wormbase'
       types:
         - 'Genomic'
 
@@ -931,8 +1215,12 @@ genome_track_categories:
       track_list:
         - label: 'Reference sequence'
           track_id: 'contig'
+          description: 'Shows the contigs underlying the reference assembly.'
+          sources: []
         - label: '%GC'
           track_id: 'gc'
+          description: 'Shows the percentage of Gs and Cs in a region.'
+          sources: []
       types:
         - 'Genomic'
 
@@ -977,6 +1265,7 @@ genome_track_categories:
       track_list: []
       types:
         - 'Expression'
+
   a73356e1-93e7-11ec-a39d-005056b38ce3:
     - label: 'Genes & transcripts'
       track_category_id: 'genes-transcripts'
@@ -985,18 +1274,34 @@ genome_track_categories:
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-fwd'
+          description: 'Shows all protein coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
         - additional_info: 'Forward strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-fwd'
+          description: 'Shows all non-coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
         - additional_info: 'Reverse strand'
           colour: 'DARK_GREY'
           label: 'Protein coding genes'
           track_id: 'gene-pc-rev'
+          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
         - additional_info: 'Reverse strand'
           colour: 'GREY'
           label: 'Other genes'
           track_id: 'gene-other-rev'
+          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+          sources:
+            - url: 'www.ebi.ac.uk/ena'
+              name: 'ENA'
       types:
         - 'Genomic'
 
@@ -1005,8 +1310,12 @@ genome_track_categories:
       track_list:
         - label: 'Reference sequence'
           track_id: 'contig'
+          description: 'Shows the contigs underlying the reference assembly.'
+          sources: []
         - label: '%GC'
           track_id: 'gc'
+          description: 'Shows the percentage of Gs and Cs in a region.'
+          sources: []
       types:
         - 'Genomic'
 
