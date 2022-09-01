@@ -1,1362 +1,1410 @@
 genome_track_categories:
   homo_sapiens_GCA_000001405_28:
-    - label: 'Genes & transcripts'
-      track_category_id: 'genes-transcripts'
+    - label: Genes & transcripts
+      track_category_id: genes-transcripts
       track_list:
-        - additional_info: 'Forward strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-fwd'
-          description: 'Shows all protein coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+        - additional_info: Forward strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-fwd
+          description: Shows all protein coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
-        - additional_info: 'Forward strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-fwd'
-          description: 'Shows all non-coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+            - url: https://gencodegenes.org
+              name: GENCODE
+        - additional_info: Forward strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-fwd
+          description: Shows all non-coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
-        - additional_info: 'Reverse strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-rev'
-          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+            - url: https://gencodegenes.org
+              name: GENCODE
+        - additional_info: Reverse strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-rev
+          description: Shows all protein coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
-        - additional_info: 'Reverse strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-rev'
-          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+            - url: https://gencodegenes.org
+              name: GENCODE
+        - additional_info: Reverse strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-rev
+          description: Shows all non-coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
+            - url: https://gencodegenes.org
+              name: GENCODE
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Assembly'
-      track_category_id: 'assembly'
+    - label: Assembly
+      track_category_id: assembly
       track_list:
-        - label: 'Reference sequence'
-          track_id: 'contig'
-          description: 'Shows the contigs underlying the reference assembly.'
+        - label: Reference sequence
+          track_id: contig
+          description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: '%GC'
-          track_id: 'gc'
-          description: 'Shows the percentage of Gs and Cs in a region.'
-          sources: []
-      types:
-        - 'Genomic'
-
-    - label: 'Comparative genomics'
-      track_category_id: 'comparative-genomics'
-      track_list: []
-      types:
-        - 'Genomic'
-
-    - label: 'Short variants'
-      track_category_id: 'short-variants'
-      track_list:
-        - label: '1000 Genomes all SNPs & indels'
-          track_id: 'variant'
-          description: 'Shows the Variants genotyped by the 1000 Genomes project (phase 3).'
+        - label: %GC
+          track_id: gc
+          description: Shows the percentage of Gs and Cs in a region.
           sources: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Somatic variants'
-      track_category_id: 'somatic-variants'
+    - label: Comparative genomics
+      track_category_id: comparative-genomics
       track_list: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Structural variants'
-      track_category_id: 'structural-variants'
+    - label: Short variants
+      track_category_id: short-variants
+      track_list:
+        - label: All short variant data
+          track_id: variant
+          description: Short variant data from multiple repositories, including dbSNP and 1000G as well as disease and phenotype associated sources.
+          sources: []
+      types:
+        - Variation
+
+    - label: Somatic variants
+      track_category_id: somatic-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Regulatory features'
-      track_category_id: 'regulatory-features'
+    - label: Structural variants
+      track_category_id: structural-variants
       track_list: []
       types:
-        - 'Expression'
+        - Variation
 
-    - label: 'Gene expression correlations'
-      track_category_id: 'gene-expression'
+    - label: Regulatory features
+      track_category_id: regulatory-features
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Other regulatory regions'
-      track_category_id: 'regulatory-regions'
+    - label: Gene expression correlations
+      track_category_id: gene-expression
       track_list: []
       types:
-        - 'Expression'
+        - Expression
+
+    - label: Other regulatory regions
+      track_category_id: regulatory-regions
+      track_list: []
+      types:
+        - Expression
 
   homo_sapiens_GCA_000001405_14:
-    - label: 'Genes & transcripts'
-      track_category_id: 'genes-transcripts'
+    - label: Genes & transcripts
+      track_category_id: genes-transcripts
       track_list:
-        - additional_info: 'Forward strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-fwd'
-          description: 'Shows all protein coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+        - additional_info: Forward strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-fwd
+          description: Shows all protein coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
-        - additional_info: 'Forward strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-fwd'
-          description: 'Shows all non-coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+            - url: https://gencodegenes.org
+              name: GENCODE
+        - additional_info: Forward strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-fwd
+          description: Shows all non-coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
-        - additional_info: 'Reverse strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-rev'
-          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+            - url: https://gencodegenes.org
+              name: GENCODE
+        - additional_info: Reverse strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-rev
+          description: Shows all protein coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
-        - additional_info: 'Reverse strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-rev'
-          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+            - url: https://gencodegenes.org
+              name: GENCODE
+        - additional_info: Reverse strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-rev
+          description: Shows all non-coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
+            - url: https://gencodegenes.org
+              name: GENCODE
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Assembly'
-      track_category_id: 'assembly'
+    - label: Assembly
+      track_category_id: assembly
       track_list:
-        - label: 'Reference sequence'
-          track_id: 'contig'
-          description: 'Shows the contigs underlying the reference assembly.'
+        - label: Reference sequence
+          track_id: contig
+          description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: '%GC'
-          track_id: 'gc'
-          description: 'Shows the percentage of Gs and Cs in a region.'
-          sources: []
-      types:
-        - 'Genomic'
-
-    - label: 'Comparative genomics'
-      track_category_id: 'comparative-genomics'
-      track_list: []
-      types:
-        - 'Genomic'
-
-    - label: 'Short variants'
-      track_category_id: 'short-variants'
-      track_list:
-        - label: '1000 Genomes all SNPs & indels'
-          track_id: 'variant'
-          description: 'Shows the Variants genotyped by the 1000 Genomes project (phase 3).'
+        - label: %GC
+          track_id: gc
+          description: Shows the percentage of Gs and Cs in a region.
           sources: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Somatic variants'
-      track_category_id: 'somatic-variants'
+    - label: Comparative genomics
+      track_category_id: comparative-genomics
       track_list: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Structural variants'
-      track_category_id: 'structural-variants'
+    - label: Short variants
+      track_category_id: short-variants
+      track_list:
+        - label: All short variant data
+          track_id: variant
+          description: Short variant data from multiple repositories, including dbSNP and 1000G as well as disease and phenotype associated sources.
+          sources: []
+      types:
+        - Variation
+
+    - label: Somatic variants
+      track_category_id: somatic-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Regulatory features'
-      track_category_id: 'regulatory-features'
+    - label: Structural variants
+      track_category_id: structural-variants
       track_list: []
       types:
-        - 'Expression'
+        - Variation
 
-    - label: 'Gene expression correlations'
-      track_category_id: 'gene-expression'
+    - label: Regulatory features
+      track_category_id: regulatory-features
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Other regulatory regions'
-      track_category_id: 'regulatory-regions'
+    - label: Gene expression correlations
+      track_category_id: gene-expression
       track_list: []
       types:
-        - 'Expression'
+        - Expression
+
+    - label: Other regulatory regions
+      track_category_id: regulatory-regions
+      track_list: []
+      types:
+        - Expression
 
   triticum_aestivum_GCA_900519105_1:
-    - label: 'Genes & transcripts'
-      track_category_id: 'genes-transcripts'
+    - label: Genes & transcripts
+      track_category_id: genes-transcripts
       track_list:
-        - additional_info: 'Forward strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-fwd'
-          description: 'Shows all protein coding genes on the forward strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+        - additional_info: Forward strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-fwd
+          description: Shows all protein coding genes on the forward strand. Genes annotated with high confidence by IWGSC.
           sources:
-            - url: 'www.wheatgenome.org'
-              name: 'IWGSC'
-        - additional_info: 'Forward strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-fwd'
-          description: 'Shows all non-coding genes on the forward strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+            - url: https://wheatgenome.org
+              name: IWGSC
+        - additional_info: Forward strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-fwd
+          description: >- 
+            Shows all non-coding genes on the forward strand. This track comprises multiple analyses:
+            genes annotated with high confidence by IWGSC, RNA genes produced by filtering predictions from tRNAscan-SE v1.23, 
+            and alignments of Rfam (release 12.2) covariance models.
           sources:
-            - url: 'www.wheatgenome.org'
-              name: 'IWGSC'
-        - additional_info: 'Reverse strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-rev'
-          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+            - url: https://wheatgenome.org
+              name: IWGSC
+            - url: http://lowelab.ucsc.edu/tRNAscan-SE
+              name: tRNAscan-SE
+            - url: https://rfam.xfam.org
+              name: Rfam
+        - additional_info: Reverse strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-rev
+          description: Shows all protein coding genes on the reverse strand. Genes annotated with high confidence by IWGSC.
           sources:
-            - url: 'www.wheatgenome.org'
-              name: 'IWGSC'
-        - additional_info: 'Reverse strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-rev'
-          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+            - url: https://wheatgenome.org
+              name: IWGSC
+        - additional_info: Reverse strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-rev
+          description: >- 
+            Shows all non-coding genes on the reverse strand. This track comprises multiple analyses:
+            genes annotated with high confidence by IWGSC, RNA genes produced by filtering predictions from tRNAscan-SE v1.23, 
+            and alignments of Rfam (release 12.2) covariance models.
           sources:
-            - url: 'www.wheatgenome.org'
-              name: 'IWGSC'
+            - url: https://wheatgenome.org
+              name: IWGSC
+            - url: http://lowelab.ucsc.edu/tRNAscan-SE
+              name: tRNAscan-SE
+            - url: https://rfam.xfam.org
+              name: Rfam
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Assembly'
-      track_category_id: 'assembly'
+    - label: Assembly
+      track_category_id: assembly
       track_list:
-        - label: 'Reference sequence'
-          track_id: 'contig'
-          description: 'Shows the contigs underlying the reference assembly.'
+        - label: Reference sequence
+          track_id: contig
+          description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: '%GC'
-          track_id: 'gc'
-          description: 'Shows the percentage of Gs and Cs in a region.'
-          sources: []
-      types:
-        - 'Genomic'
-
-    - label: 'Comparative genomics'
-      track_category_id: 'comparative-genomics'
-      track_list: []
-      types:
-        - 'Genomic'
-
-    - label: 'Short variants'
-      track_category_id: 'short-variants'
-      track_list:
-        - label: 'Sequence variants (all sources)'
-          track_id: 'variant'
-          description: 'Sequence variants from all sources.'
+        - label: %GC
+          track_id: gc
+          description: Shows the percentage of Gs and Cs in a region.
           sources: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Somatic variants'
-      track_category_id: 'somatic-variants'
+    - label: Comparative genomics
+      track_category_id: comparative-genomics
       track_list: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Structural variants'
-      track_category_id: 'structural-variants'
+    - label: Short variants
+      track_category_id: short-variants
+      track_list:
+        - label: Sequence variants (all sources)
+          track_id: variant
+          description: Sequence variants from all sources.
+          sources: []
+      types:
+        - Variation
+
+    - label: Somatic variants
+      track_category_id: somatic-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Regulatory features'
-      track_category_id: 'regulatory-features'
+    - label: Structural variants
+      track_category_id: structural-variants
       track_list: []
       types:
-        - 'Expression'
+        - Variation
 
-    - label: 'Gene expression correlations'
-      track_category_id: 'gene-expression'
+    - label: Regulatory features
+      track_category_id: regulatory-features
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Other regulatory regions'
-      track_category_id: 'regulatory-regions'
+    - label: Gene expression correlations
+      track_category_id: gene-expression
       track_list: []
       types:
-        - 'Expression'
+        - Expression
+
+    - label: Other regulatory regions
+      track_category_id: regulatory-regions
+      track_list: []
+      types:
+        - Expression
 
   saccharomyces_cerevisiae_GCA_000146045_2:
-    - label: 'Genes & transcripts'
-      track_category_id: 'genes-transcripts'
+    - label: Genes & transcripts
+      track_category_id: genes-transcripts
       track_list:
-        - additional_info: 'Forward strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-fwd'
-          description: 'Shows all protein coding genes on the forward strand of this chromosome. Annotation imported from SGD.'
+        - additional_info: Forward strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-fwd
+          description: Shows all protein coding genes on the forward strand. Annotation imported from SGD.
           sources:
-            - url: 'www.yeastgenome.org'
-              name: 'SGD'
-        - additional_info: 'Forward strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-fwd'
-          description: 'Shows all non-coding genes on the forward strand of this chromosome. Annotation imported from SGD.'
+            - url: https://yeastgenome.org
+              name: SGD
+        - additional_info: Forward strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-fwd
+          description: Shows all non-coding genes on the forward strand. Annotation imported from SGD.
           sources:
-            - url: 'www.yeastgenome.org'
-              name: 'SGD'
-        - additional_info: 'Reverse strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-rev'
-          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Annotation imported from SGD.'
+            - url: https://yeastgenome.org
+              name: SGD
+        - additional_info: Reverse strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-rev
+          description: Shows all protein coding genes on the reverse strand. Annotation imported from SGD.
           sources:
-            - url: 'www.yeastgenome.org'
-              name: 'SGD'
-        - additional_info: 'Reverse strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-rev'
-          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Annotation imported from SGD.'
+            - url: https://yeastgenome.org
+              name: SGD
+        - additional_info: Reverse strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-rev
+          description: Shows all non-coding genes on the reverse strand. Annotation imported from SGD.
           sources:
-            - url: 'www.yeastgenome.org'
-              name: 'SGD'
+            - url: https://yeastgenome.org
+              name: SGD
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Assembly'
-      track_category_id: 'assembly'
+    - label: Assembly
+      track_category_id: assembly
       track_list:
-        - label: 'Reference sequence'
-          track_id: 'contig'
-          description: 'Shows the contigs underlying the reference assembly.'
+        - label: Reference sequence
+          track_id: contig
+          description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: '%GC'
-          track_id: 'gc'
-          description: 'Shows the percentage of Gs and Cs in a region.'
-          sources: []
-      types:
-        - 'Genomic'
-
-    - label: 'Comparative genomics'
-      track_category_id: 'comparative-genomics'
-      track_list: []
-      types:
-        - 'Genomic'
-
-    - label: 'Short variants'
-      track_category_id: 'short-variants'
-      track_list:
-        - label: 'Sequence variants (all sources)'
-          track_id: 'variant'
-          description: 'Sequence variants from all sources.'
+        - label: %GC
+          track_id: gc
+          description: Shows the percentage of Gs and Cs in a region.
           sources: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Somatic variants'
-      track_category_id: 'somatic-variants'
+    - label: Comparative genomics
+      track_category_id: comparative-genomics
       track_list: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Structural variants'
-      track_category_id: 'structural-variants'
+    - label: Short variants
+      track_category_id: short-variants
+      track_list:
+        - label: Sequence variants (all sources)
+          track_id: variant
+          description: Sequence variants from all sources.
+          sources: []
+      types:
+        - Variation
+
+    - label: Somatic variants
+      track_category_id: somatic-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Regulatory features'
-      track_category_id: 'regulatory-features'
+    - label: Structural variants
+      track_category_id: structural-variants
       track_list: []
       types:
-        - 'Expression'
+        - Variation
 
-    - label: 'Gene expression correlations'
-      track_category_id: 'gene-expression'
+    - label: Regulatory features
+      track_category_id: regulatory-features
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Other regulatory regions'
-      track_category_id: 'regulatory-regions'
+    - label: Gene expression correlations
+      track_category_id: gene-expression
       track_list: []
       types:
-        - 'Expression'
+        - Expression
+
+    - label: Other regulatory regions
+      track_category_id: regulatory-regions
+      track_list: []
+      types:
+        - Expression
 
   escherichia_coli_str_k_12_substr_mg1655_gca_000005845_GCA_000005845_2:
-    - label: 'Genes & transcripts'
-      track_category_id: 'genes-transcripts'
+    - label: Genes & transcripts
+      track_category_id: genes-transcripts
       track_list:
-        - additional_info: 'Forward strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-fwd'
-          description: 'Shows all protein coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+        - additional_info: Forward strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-fwd
+          description: Shows all protein coding genes on the forward strand. Protein genes annotated in ENA.
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
-        - additional_info: 'Forward strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-fwd'
-          description: 'Shows all non-coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
+        - additional_info: Forward strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-fwd
+          description: Shows all non-coding genes on the forward strand. ncRNA genes annotated in ENA.
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
-        - additional_info: 'Reverse strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-rev'
-          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
+        - additional_info: Reverse strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-rev
+          description: Shows all protein coding genes on the reverse strand. Protein genes annotated in ENA.
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
-        - additional_info: 'Reverse strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-rev'
-          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
+        - additional_info: Reverse strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-rev
+          description: Shows all non-coding genes on the reverse strand. ncRNA genes annotated in ENA.
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Assembly'
-      track_category_id: 'assembly'
+    - label: Assembly
+      track_category_id: assembly
       track_list:
-        - label: 'Reference sequence'
-          track_id: 'contig'
-          description: 'Shows the contigs underlying the reference assembly.'
+        - label: Reference sequence
+          track_id: contig
+          description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: '%GC'
-          track_id: 'gc'
-          description: 'Shows the percentage of Gs and Cs in a region.'
+        - label: %GC
+          track_id: gc
+          description: Shows the percentage of Gs and Cs in a region.
           sources: []
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Comparative genomics'
-      track_category_id: 'comparative-genomics'
+    - label: Comparative genomics
+      track_category_id: comparative-genomics
       track_list: []
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Short variants'
-      track_category_id: 'short-variants'
+    - label: Short variants
+      track_category_id: short-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Somatic variants'
-      track_category_id: 'somatic-variants'
+    - label: Somatic variants
+      track_category_id: somatic-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Structural variants'
-      track_category_id: 'structural-variants'
+    - label: Structural variants
+      track_category_id: structural-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Regulatory features'
-      track_category_id: 'regulatory-features'
+    - label: Regulatory features
+      track_category_id: regulatory-features
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Gene expression correlations'
-      track_category_id: 'gene-expression'
+    - label: Gene expression correlations
+      track_category_id: gene-expression
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Other regulatory regions'
-      track_category_id: 'regulatory-regions'
+    - label: Other regulatory regions
+      track_category_id: regulatory-regions
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
   caenorhabditis_elegans_GCA_000002985_3:
-    - label: 'Genes & transcripts'
-      track_category_id: 'genes-transcripts'
+    - label: Genes & transcripts
+      track_category_id: genes-transcripts
       track_list:
-        - additional_info: 'Forward strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-fwd'
-          description: 'Shows all protein coding genes on the forward strand of this chromosome. Protein coding model imported from Wormbase.'
+        - additional_info: Forward strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-fwd
+          description: Shows all protein coding genes on the forward strand. Protein coding model imported from Wormbase.
           sources:
-            - url: 'www.wormbase.org'
-              name: 'Wormbase'
-        - additional_info: 'Forward strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-fwd'
-          description: 'Shows all non-coding genes on the forward strand of this chromosome. Protein coding model imported from Wormbase.'
+            - url: https://wormbase.org
+              name: Wormbase
+        - additional_info: Forward strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-fwd
+          description: Shows all non-coding genes on the forward strand. Non-coding and pseudogenes imported from WormBase.
           sources:
-            - url: 'www.wormbase.org'
-              name: 'Wormbase'
-        - additional_info: 'Reverse strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-rev'
-          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Protein coding model imported from Wormbase.'
+            - url: https://wormbase.org
+              name: Wormbase
+        - additional_info: Reverse strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-rev
+          description: Shows all protein coding genes on the reverse strand. Protein coding model imported from Wormbase.
           sources:
-            - url: 'www.wormbase.org'
-              name: 'Wormbase'
-        - additional_info: 'Reverse strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-rev'
-          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Protein coding model imported from Wormbase.'
+            - url: https://wormbase.org
+              name: Wormbase
+        - additional_info: Reverse strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-rev
+          description: Shows all non-coding genes on the reverse strand. Non-coding and pseudogenes imported from WormBase.
           sources:
-            - url: 'www.wormbase.org'
-              name: 'Wormbase'
+            - url: https://wormbase.org
+              name: Wormbase
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Assembly'
-      track_category_id: 'assembly'
+    - label: Assembly
+      track_category_id: assembly
       track_list:
-        - label: 'Reference sequence'
-          track_id: 'contig'
-          description: 'Shows the contigs underlying the reference assembly.'
+        - label: Reference sequence
+          track_id: contig
+          description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: '%GC'
-          track_id: 'gc'
-          description: 'Shows the percentage of Gs and Cs in a region.'
+        - label: %GC
+          track_id: gc
+          description: Shows the percentage of Gs and Cs in a region.
           sources: []
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Comparative genomics'
-      track_category_id: 'comparative-genomics'
+    - label: Comparative genomics
+      track_category_id: comparative-genomics
       track_list: []
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Short variants'
-      track_category_id: 'short-variants'
+    - label: Short variants
+      track_category_id: short-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Somatic variants'
-      track_category_id: 'somatic-variants'
+    - label: Somatic variants
+      track_category_id: somatic-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Structural variants'
-      track_category_id: 'structural-variants'
+    - label: Structural variants
+      track_category_id: structural-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Regulatory features'
-      track_category_id: 'regulatory-features'
+    - label: Regulatory features
+      track_category_id: regulatory-features
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Gene expression correlations'
-      track_category_id: 'gene-expression'
+    - label: Gene expression correlations
+      track_category_id: gene-expression
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Other regulatory regions'
-      track_category_id: 'regulatory-regions'
+    - label: Other regulatory regions
+      track_category_id: regulatory-regions
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
   plasmodium_falciparum_GCA_000002765_2:
-    - label: 'Genes & transcripts'
-      track_category_id: 'genes-transcripts'
+    - label: Genes & transcripts
+      track_category_id: genes-transcripts
       track_list:
-        - additional_info: 'Forward strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-fwd'
-          description: 'Shows all protein coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+        - additional_info: Forward strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-fwd
+          description: Shows all protein coding genes on the forward strand. Protein genes annotated in ENA.
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
-        - additional_info: 'Forward strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-fwd'
-          description: 'Shows all non-coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
+        - additional_info: Forward strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-fwd
+          description: >-
+            Shows all non-coding genes on the forward strand. This track comprises multiple analyses:
+            ncRNA genes annotated in ENA and ncRNA gene models based on alignment of 
+            Rfam families to genomic sequences (alignments provided by Rfam).
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
-        - additional_info: 'Reverse strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-rev'
-          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
+            - url: https://rfam.xfam.org
+              name: Rfam
+        - additional_info: Reverse strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-rev
+          description: Shows all protein coding genes on the reverse strand. Protein genes annotated in ENA.
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
-        - additional_info: 'Reverse strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-rev'
-          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
+        - additional_info: Reverse strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-rev
+          description: >-
+            Shows all non-coding genes on the reverse strand. This track comprises multiple analyses:
+            ncRNA genes annotated in ENA and ncRNA gene models based on alignment of 
+            Rfam families to genomic sequences (alignments provided by Rfam).
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
+            - url: https://rfam.xfam.org
+              name: Rfam
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Assembly'
-      track_category_id: 'assembly'
+    - label: Assembly
+      track_category_id: assembly
       track_list:
-        - label: 'Reference sequence'
-          track_id: 'contig'
-          description: 'Shows the contigs underlying the reference assembly.'
+        - label: Reference sequence
+          track_id: contig
+          description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: '%GC'
-          track_id: 'gc'
-          description: 'Shows the percentage of Gs and Cs in a region.'
+        - label: %GC
+          track_id: gc
+          description: Shows the percentage of Gs and Cs in a region.
           sources: []
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Comparative genomics'
-      track_category_id: 'comparative-genomics'
+    - label: Comparative genomics
+      track_category_id: comparative-genomics
       track_list: []
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Short variants'
-      track_category_id: 'short-variants'
+    - label: Short variants
+      track_category_id: short-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Somatic variants'
-      track_category_id: 'somatic-variants'
+    - label: Somatic variants
+      track_category_id: somatic-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Structural variants'
-      track_category_id: 'structural-variants'
+    - label: Structural variants
+      track_category_id: structural-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Regulatory features'
-      track_category_id: 'regulatory-features'
+    - label: Regulatory features
+      track_category_id: regulatory-features
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Gene expression correlations'
-      track_category_id: 'gene-expression'
+    - label: Gene expression correlations
+      track_category_id: gene-expression
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Other regulatory regions'
-      track_category_id: 'regulatory-regions'
+    - label: Other regulatory regions
+      track_category_id: regulatory-regions
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
   a7335667-93e7-11ec-a39d-005056b38ce3:
-    - label: 'Genes & transcripts'
-      track_category_id: 'genes-transcripts'
+    - label: Genes & transcripts
+      track_category_id: genes-transcripts
       track_list:
-        - additional_info: 'Forward strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-fwd'
-          description: 'Shows all protein coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+        - additional_info: Forward strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-fwd
+          description: Shows all protein coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
-        - additional_info: 'Forward strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-fwd'
-          description: 'Shows all non-coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+            - url: https://gencodegenes.org
+              name: GENCODE
+        - additional_info: Forward strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-fwd
+          description: Shows all non-coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
-        - additional_info: 'Reverse strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-rev'
-          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+            - url: https://gencodegenes.org
+              name: GENCODE
+        - additional_info: Reverse strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-rev
+          description: Shows all protein coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
-        - additional_info: 'Reverse strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-rev'
-          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+            - url: https://gencodegenes.org
+              name: GENCODE
+        - additional_info: Reverse strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-rev
+          description: Shows all non-coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
+            - url: https://gencodegenes.org
+              name: GENCODE
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Assembly'
-      track_category_id: 'assembly'
+    - label: Assembly
+      track_category_id: assembly
       track_list:
-        - label: 'Reference sequence'
-          track_id: 'contig'
-          description: 'Shows the contigs underlying the reference assembly.'
+        - label: Reference sequence
+          track_id: contig
+          description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: '%GC'
-          track_id: 'gc'
-          description: 'Shows the percentage of Gs and Cs in a region.'
-          sources: []
-      types:
-        - 'Genomic'
-
-    - label: 'Comparative genomics'
-      track_category_id: 'comparative-genomics'
-      track_list: []
-      types:
-        - 'Genomic'
-
-    - label: 'Short variants'
-      track_category_id: 'short-variants'
-      track_list:
-        - label: '1000 Genomes all SNPs & indels'
-          track_id: 'variant'
-          description: 'Shows the Variants genotyped by the 1000 Genomes project (phase 3).'
+        - label: %GC
+          track_id: gc
+          description: Shows the percentage of Gs and Cs in a region.
           sources: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Somatic variants'
-      track_category_id: 'somatic-variants'
+    - label: Comparative genomics
+      track_category_id: comparative-genomics
       track_list: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Structural variants'
-      track_category_id: 'structural-variants'
+    - label: Short variants
+      track_category_id: short-variants
+      track_list:
+        - label: All short variant data
+          track_id: variant
+          description: Short variant data from multiple repositories, including dbSNP and 1000G as well as disease and phenotype associated sources.
+          sources: []
+      types:
+        - Variation
+
+    - label: Somatic variants
+      track_category_id: somatic-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Regulatory features'
-      track_category_id: 'regulatory-features'
+    - label: Structural variants
+      track_category_id: structural-variants
       track_list: []
       types:
-        - 'Expression'
+        - Variation
 
-    - label: 'Gene expression correlations'
-      track_category_id: 'gene-expression'
+    - label: Regulatory features
+      track_category_id: regulatory-features
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Other regulatory regions'
-      track_category_id: 'regulatory-regions'
+    - label: Gene expression correlations
+      track_category_id: gene-expression
       track_list: []
       types:
-        - 'Expression'
+        - Expression
+
+    - label: Other regulatory regions
+      track_category_id: regulatory-regions
+      track_list: []
+      types:
+        - Expression
 
   3704ceb1-948d-11ec-a39d-005056b38ce3:
-    - label: 'Genes & transcripts'
-      track_category_id: 'genes-transcripts'
+    - label: Genes & transcripts
+      track_category_id: genes-transcripts
       track_list:
-        - additional_info: 'Forward strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-fwd'
-          description: 'Shows all protein coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+        - additional_info: Forward strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-fwd
+          description: Shows all protein coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
-        - additional_info: 'Forward strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-fwd'
-          description: 'Shows all non-coding genes on the forward strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+            - url: https://gencodegenes.org
+              name: GENCODE
+        - additional_info: Forward strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-fwd
+          description: Shows all non-coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
-        - additional_info: 'Reverse strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-rev'
-          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+            - url: https://gencodegenes.org
+              name: GENCODE
+        - additional_info: Reverse strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-rev
+          description: Shows all protein coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
-        - additional_info: 'Reverse strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-rev'
-          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Part of the GENCODE Comprehensive gene set.'
+            - url: https://gencodegenes.org
+              name: GENCODE
+        - additional_info: Reverse strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-rev
+          description: Shows all non-coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
           sources:
-            - url: 'www.gencodegenes.org'
-              name: 'GENCODE'
+            - url: https://gencodegenes.org
+              name: GENCODE
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Assembly'
-      track_category_id: 'assembly'
+    - label: Assembly
+      track_category_id: assembly
       track_list:
-        - label: 'Reference sequence'
-          track_id: 'contig'
-          description: 'Shows the contigs underlying the reference assembly.'
+        - label: Reference sequence
+          track_id: contig
+          description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: '%GC'
-          track_id: 'gc'
-          description: 'Shows the percentage of Gs and Cs in a region.'
-          sources: []
-      types:
-        - 'Genomic'
-
-    - label: 'Comparative genomics'
-      track_category_id: 'comparative-genomics'
-      track_list: []
-      types:
-        - 'Genomic'
-
-    - label: 'Short variants'
-      track_category_id: 'short-variants'
-      track_list:
-        - label: '1000 Genomes all SNPs & indels'
-          track_id: 'variant'
-          description: 'Shows the Variants genotyped by the 1000 Genomes project (phase 3).'
+        - label: %GC
+          track_id: gc
+          description: Shows the percentage of Gs and Cs in a region.
           sources: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Somatic variants'
-      track_category_id: 'somatic-variants'
+    - label: Comparative genomics
+      track_category_id: comparative-genomics
       track_list: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Structural variants'
-      track_category_id: 'structural-variants'
+    - label: Short variants
+      track_category_id: short-variants
+      track_list:
+        - label: All short variant data
+          track_id: variant
+          description: Short variant data from multiple repositories, including dbSNP and 1000G as well as disease and phenotype associated sources.
+          sources: []
+      types:
+        - Variation
+
+    - label: Somatic variants
+      track_category_id: somatic-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Regulatory features'
-      track_category_id: 'regulatory-features'
+    - label: Structural variants
+      track_category_id: structural-variants
       track_list: []
       types:
-        - 'Expression'
+        - Variation
 
-    - label: 'Gene expression correlations'
-      track_category_id: 'gene-expression'
+    - label: Regulatory features
+      track_category_id: regulatory-features
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Other regulatory regions'
-      track_category_id: 'regulatory-regions'
+    - label: Gene expression correlations
+      track_category_id: gene-expression
       track_list: []
       types:
-        - 'Expression'
+        - Expression
+
+    - label: Other regulatory regions
+      track_category_id: regulatory-regions
+      track_list: []
+      types:
+        - Expression
 
   a73357ab-93e7-11ec-a39d-005056b38ce3:
-    - label: 'Genes & transcripts'
-      track_category_id: 'genes-transcripts'
+    - label: Genes & transcripts
+      track_category_id: genes-transcripts
       track_list:
-        - additional_info: 'Forward strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-fwd'
-          description: 'Shows all protein coding genes on the forward strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+        - additional_info: Forward strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-fwd
+          description: Shows all protein coding genes on the forward strand. Genes annotated with high confidence by IWGSC.
           sources:
-            - url: 'www.wheatgenome.org'
-              name: 'IWGSC'
-        - additional_info: 'Forward strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-fwd'
-          description: 'Shows all non-coding genes on the forward strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+            - url: https://wheatgenome.org
+              name: IWGSC
+        - additional_info: Forward strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-fwd
+          description: >- 
+            Shows all non-coding genes on the forward strand. This track comprises multiple analyses:
+            genes annotated with high confidence by IWGSC, RNA genes produced by filtering predictions from tRNAscan-SE v1.23, 
+            and alignments of Rfam (release 12.2) covariance models.
           sources:
-            - url: 'www.wheatgenome.org'
-              name: 'IWGSC'
-        - additional_info: 'Reverse strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-rev'
-          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+            - url: https://wheatgenome.org
+              name: IWGSC
+            - url: http://lowelab.ucsc.edu/tRNAscan-SE
+              name: tRNAscan-SE
+            - url: https://rfam.xfam.org
+              name: Rfam
+        - additional_info: Reverse strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-rev
+          description: Shows all protein coding genes on the reverse strand. Genes annotated with high confidence by IWGSC.
           sources:
-            - url: 'www.wheatgenome.org'
-              name: 'IWGSC'
-        - additional_info: 'Reverse strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-rev'
-          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Genes annotated with high confidence by IWGSC.'
+            - url: https://wheatgenome.org
+              name: IWGSC
+        - additional_info: Reverse strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-rev
+          description: >- 
+            Shows all non-coding genes on the reverse strand. This track comprises multiple analyses:
+            genes annotated with high confidence by IWGSC, RNA genes produced by filtering predictions from tRNAscan-SE v1.23, 
+            and alignments of Rfam (release 12.2) covariance models.
           sources:
-            - url: 'www.wheatgenome.org'
-              name: 'IWGSC'
+            - url: https://wheatgenome.org
+              name: IWGSC
+            - url: http://lowelab.ucsc.edu/tRNAscan-SE
+              name: tRNAscan-SE
+            - url: https://rfam.xfam.org
+              name: Rfam
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Assembly'
-      track_category_id: 'assembly'
+    - label: Assembly
+      track_category_id: assembly
       track_list:
-        - label: 'Reference sequence'
-          track_id: 'contig'
-          description: 'Shows the contigs underlying the reference assembly.'
+        - label: Reference sequence
+          track_id: contig
+          description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: '%GC'
-          track_id: 'gc'
-          description: 'Shows the percentage of Gs and Cs in a region.'
-          sources: []
-      types:
-        - 'Genomic'
-
-    - label: 'Comparative genomics'
-      track_category_id: 'comparative-genomics'
-      track_list: []
-      types:
-        - 'Genomic'
-
-    - label: 'Short variants'
-      track_category_id: 'short-variants'
-      track_list:
-        - label: 'Sequence variants (all sources)'
-          track_id: 'variant'
-          description: 'Sequence variants from all sources.'
+        - label: %GC
+          track_id: gc
+          description: Shows the percentage of Gs and Cs in a region.
           sources: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Somatic variants'
-      track_category_id: 'somatic-variants'
+    - label: Comparative genomics
+      track_category_id: comparative-genomics
       track_list: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Structural variants'
-      track_category_id: 'structural-variants'
+    - label: Short variants
+      track_category_id: short-variants
+      track_list:
+        - label: Sequence variants (all sources)
+          track_id: variant
+          description: Sequence variants from all sources.
+          sources: []
+      types:
+        - Variation
+
+    - label: Somatic variants
+      track_category_id: somatic-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Regulatory features'
-      track_category_id: 'regulatory-features'
+    - label: Structural variants
+      track_category_id: structural-variants
       track_list: []
       types:
-        - 'Expression'
+        - Variation
 
-    - label: 'Gene expression correlations'
-      track_category_id: 'gene-expression'
+    - label: Regulatory features
+      track_category_id: regulatory-features
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Other regulatory regions'
-      track_category_id: 'regulatory-regions'
+    - label: Gene expression correlations
+      track_category_id: gene-expression
       track_list: []
       types:
-        - 'Expression'
+        - Expression
+
+    - label: Other regulatory regions
+      track_category_id: regulatory-regions
+      track_list: []
+      types:
+        - Expression
 
   a733574a-93e7-11ec-a39d-005056b38ce3:
-    - label: 'Genes & transcripts'
-      track_category_id: 'genes-transcripts'
+    - label: Genes & transcripts
+      track_category_id: genes-transcripts
       track_list:
-        - additional_info: 'Forward strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-fwd'
-          description: 'Shows all protein coding genes on the forward strand of this chromosome. Annotation imported from SGD.'
+        - additional_info: Forward strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-fwd
+          description: Shows all protein coding genes on the forward strand. Annotation imported from SGD.
           sources:
-            - url: 'www.yeastgenome.org'
-              name: 'SGD'
-        - additional_info: 'Forward strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-fwd'
-          description: 'Shows all non-coding genes on the forward strand of this chromosome. Annotation imported from SGD.'
+            - url: https://yeastgenome.org
+              name: SGD
+        - additional_info: Forward strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-fwd
+          description: Shows all non-coding genes on the forward strand. Annotation imported from SGD.
           sources:
-            - url: 'www.yeastgenome.org'
-              name: 'SGD'
-        - additional_info: 'Reverse strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-rev'
-          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Annotation imported from SGD.'
+            - url: https://yeastgenome.org
+              name: SGD
+        - additional_info: Reverse strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-rev
+          description: Shows all protein coding genes on the reverse strand. Annotation imported from SGD.
           sources:
-            - url: 'www.yeastgenome.org'
-              name: 'SGD'
-        - additional_info: 'Reverse strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-rev'
-          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Annotation imported from SGD.'
+            - url: https://yeastgenome.org
+              name: SGD
+        - additional_info: Reverse strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-rev
+          description: Shows all non-coding genes on the reverse strand. Annotation imported from SGD.
           sources:
-            - url: 'www.yeastgenome.org'
-              name: 'SGD'
+            - url: https://yeastgenome.org
+              name: SGD
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Assembly'
-      track_category_id: 'assembly'
+    - label: Assembly
+      track_category_id: assembly
       track_list:
-        - label: 'Reference sequence'
-          track_id: 'contig'
-          description: 'Shows the contigs underlying the reference assembly.'
+        - label: Reference sequence
+          track_id: contig
+          description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: '%GC'
-          track_id: 'gc'
-          description: 'Shows the percentage of Gs and Cs in a region.'
-          sources: []
-      types:
-        - 'Genomic'
-
-    - label: 'Comparative genomics'
-      track_category_id: 'comparative-genomics'
-      track_list: []
-      types:
-        - 'Genomic'
-
-    - label: 'Short variants'
-      track_category_id: 'short-variants'
-      track_list:
-        - label: 'Sequence variants (all sources)'
-          track_id: 'variant'
-          description: 'Sequence variants from all sources.'
+        - label: %GC
+          track_id: gc
+          description: Shows the percentage of Gs and Cs in a region.
           sources: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Somatic variants'
-      track_category_id: 'somatic-variants'
+    - label: Comparative genomics
+      track_category_id: comparative-genomics
       track_list: []
       types:
-        - 'Variation'
+        - Genomic
 
-    - label: 'Structural variants'
-      track_category_id: 'structural-variants'
+    - label: Short variants
+      track_category_id: short-variants
+      track_list:
+        - label: Sequence variants (all sources)
+          track_id: variant
+          description: Sequence variants from all sources.
+          sources: []
+      types:
+        - Variation
+
+    - label: Somatic variants
+      track_category_id: somatic-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Regulatory features'
-      track_category_id: 'regulatory-features'
+    - label: Structural variants
+      track_category_id: structural-variants
       track_list: []
       types:
-        - 'Expression'
+        - Variation
 
-    - label: 'Gene expression correlations'
-      track_category_id: 'gene-expression'
+    - label: Regulatory features
+      track_category_id: regulatory-features
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Other regulatory regions'
-      track_category_id: 'regulatory-regions'
+    - label: Gene expression correlations
+      track_category_id: gene-expression
       track_list: []
       types:
-        - 'Expression'
+        - Expression
+
+    - label: Other regulatory regions
+      track_category_id: regulatory-regions
+      track_list: []
+      types:
+        - Expression
 
   a73351f7-93e7-11ec-a39d-005056b38ce3:
-    - label: 'Genes & transcripts'
-      track_category_id: 'genes-transcripts'
+    - label: Genes & transcripts
+      track_category_id: genes-transcripts
       track_list:
-        - additional_info: 'Forward strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-fwd'
-          description: 'Shows all protein coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+        - additional_info: Forward strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-fwd
+          description: Shows all protein coding genes on the forward strand. Protein genes annotated in ENA.
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
-        - additional_info: 'Forward strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-fwd'
-          description: 'Shows all non-coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
+        - additional_info: Forward strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-fwd
+          description: Shows all non-coding genes on the forward strand. ncRNA genes annotated in ENA.
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
-        - additional_info: 'Reverse strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-rev'
-          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
+        - additional_info: Reverse strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-rev
+          description: Shows all protein coding genes on the reverse strand. Protein genes annotated in ENA.
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
-        - additional_info: 'Reverse strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-rev'
-          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
+        - additional_info: Reverse strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-rev
+          description: Shows all non-coding genes on the reverse strand. ncRNA genes annotated in ENA.
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Assembly'
-      track_category_id: 'assembly'
+    - label: Assembly
+      track_category_id: assembly
       track_list:
-        - label: 'Reference sequence'
-          track_id: 'contig'
-          description: 'Shows the contigs underlying the reference assembly.'
+        - label: Reference sequence
+          track_id: contig
+          description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: '%GC'
-          track_id: 'gc'
-          description: 'Shows the percentage of Gs and Cs in a region.'
+        - label: %GC
+          track_id: gc
+          description: Shows the percentage of Gs and Cs in a region.
           sources: []
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Comparative genomics'
-      track_category_id: 'comparative-genomics'
+    - label: Comparative genomics
+      track_category_id: comparative-genomics
       track_list: []
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Short variants'
-      track_category_id: 'short-variants'
+    - label: Short variants
+      track_category_id: short-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Somatic variants'
-      track_category_id: 'somatic-variants'
+    - label: Somatic variants
+      track_category_id: somatic-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Structural variants'
-      track_category_id: 'structural-variants'
+    - label: Structural variants
+      track_category_id: structural-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Regulatory features'
-      track_category_id: 'regulatory-features'
+    - label: Regulatory features
+      track_category_id: regulatory-features
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Gene expression correlations'
-      track_category_id: 'gene-expression'
+    - label: Gene expression correlations
+      track_category_id: gene-expression
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Other regulatory regions'
-      track_category_id: 'regulatory-regions'
+    - label: Other regulatory regions
+      track_category_id: regulatory-regions
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
   a733550b-93e7-11ec-a39d-005056b38ce3:
-    - label: 'Genes & transcripts'
-      track_category_id: 'genes-transcripts'
+    - label: Genes & transcripts
+      track_category_id: genes-transcripts
       track_list:
-        - additional_info: 'Forward strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-fwd'
-          description: 'Shows all protein coding genes on the forward strand of this chromosome. Protein coding model imported from Wormbase.'
+        - additional_info: Forward strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-fwd
+          description: Shows all protein coding genes on the forward strand. Protein coding model imported from Wormbase.
           sources:
-            - url: 'www.wormbase.org'
-              name: 'Wormbase'
-        - additional_info: 'Forward strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-fwd'
-          description: 'Shows all non-coding genes on the forward strand of this chromosome. Protein coding model imported from Wormbase.'
+            - url: https://wormbase.org
+              name: Wormbase
+        - additional_info: Forward strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-fwd
+          description: Shows all non-coding genes on the forward strand. Non-coding and pseudogenes imported from WormBase.
           sources:
-            - url: 'www.wormbase.org'
-              name: 'Wormbase'
-        - additional_info: 'Reverse strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-rev'
-          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Protein coding model imported from Wormbase.'
+            - url: https://wormbase.org
+              name: Wormbase
+        - additional_info: Reverse strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-rev
+          description: Shows all protein coding genes on the reverse strand. Protein coding model imported from Wormbase.
           sources:
-            - url: 'www.wormbase.org'
-              name: 'Wormbase'
-        - additional_info: 'Reverse strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-rev'
-          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Protein coding model imported from Wormbase.'
+            - url: https://wormbase.org
+              name: Wormbase
+        - additional_info: Reverse strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-rev
+          description: Shows all non-coding genes on the reverse strand. Non-coding and pseudogenes imported from WormBase.
           sources:
-            - url: 'www.wormbase.org'
-              name: 'Wormbase'
+            - url: https://wormbase.org
+              name: Wormbase
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Assembly'
-      track_category_id: 'assembly'
+    - label: Assembly
+      track_category_id: assembly
       track_list:
-        - label: 'Reference sequence'
-          track_id: 'contig'
-          description: 'Shows the contigs underlying the reference assembly.'
+        - label: Reference sequence
+          track_id: contig
+          description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: '%GC'
-          track_id: 'gc'
-          description: 'Shows the percentage of Gs and Cs in a region.'
+        - label: %GC
+          track_id: gc
+          description: Shows the percentage of Gs and Cs in a region.
           sources: []
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Comparative genomics'
-      track_category_id: 'comparative-genomics'
+    - label: Comparative genomics
+      track_category_id: comparative-genomics
       track_list: []
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Short variants'
-      track_category_id: 'short-variants'
+    - label: Short variants
+      track_category_id: short-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Somatic variants'
-      track_category_id: 'somatic-variants'
+    - label: Somatic variants
+      track_category_id: somatic-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Structural variants'
-      track_category_id: 'structural-variants'
+    - label: Structural variants
+      track_category_id: structural-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Regulatory features'
-      track_category_id: 'regulatory-features'
+    - label: Regulatory features
+      track_category_id: regulatory-features
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Gene expression correlations'
-      track_category_id: 'gene-expression'
+    - label: Gene expression correlations
+      track_category_id: gene-expression
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Other regulatory regions'
-      track_category_id: 'regulatory-regions'
+    - label: Other regulatory regions
+      track_category_id: regulatory-regions
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
   a73356e1-93e7-11ec-a39d-005056b38ce3:
-    - label: 'Genes & transcripts'
-      track_category_id: 'genes-transcripts'
+    - label: Genes & transcripts
+      track_category_id: genes-transcripts
       track_list:
-        - additional_info: 'Forward strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-fwd'
-          description: 'Shows all protein coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+        - additional_info: Forward strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-fwd
+          description: Shows all protein coding genes on the forward strand. Protein genes annotated in ENA.
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
-        - additional_info: 'Forward strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-fwd'
-          description: 'Shows all non-coding genes on the forward strand of this chromosome. Protein genes annotated in ENA.'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
+        - additional_info: Forward strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-fwd
+          description: >-
+            Shows all non-coding genes on the forward strand. This track comprises multiple analyses:
+            ncRNA genes annotated in ENA and ncRNA gene models based on alignment of 
+            Rfam families to genomic sequences (alignments provided by Rfam).
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
-        - additional_info: 'Reverse strand'
-          colour: 'DARK_GREY'
-          label: 'Protein coding genes'
-          track_id: 'gene-pc-rev'
-          description: 'Shows all protein coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
+            - url: https://rfam.xfam.org
+              name: Rfam
+        - additional_info: Reverse strand
+          colour: DARK_GREY
+          label: Protein coding genes
+          track_id: gene-pc-rev
+          description: Shows all protein coding genes on the reverse strand. Protein genes annotated in ENA.
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
-        - additional_info: 'Reverse strand'
-          colour: 'GREY'
-          label: 'Other genes'
-          track_id: 'gene-other-rev'
-          description: 'Shows all non-coding genes on the reverse strand of this chromosome. Protein genes annotated in ENA.'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
+        - additional_info: Reverse strand
+          colour: GREY
+          label: Other genes
+          track_id: gene-other-rev
+          description: >-
+            Shows all non-coding genes on the reverse strand. This track comprises multiple analyses:
+            ncRNA genes annotated in ENA and ncRNA gene models based on alignment of 
+            Rfam families to genomic sequences (alignments provided by Rfam).
           sources:
-            - url: 'www.ebi.ac.uk/ena'
-              name: 'ENA'
+            - url: https://ebi.ac.uk/ena
+              name: ENA
+            - url: https://rfam.xfam.org
+              name: Rfam
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Assembly'
-      track_category_id: 'assembly'
+    - label: Assembly
+      track_category_id: assembly
       track_list:
-        - label: 'Reference sequence'
-          track_id: 'contig'
-          description: 'Shows the contigs underlying the reference assembly.'
+        - label: Reference sequence
+          track_id: contig
+          description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: '%GC'
-          track_id: 'gc'
-          description: 'Shows the percentage of Gs and Cs in a region.'
+        - label: %GC
+          track_id: gc
+          description: Shows the percentage of Gs and Cs in a region.
           sources: []
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Comparative genomics'
-      track_category_id: 'comparative-genomics'
+    - label: Comparative genomics
+      track_category_id: comparative-genomics
       track_list: []
       types:
-        - 'Genomic'
+        - Genomic
 
-    - label: 'Short variants'
-      track_category_id: 'short-variants'
+    - label: Short variants
+      track_category_id: short-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Somatic variants'
-      track_category_id: 'somatic-variants'
+    - label: Somatic variants
+      track_category_id: somatic-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Structural variants'
-      track_category_id: 'structural-variants'
+    - label: Structural variants
+      track_category_id: structural-variants
       track_list: []
       types:
-        - 'Variation'
+        - Variation
 
-    - label: 'Regulatory features'
-      track_category_id: 'regulatory-features'
+    - label: Regulatory features
+      track_category_id: regulatory-features
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Gene expression correlations'
-      track_category_id: 'gene-expression'
+    - label: Gene expression correlations
+      track_category_id: gene-expression
       track_list: []
       types:
-        - 'Expression'
+        - Expression
 
-    - label: 'Other regulatory regions'
-      track_category_id: 'regulatory-regions'
+    - label: Other regulatory regions
+      track_category_id: regulatory-regions
       track_list: []
       types:
-        - 'Expression'
+        - Expression
