@@ -45,7 +45,7 @@ genome_track_categories:
           track_id: contig
           description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: %GC
+        - label: '%GC'
           track_id: gc
           description: Shows the percentage of Gs and Cs in a region.
           sources: []
@@ -144,7 +144,7 @@ genome_track_categories:
           track_id: contig
           description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: %GC
+        - label: '%GC'
           track_id: gc
           description: Shows the percentage of Gs and Cs in a region.
           sources: []
@@ -257,7 +257,7 @@ genome_track_categories:
           track_id: contig
           description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: %GC
+        - label: '%GC'
           track_id: gc
           description: Shows the percentage of Gs and Cs in a region.
           sources: []
@@ -356,7 +356,7 @@ genome_track_categories:
           track_id: contig
           description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: %GC
+        - label: '%GC'
           track_id: gc
           description: Shows the percentage of Gs and Cs in a region.
           sources: []
@@ -455,7 +455,7 @@ genome_track_categories:
           track_id: contig
           description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: %GC
+        - label: '%GC'
           track_id: gc
           description: Shows the percentage of Gs and Cs in a region.
           sources: []
@@ -550,7 +550,7 @@ genome_track_categories:
           track_id: contig
           description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: %GC
+        - label: '%GC'
           track_id: gc
           description: Shows the percentage of Gs and Cs in a region.
           sources: []
@@ -655,7 +655,7 @@ genome_track_categories:
           track_id: contig
           description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: %GC
+        - label: '%GC'
           track_id: gc
           description: Shows the percentage of Gs and Cs in a region.
           sources: []
@@ -750,7 +750,7 @@ genome_track_categories:
           track_id: contig
           description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: %GC
+        - label: '%GC'
           track_id: gc
           description: Shows the percentage of Gs and Cs in a region.
           sources: []
@@ -849,7 +849,7 @@ genome_track_categories:
           track_id: contig
           description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: %GC
+        - label: '%GC'
           track_id: gc
           description: Shows the percentage of Gs and Cs in a region.
           sources: []
@@ -962,7 +962,7 @@ genome_track_categories:
           track_id: contig
           description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: %GC
+        - label: '%GC'
           track_id: gc
           description: Shows the percentage of Gs and Cs in a region.
           sources: []
@@ -1061,7 +1061,7 @@ genome_track_categories:
           track_id: contig
           description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: %GC
+        - label: '%GC'
           track_id: gc
           description: Shows the percentage of Gs and Cs in a region.
           sources: []
@@ -1160,7 +1160,7 @@ genome_track_categories:
           track_id: contig
           description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: %GC
+        - label: '%GC'
           track_id: gc
           description: Shows the percentage of Gs and Cs in a region.
           sources: []
@@ -1255,7 +1255,7 @@ genome_track_categories:
           track_id: contig
           description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: %GC
+        - label: '%GC'
           track_id: gc
           description: Shows the percentage of Gs and Cs in a region.
           sources: []
@@ -1360,7 +1360,7 @@ genome_track_categories:
           track_id: contig
           description: Shows the contigs underlying the reference assembly.
           sources: []
-        - label: %GC
+        - label: '%GC'
           track_id: gc
           description: Shows the percentage of Gs and Cs in a region.
           sources: []

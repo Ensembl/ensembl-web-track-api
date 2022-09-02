@@ -9,7 +9,7 @@ DRF Serializers corresponding to tracks app datamodels
 class TrackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Track
-        fields = ["colour", "label", "track_id", "additional_info"]
+        fields = ["colour", "label", "track_id", "additional_info", "description", "sources"]
 
 
 class CategorySerializer(serializers.ModelSerializer):

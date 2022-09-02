@@ -11,7 +11,7 @@ if __name__ == "__main__":
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ensembl_track_api.settings')
     django.setup()
 
-from tracks.models import Genome, Category, CategoryType, Track
+from tracks.models import Genome, Category, CategoryType, Track, Source
 
 """
 Script for importing track categories data from a yaml file.
@@ -63,7 +63,7 @@ with open(yaml_file) as f:
                 category_obj = Category.objects.create(
                     label=category["label"],
                     track_category_id=category["track_category_id"],
-                    genome=genome_obj,
+                    genome=genome_obj
                 )
                 for type in category["types"]:
                     # reuse stored category types
@@ -76,13 +76,21 @@ with open(yaml_file) as f:
                     track_obj = Track.objects.create(
                         label=track["label"],
                         track_id=track["track_id"],
-                        category=category_obj,
+                        category=category_obj
                     )
                     # fill optional fields
-                    for field in ["colour", "additional_info"]:
+                    for field in ["colour", "additional_info", "description"]:
                         if field in track:
                             setattr(track_obj, field, track[field])
                     track_obj.save()
+                    # add/reuse source objects
+                    for source in track["sources"]:
+                        source_obj = Source.objects.get_or_create(
+                            name=source["name"],
+                            url=source["url"]
+                        )
+                        track_obj.sources.add(source_obj) # link source to track datafield
+                        
     except KeyError as e:
         print("Missing data field:", e)
 

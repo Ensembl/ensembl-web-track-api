@@ -40,6 +40,14 @@ class Track(models.Model):
     label = models.CharField(max_length=100)
     track_id = models.CharField(max_length=100)
     additional_info = models.TextField(blank=True, default="")
+    description = models.CharField(blank=True, default="")
 
     class Meta:
         ordering = ['id']
+
+class Source(models.Model):
+    track = models.ManyToManyField( #reuse source objects in tracks
+        Track, related_name="sources"
+    )
+    name = models.CharField(max_length=100)
+    url = models.CharField(max_length=100)
