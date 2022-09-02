@@ -1,19 +1,26 @@
-from .models import Genome, Category, CategoryType, Track
+from .models import Genome, Category, Track, Source
 from rest_framework import serializers
 
 """
 DRF Serializers corresponding to tracks app datamodels
 """
 
+class SourceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Source
+        fields = ["name", "url"]
+
 
 class TrackSerializer(serializers.ModelSerializer):
+    sources = SourceSerializer(many=True, read_only=True)
+
     class Meta:
         model = Track
-        fields = ["colour", "label", "track_id", "additional_info", "description", "sources"]
+        fields = ["label", "track_id", "colour", "additional_info", "description", "sources"]
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    types = serializers.StringRelatedField(many=True, read_only=True)
+    types = serializers.StringRelatedField(many=True)
     track_list = TrackSerializer(many=True, read_only=True)
 
     class Meta:
