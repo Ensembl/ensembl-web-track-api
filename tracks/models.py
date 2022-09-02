@@ -40,7 +40,7 @@ class Track(models.Model):
     label = models.CharField(max_length=100)
     track_id = models.CharField(max_length=100)
     additional_info = models.TextField(blank=True, default="")
-    description = models.CharField(blank=True, default="")
+    description = models.TextField(blank=True, default="")
 
     class Meta:
         ordering = ['id']

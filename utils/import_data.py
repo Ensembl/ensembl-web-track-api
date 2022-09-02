@@ -85,7 +85,7 @@ with open(yaml_file) as f:
                     track_obj.save()
                     # add/reuse source objects
                     for source in track["sources"]:
-                        source_obj = Source.objects.get_or_create(
+                        source_obj, created = Source.objects.get_or_create(
                             name=source["name"],
                             url=source["url"]
                         )

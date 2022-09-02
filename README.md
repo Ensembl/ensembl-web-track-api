@@ -49,4 +49,6 @@ For each of the 8 environments, 5 manifest files are applied to deploy the app:
 - Track data is served from an external postgres database in both datacenters (defined in `db_service.yaml`).
 Since the database user for k8s cluster is read-only, the database build and data import commands are run from a local computer with a read/write database user (specified in `settings.py`), followed by granting data access for the r/o user (`utils/grant_access.sh`).
 - Review apps from `update` branch use local database in k8s. Run `python utils/import_data.py` in the review app pod to update the data (data source: `data/track_categories.yaml`)
-- Use `./manage.py sqlflush` and `./manage.py dbshell` to address any database-related Django errors.
+- Update relevant environment variables (see `settings.py`) before running data update scripts (e.g from a file: `export $(cat .env | xargs)`)
+- Use `./manage.py sqlflush` and `./manage.py dbshell` to debug any database-related Django errors.
+  - Flush database: run the database command from `sqlflush` (with system tables removed) in `dbshell` terminal
