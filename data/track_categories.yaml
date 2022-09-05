@@ -7,7 +7,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          description: Shows all protein coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all protein coding genes on the forward strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -15,7 +17,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          description: Shows all non-coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all non-coding genes on the forward strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -23,7 +27,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          description: Shows all protein coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all protein coding genes on the reverse strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -31,7 +37,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          description: Shows all non-coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all non-coding genes on the reverse strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -43,11 +51,13 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          description: Shows the contigs underlying the reference assembly.
+          description: |-
+            Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
-          description: Shows the percentage of Gs and Cs in a region.
+          description: |-
+            Shows the percentage of Gs and Cs in a region
           sources: []
       types:
         - Genomic
@@ -63,8 +73,13 @@ genome_track_categories:
       track_list:
         - label: All short variant data
           track_id: variant
-          description: Short variant data from multiple repositories, including dbSNP and 1000G as well as disease and phenotype associated sources.
-          sources: []
+          description: |-
+            Short variant data from multiple repositories, including dbSNP and 1000G as well as disease and phenotype associated sources
+          sources:
+            - url: https://www.ncbi.nlm.nih.gov/snp/
+              name: dbSNP
+            - url: https://www.internationalgenome.org
+              name: 1000 Genomes Project
       types:
         - Variation
 
@@ -106,7 +121,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          description: Shows all protein coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all protein coding genes on the forward strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -114,7 +131,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          description: Shows all non-coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all non-coding genes on the forward strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -122,7 +141,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          description: Shows all protein coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all protein coding genes on the reverse strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -130,7 +151,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          description: Shows all non-coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all non-coding genes on the reverse strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -142,11 +165,13 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          description: Shows the contigs underlying the reference assembly.
+          description: |-
+            Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
-          description: Shows the percentage of Gs and Cs in a region.
+          description: |-
+            Shows the percentage of Gs and Cs in a region
           sources: []
       types:
         - Genomic
@@ -162,8 +187,13 @@ genome_track_categories:
       track_list:
         - label: All short variant data
           track_id: variant
-          description: Short variant data from multiple repositories, including dbSNP and 1000G as well as disease and phenotype associated sources.
-          sources: []
+          description: |-
+            Short variant data from multiple repositories, including dbSNP and 1000G as well as disease and phenotype associated sources
+          sources:
+            - url: https://www.ncbi.nlm.nih.gov/snp/
+              name: dbSNP
+            - url: https://www.internationalgenome.org
+              name: 1000 Genomes Project
       types:
         - Variation
 
@@ -205,7 +235,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          description: Shows all protein coding genes on the forward strand. Genes annotated with high confidence by IWGSC.
+          description: |-
+            Shows all protein coding genes on the forward strand.
+            Genes annotated with high confidence by IWGSC
           sources:
             - url: https://wheatgenome.org
               name: IWGSC
@@ -213,10 +245,10 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          description: >- 
-            Shows all non-coding genes on the forward strand. This track comprises multiple analyses:
-            genes annotated with high confidence by IWGSC, RNA genes produced by filtering predictions from tRNAscan-SE v1.23, 
-            and alignments of Rfam (release 12.2) covariance models.
+          description: |-
+            Shows all non-coding genes on the forward strand.
+            This track comprises multiple analyses:
+            Genes annotated with high confidence by IWGSC, RNA genes produced by filtering predictions from tRNAscan-SE v1.23, and alignments of Rfam (release 12.2) covariance models
           sources:
             - url: https://wheatgenome.org
               name: IWGSC
@@ -228,7 +260,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          description: Shows all protein coding genes on the reverse strand. Genes annotated with high confidence by IWGSC.
+          description: |-
+            Shows all protein coding genes on the reverse strand.
+            Genes annotated with high confidence by IWGSC
           sources:
             - url: https://wheatgenome.org
               name: IWGSC
@@ -236,10 +270,10 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          description: >- 
-            Shows all non-coding genes on the reverse strand. This track comprises multiple analyses:
-            genes annotated with high confidence by IWGSC, RNA genes produced by filtering predictions from tRNAscan-SE v1.23, 
-            and alignments of Rfam (release 12.2) covariance models.
+          description: |-
+            Shows all non-coding genes on the reverse strand.
+            This track comprises multiple analyses:
+            Genes annotated with high confidence by IWGSC, RNA genes produced by filtering predictions from tRNAscan-SE v1.23, and alignments of Rfam (release 12.2) covariance models
           sources:
             - url: https://wheatgenome.org
               name: IWGSC
@@ -255,11 +289,13 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          description: Shows the contigs underlying the reference assembly.
+          description: |-
+            Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
-          description: Shows the percentage of Gs and Cs in a region.
+          description: |-
+            Shows the percentage of Gs and Cs in a region
           sources: []
       types:
         - Genomic
@@ -273,10 +309,15 @@ genome_track_categories:
     - label: Short variants
       track_category_id: short-variants
       track_list:
-        - label: Sequence variants (all sources)
+        - label: All short variant data
           track_id: variant
-          description: Sequence variants from all sources.
-          sources: []
+          description: |-
+            Short variant data from multiple repositories, including CerealsDB and EMS mutation data from the wheat TILLING population
+          sources:
+            - url: https://www.cerealsdb.uk.net
+              name: CerealsDB
+            - url: https://dubcovskylab.ucdavis.edu/wheat-tilling
+              name: Wheat TILLING Project
       types:
         - Variation
 
@@ -318,7 +359,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          description: Shows all protein coding genes on the forward strand. Annotation imported from SGD.
+          description: |-
+            Shows all protein coding genes on the forward strand.
+            Annotation imported from SGD
           sources:
             - url: https://yeastgenome.org
               name: SGD
@@ -326,7 +369,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          description: Shows all non-coding genes on the forward strand. Annotation imported from SGD.
+          description: |-
+            Shows all non-coding genes on the forward strand.
+            Annotation imported from SGD
           sources:
             - url: https://yeastgenome.org
               name: SGD
@@ -334,7 +379,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          description: Shows all protein coding genes on the reverse strand. Annotation imported from SGD.
+          description: |-
+            Shows all protein coding genes on the reverse strand.
+            Annotation imported from SGD
           sources:
             - url: https://yeastgenome.org
               name: SGD
@@ -342,7 +389,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          description: Shows all non-coding genes on the reverse strand. Annotation imported from SGD.
+          description: |-
+            Shows all non-coding genes on the reverse strand.
+            Annotation imported from SGD
           sources:
             - url: https://yeastgenome.org
               name: SGD
@@ -354,11 +403,13 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          description: Shows the contigs underlying the reference assembly.
+          description: |-
+            Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
-          description: Shows the percentage of Gs and Cs in a region.
+          description: |-
+            Shows the percentage of Gs and Cs in a region
           sources: []
       types:
         - Genomic
@@ -372,9 +423,10 @@ genome_track_categories:
     - label: Short variants
       track_category_id: short-variants
       track_list:
-        - label: Sequence variants (all sources)
+        - label: All short variant data
           track_id: variant
-          description: Sequence variants from all sources.
+          description: |-
+            Sequence variants from all sources
           sources: []
       types:
         - Variation
@@ -417,7 +469,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          description: Shows all protein coding genes on the forward strand. Protein genes annotated in ENA.
+          description: |-
+            Shows all protein coding genes on the forward strand.
+            Protein genes annotated in ENA
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -425,7 +479,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          description: Shows all non-coding genes on the forward strand. ncRNA genes annotated in ENA.
+          description: |-
+            Shows all non-coding genes on the forward strand.
+            ncRNA genes annotated in ENA
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -433,7 +489,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          description: Shows all protein coding genes on the reverse strand. Protein genes annotated in ENA.
+          description: |-
+            Shows all protein coding genes on the reverse strand.
+            Protein genes annotated in ENA
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -441,7 +499,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          description: Shows all non-coding genes on the reverse strand. ncRNA genes annotated in ENA.
+          description: |-
+            Shows all non-coding genes on the reverse strand.
+            ncRNA genes annotated in ENA
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -453,11 +513,13 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          description: Shows the contigs underlying the reference assembly.
+          description: |-
+            Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
-          description: Shows the percentage of Gs and Cs in a region.
+          description: |-
+            Shows the percentage of Gs and Cs in a region
           sources: []
       types:
         - Genomic
@@ -512,7 +574,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          description: Shows all protein coding genes on the forward strand. Protein coding model imported from Wormbase.
+          description: |-
+            Shows all protein coding genes on the forward strand.
+            Protein coding model imported from Wormbase
           sources:
             - url: https://wormbase.org
               name: Wormbase
@@ -520,7 +584,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          description: Shows all non-coding genes on the forward strand. Non-coding and pseudogenes imported from WormBase.
+          description: |-
+            Shows all non-coding genes on the forward strand.
+            Non-coding and pseudogenes imported from WormBase
           sources:
             - url: https://wormbase.org
               name: Wormbase
@@ -528,7 +594,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          description: Shows all protein coding genes on the reverse strand. Protein coding model imported from Wormbase.
+          description: |-
+            Shows all protein coding genes on the reverse strand.
+            Protein coding model imported from Wormbase
           sources:
             - url: https://wormbase.org
               name: Wormbase
@@ -536,7 +604,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          description: Shows all non-coding genes on the reverse strand. Non-coding and pseudogenes imported from WormBase.
+          description: |-
+            Shows all non-coding genes on the reverse strand.
+            Non-coding and pseudogenes imported from WormBase
           sources:
             - url: https://wormbase.org
               name: Wormbase
@@ -548,11 +618,13 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          description: Shows the contigs underlying the reference assembly.
+          description: |-
+            Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
-          description: Shows the percentage of Gs and Cs in a region.
+          description: |-
+            Shows the percentage of Gs and Cs in a region
           sources: []
       types:
         - Genomic
@@ -607,7 +679,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          description: Shows all protein coding genes on the forward strand. Protein genes annotated in ENA.
+          description: |-
+            Shows all protein coding genes on the forward strand.
+            Protein genes annotated in ENA
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -615,10 +689,10 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          description: >-
-            Shows all non-coding genes on the forward strand. This track comprises multiple analyses:
-            ncRNA genes annotated in ENA and ncRNA gene models based on alignment of 
-            Rfam families to genomic sequences (alignments provided by Rfam).
+          description: |-
+            Shows all non-coding genes on the forward strand.
+            This track comprises multiple analyses:
+            ncRNA genes annotated in ENA and ncRNA gene models based on alignment of Rfam families to genomic sequences (alignments provided by Rfam)
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -628,7 +702,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          description: Shows all protein coding genes on the reverse strand. Protein genes annotated in ENA.
+          description: |-
+            Shows all protein coding genes on the reverse strand.
+            Protein genes annotated in ENA
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -636,10 +712,10 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          description: >-
-            Shows all non-coding genes on the reverse strand. This track comprises multiple analyses:
-            ncRNA genes annotated in ENA and ncRNA gene models based on alignment of 
-            Rfam families to genomic sequences (alignments provided by Rfam).
+          description: |-
+            Shows all non-coding genes on the reverse strand.
+            This track comprises multiple analyses:
+            ncRNA genes annotated in ENA and ncRNA gene models based on alignment of Rfam families to genomic sequences (alignments provided by Rfam)
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -653,11 +729,13 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          description: Shows the contigs underlying the reference assembly.
+          description: |-
+            Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
-          description: Shows the percentage of Gs and Cs in a region.
+          description: |-
+            Shows the percentage of Gs and Cs in a region
           sources: []
       types:
         - Genomic
@@ -712,7 +790,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          description: Shows all protein coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all protein coding genes on the forward strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -720,7 +800,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          description: Shows all non-coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all non-coding genes on the forward strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -728,7 +810,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          description: Shows all protein coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all protein coding genes on the reverse strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -736,7 +820,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          description: Shows all non-coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all non-coding genes on the reverse strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -748,11 +834,13 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          description: Shows the contigs underlying the reference assembly.
+          description: |-
+            Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
-          description: Shows the percentage of Gs and Cs in a region.
+          description: |-
+            Shows the percentage of Gs and Cs in a region
           sources: []
       types:
         - Genomic
@@ -768,8 +856,13 @@ genome_track_categories:
       track_list:
         - label: All short variant data
           track_id: variant
-          description: Short variant data from multiple repositories, including dbSNP and 1000G as well as disease and phenotype associated sources.
-          sources: []
+          description: |-
+            Short variant data from multiple repositories, including dbSNP and 1000G as well as disease and phenotype associated sources
+          sources:
+            - url: https://www.ncbi.nlm.nih.gov/snp/
+              name: dbSNP
+            - url: https://www.internationalgenome.org
+              name: 1000 Genomes Project
       types:
         - Variation
 
@@ -811,7 +904,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          description: Shows all protein coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all protein coding genes on the forward strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -819,7 +914,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          description: Shows all non-coding genes on the forward strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all non-coding genes on the forward strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -827,7 +924,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          description: Shows all protein coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all protein coding genes on the reverse strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -835,7 +934,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          description: Shows all non-coding genes on the reverse strand. Part of the GENCODE Comprehensive gene set.
+          description: |-
+            Shows all non-coding genes on the reverse strand.
+            Part of the GENCODE Comprehensive gene set
           sources:
             - url: https://gencodegenes.org
               name: GENCODE
@@ -847,11 +948,13 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          description: Shows the contigs underlying the reference assembly.
+          description: |-
+            Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
-          description: Shows the percentage of Gs and Cs in a region.
+          description: |-
+            Shows the percentage of Gs and Cs in a region
           sources: []
       types:
         - Genomic
@@ -867,8 +970,13 @@ genome_track_categories:
       track_list:
         - label: All short variant data
           track_id: variant
-          description: Short variant data from multiple repositories, including dbSNP and 1000G as well as disease and phenotype associated sources.
-          sources: []
+          description: |-
+            Short variant data from multiple repositories, including dbSNP and 1000G as well as disease and phenotype associated sources
+          sources:
+            - url: https://www.ncbi.nlm.nih.gov/snp/
+              name: dbSNP
+            - url: https://www.internationalgenome.org
+              name: 1000 Genomes Project
       types:
         - Variation
 
@@ -910,7 +1018,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          description: Shows all protein coding genes on the forward strand. Genes annotated with high confidence by IWGSC.
+          description: |-
+            Shows all protein coding genes on the forward strand.
+            Genes annotated with high confidence by IWGSC
           sources:
             - url: https://wheatgenome.org
               name: IWGSC
@@ -918,10 +1028,10 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          description: >- 
-            Shows all non-coding genes on the forward strand. This track comprises multiple analyses:
-            genes annotated with high confidence by IWGSC, RNA genes produced by filtering predictions from tRNAscan-SE v1.23, 
-            and alignments of Rfam (release 12.2) covariance models.
+          description: |-
+            Shows all non-coding genes on the forward strand.
+            This track comprises multiple analyses:
+            Genes annotated with high confidence by IWGSC, RNA genes produced by filtering predictions from tRNAscan-SE v1.23, and alignments of Rfam (release 12.2) covariance models
           sources:
             - url: https://wheatgenome.org
               name: IWGSC
@@ -933,7 +1043,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          description: Shows all protein coding genes on the reverse strand. Genes annotated with high confidence by IWGSC.
+          description: |-
+            Shows all protein coding genes on the reverse strand.
+            Genes annotated with high confidence by IWGSC
           sources:
             - url: https://wheatgenome.org
               name: IWGSC
@@ -941,10 +1053,10 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          description: >- 
-            Shows all non-coding genes on the reverse strand. This track comprises multiple analyses:
-            genes annotated with high confidence by IWGSC, RNA genes produced by filtering predictions from tRNAscan-SE v1.23, 
-            and alignments of Rfam (release 12.2) covariance models.
+          description: |-
+            Shows all non-coding genes on the reverse strand.
+            This track comprises multiple analyses:
+            Genes annotated with high confidence by IWGSC, RNA genes produced by filtering predictions from tRNAscan-SE v1.23, and alignments of Rfam (release 12.2) covariance models
           sources:
             - url: https://wheatgenome.org
               name: IWGSC
@@ -960,11 +1072,13 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          description: Shows the contigs underlying the reference assembly.
+          description: |-
+            Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
-          description: Shows the percentage of Gs and Cs in a region.
+          description: |-
+            Shows the percentage of Gs and Cs in a region
           sources: []
       types:
         - Genomic
@@ -978,10 +1092,15 @@ genome_track_categories:
     - label: Short variants
       track_category_id: short-variants
       track_list:
-        - label: Sequence variants (all sources)
+        - label: All short variant data
           track_id: variant
-          description: Sequence variants from all sources.
-          sources: []
+          description: |-
+            Short variant data from multiple repositories, including CerealsDB and EMS mutation data from the wheat TILLING population
+          sources:
+            - url: https://www.cerealsdb.uk.net
+              name: CerealsDB
+            - url: https://dubcovskylab.ucdavis.edu/wheat-tilling
+              name: Wheat TILLING Project
       types:
         - Variation
 
@@ -1023,7 +1142,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          description: Shows all protein coding genes on the forward strand. Annotation imported from SGD.
+          description: |-
+            Shows all protein coding genes on the forward strand.
+            Annotation imported from SGD
           sources:
             - url: https://yeastgenome.org
               name: SGD
@@ -1031,7 +1152,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          description: Shows all non-coding genes on the forward strand. Annotation imported from SGD.
+          description: |-
+            Shows all non-coding genes on the forward strand.
+            Annotation imported from SGD
           sources:
             - url: https://yeastgenome.org
               name: SGD
@@ -1039,7 +1162,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          description: Shows all protein coding genes on the reverse strand. Annotation imported from SGD.
+          description: |-
+            Shows all protein coding genes on the reverse strand.
+            Annotation imported from SGD
           sources:
             - url: https://yeastgenome.org
               name: SGD
@@ -1047,7 +1172,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          description: Shows all non-coding genes on the reverse strand. Annotation imported from SGD.
+          description: |-
+            Shows all non-coding genes on the reverse strand.
+            Annotation imported from SGD
           sources:
             - url: https://yeastgenome.org
               name: SGD
@@ -1059,11 +1186,13 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          description: Shows the contigs underlying the reference assembly.
+          description: |-
+            Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
-          description: Shows the percentage of Gs and Cs in a region.
+          description: |-
+            Shows the percentage of Gs and Cs in a region
           sources: []
       types:
         - Genomic
@@ -1077,9 +1206,10 @@ genome_track_categories:
     - label: Short variants
       track_category_id: short-variants
       track_list:
-        - label: Sequence variants (all sources)
+        - label: All short variant data
           track_id: variant
-          description: Sequence variants from all sources.
+          description: |-
+            Sequence variants from all sources
           sources: []
       types:
         - Variation
@@ -1122,7 +1252,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          description: Shows all protein coding genes on the forward strand. Protein genes annotated in ENA.
+          description: |-
+            Shows all protein coding genes on the forward strand.
+            Protein genes annotated in ENA
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -1130,7 +1262,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          description: Shows all non-coding genes on the forward strand. ncRNA genes annotated in ENA.
+          description: |-
+            Shows all non-coding genes on the forward strand.
+            ncRNA genes annotated in ENA
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -1138,7 +1272,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          description: Shows all protein coding genes on the reverse strand. Protein genes annotated in ENA.
+          description: |-
+            Shows all protein coding genes on the reverse strand.
+            Protein genes annotated in ENA
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -1146,7 +1282,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          description: Shows all non-coding genes on the reverse strand. ncRNA genes annotated in ENA.
+          description: |-
+            Shows all non-coding genes on the reverse strand.
+            ncRNA genes annotated in ENA
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -1158,11 +1296,13 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          description: Shows the contigs underlying the reference assembly.
+          description: |-
+            Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
-          description: Shows the percentage of Gs and Cs in a region.
+          description: |-
+            Shows the percentage of Gs and Cs in a region
           sources: []
       types:
         - Genomic
@@ -1217,7 +1357,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          description: Shows all protein coding genes on the forward strand. Protein coding model imported from Wormbase.
+          description: |-
+            Shows all protein coding genes on the forward strand.
+            Protein coding model imported from Wormbase
           sources:
             - url: https://wormbase.org
               name: Wormbase
@@ -1225,7 +1367,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          description: Shows all non-coding genes on the forward strand. Non-coding and pseudogenes imported from WormBase.
+          description: |-
+            Shows all non-coding genes on the forward strand.
+            Non-coding and pseudogenes imported from WormBase
           sources:
             - url: https://wormbase.org
               name: Wormbase
@@ -1233,7 +1377,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          description: Shows all protein coding genes on the reverse strand. Protein coding model imported from Wormbase.
+          description: |-
+            Shows all protein coding genes on the reverse strand.
+            Protein coding model imported from Wormbase
           sources:
             - url: https://wormbase.org
               name: Wormbase
@@ -1241,7 +1387,9 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          description: Shows all non-coding genes on the reverse strand. Non-coding and pseudogenes imported from WormBase.
+          description: |-
+            Shows all non-coding genes on the reverse strand.
+            Non-coding and pseudogenes imported from WormBase
           sources:
             - url: https://wormbase.org
               name: Wormbase
@@ -1253,11 +1401,13 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          description: Shows the contigs underlying the reference assembly.
+          description: |-
+            Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
-          description: Shows the percentage of Gs and Cs in a region.
+          description: |-
+            Shows the percentage of Gs and Cs in a region
           sources: []
       types:
         - Genomic
@@ -1312,7 +1462,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          description: Shows all protein coding genes on the forward strand. Protein genes annotated in ENA.
+          description: |-
+            Shows all protein coding genes on the forward strand.
+            Protein genes annotated in ENA
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -1320,10 +1472,10 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          description: >-
-            Shows all non-coding genes on the forward strand. This track comprises multiple analyses:
-            ncRNA genes annotated in ENA and ncRNA gene models based on alignment of 
-            Rfam families to genomic sequences (alignments provided by Rfam).
+          description: |-
+            Shows all non-coding genes on the forward strand.
+            This track comprises multiple analyses:
+            ncRNA genes annotated in ENA and ncRNA gene models based on alignment of Rfam families to genomic sequences (alignments provided by Rfam)
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -1333,7 +1485,9 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          description: Shows all protein coding genes on the reverse strand. Protein genes annotated in ENA.
+          description: |-
+            Shows all protein coding genes on the reverse strand.
+            Protein genes annotated in ENA
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -1341,10 +1495,10 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          description: >-
-            Shows all non-coding genes on the reverse strand. This track comprises multiple analyses:
-            ncRNA genes annotated in ENA and ncRNA gene models based on alignment of 
-            Rfam families to genomic sequences (alignments provided by Rfam).
+          description: |-
+            Shows all non-coding genes on the reverse strand.
+            This track comprises multiple analyses:
+            ncRNA genes annotated in ENA and ncRNA gene models based on alignment of Rfam families to genomic sequences (alignments provided by Rfam)
           sources:
             - url: https://ebi.ac.uk/ena
               name: ENA
@@ -1358,11 +1512,13 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          description: Shows the contigs underlying the reference assembly.
+          description: |-
+            Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
-          description: Shows the percentage of Gs and Cs in a region.
+          description: |-
+            Shows the percentage of Gs and Cs in a region
           sources: []
       types:
         - Genomic
