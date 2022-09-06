@@ -290,7 +290,7 @@ genome_track_categories:
         - label: Reference sequence
           track_id: contig
           description: |-
-            Shows the contigs underlying the reference assembly
+            Shows the sequence scaffolds underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
@@ -1073,7 +1073,7 @@ genome_track_categories:
         - label: Reference sequence
           track_id: contig
           description: |-
-            Shows the contigs underlying the reference assembly
+            Shows the sequence scaffolds underlying the reference assembly
           sources: []
         - label: '%GC'
           track_id: gc
