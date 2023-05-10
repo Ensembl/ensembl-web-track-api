@@ -72,14 +72,14 @@ genome_track_categories:
       track_category_id: short-variants
       track_list:
         - label: 1000 Genomes short variants
-          track_id: variant
+          track_id: variant-1000genomes
           description: |-
             All short variants (SNPs and indels) data from 1000 Genomes Project Phase 3
           sources:
             - url: https://www.internationalgenome.org
               name: 1000 Genomes Project
         - label: dbSNP short variants
-          track_id: v_2
+          track_id: variant-dbsnp
           description: |-
             All short variants (SNPs and indels) data from dbSNP build 155
           sources:
@@ -190,15 +190,13 @@ genome_track_categories:
     - label: Short variants by resource
       track_category_id: short-variants
       track_list:
-        - label: All short variant data
-          track_id: variant
+        - label: dbSNP short variants
+          track_id: variant-dbsnp
           description: |-
-            Short variant data from multiple repositories, including dbSNP and 1000G as well as disease and phenotype associated sources
+            All short variants (SNPs and indels) data from dbSNP build 155
           sources:
-            - url: https://www.ncbi.nlm.nih.gov/snp/
+            - url: https://www.ncbi.nlm.nih.gov/snp
               name: dbSNP
-            - url: https://www.internationalgenome.org
-              name: 1000 Genomes Project
       types:
         - Variation
 
@@ -314,15 +312,13 @@ genome_track_categories:
     - label: Short variants by resource
       track_category_id: short-variants
       track_list:
-        - label: All short variant data
-          track_id: variant
+        - label: EVA short variants
+          track_id: variant-eva
           description: |-
-            Short variant data from multiple repositories, including CerealsDB and EMS mutation data from the wheat TILLING population
+            All short variants (SNPs and indels) data from EVA
           sources:
-            - url: https://www.cerealsdb.uk.net
-              name: CerealsDB
-            - url: https://dubcovskylab.ucdavis.edu/wheat-tilling
-              name: Wheat TILLING Project
+            - url: https://www.ebi.ac.uk/eva/
+              name: EVA
       types:
         - Variation
 
@@ -428,10 +424,10 @@ genome_track_categories:
     - label: Short variants by resource
       track_category_id: short-variants
       track_list:
-        - label: All short variant data
-          track_id: variant
+        - label: SGRP short variants
+          track_id: variant-sgrp
           description: |-
-            Sequence variants from all sources
+            All short variants (SNPs and indels) data from SGRP
           sources: []
       types:
         - Variation
