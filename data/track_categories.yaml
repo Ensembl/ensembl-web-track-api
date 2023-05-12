@@ -85,6 +85,20 @@ genome_track_categories:
           sources:
             - url: https://www.ncbi.nlm.nih.gov/snp
               name: dbSNP
+        - label: ClinVar short variants
+          track_id: variant-clinvar
+          description: |-
+            All short variants (SNPs and indels) data from ClinVar (17 Sep, 2022)
+          sources:
+            - url: https://www.ncbi.nlm.nih.gov/clinvar/
+              name: ClinVar
+        - label: NHGRI-EBI GWAS Catalog short variants
+          track_id: variant-gwas
+          description: |-
+            All short variants (SNPs and indels) data from NHGRI-EBI GWAS Catalog (14 Sep, 2022)
+          sources:
+            - url: https://www.ebi.ac.uk/gwas/
+              name: NHGRI-EBI GWAS Catalog
       types:
         - Variation
 
