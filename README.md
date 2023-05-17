@@ -1,4 +1,4 @@
-# Track API endpoint.
+# Track API endpoint
 
 A Django app for serving the available annotation tracks for Ensembl client.  
 Expects: genome ID (URL param)  
@@ -21,7 +21,7 @@ Reference dataset: ./data/track_categories.yaml
 
 4. Usage:
     - `http://localhost:8000/track_categories/:genome_id` #e.g. /track_categories/homo_sapiens_GCA_000001405_28
-    - `http://2020.ensembl.org/api/tracks/track_categories/:genome_id` #when deployed to production
+    - `https://beta.ensembl.org/api/tracks/track_categories/:genome_id` #when deployed to production
 
 5. Stop the endpoint:
     - `$ docker-compose down` #or Crtl+C if running in foreground

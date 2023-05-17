@@ -17,15 +17,13 @@
 openapi: 3.0.3
 info:
   title: Ensembl Track API
-  description: Backend service for Ensembl 2020 client, serving a list of available tracks and track categories.
+  description: Backend service for Ensembl client, serving a list of available tracks and track categories.
   contact:
     email: andres@ebi.ac.uk
   version: 0.0.1
 servers:
-  - url: http://2020.ensembl.org/api/tracks
+  - url: http://beta.ensembl.org/api/tracks
     description: Production server
-  - url: http://staging-2020.ensembl.org/api/tracks
-    description: Internal staging server
 paths:
   /track_categories/{genome_id}:
     get:
