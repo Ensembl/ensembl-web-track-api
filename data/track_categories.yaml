@@ -126,9 +126,7 @@ genome_track_categories:
             CTCF binding sites
             Transcription factor binding (enriched for TF binding, but lacking evidence to be classihed as open chromatin, enhancer or promoter)
             Open chromatin regions (with insufficient evidence to classify as a promoter or enhancer)
-          sources:
-            - url: https://www.internationalgenome.org
-              name: 1000 Genomes Project
+          sources: []
       types:
         - Regulation
 
