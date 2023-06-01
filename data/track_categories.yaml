@@ -116,21 +116,33 @@ genome_track_categories:
 
     - label: Regulatory features
       track_category_id: regulatory-features
-      track_list: []
+      track_list:
+        - label: Regulatory annotation
+          track_id: regulation
+          description: |-
+            Regions that have epigenomic marks associated with non-coding regulatory function, including:
+            Promoters
+            Enhancers
+            CTCF binding sites
+            Transcription factor binding (enriched for TF binding, but lacking evidence to be classihed as open chromatin, enhancer or promoter)
+            Open chromatin regions (with insufficient evidence to classify as a promoter or enhancer)
+          sources:
+            - url: https://www.internationalgenome.org
+              name: 1000 Genomes Project
       types:
-        - Expression
+        - Regulation
 
     - label: Gene expression correlations
       track_category_id: gene-expression
       track_list: []
       types:
-        - Expression
+        - Regulation
 
     - label: Other regulatory regions
       track_category_id: regulatory-regions
       track_list: []
       types:
-        - Expression
+        - Regulation
 
   3704ceb1-948d-11ec-a39d-005056b38ce3:
     - label: Genes & transcripts
