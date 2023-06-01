@@ -121,10 +121,15 @@ genome_track_categories:
           track_id: regulation
           description: |-
             Regions that have epigenomic marks associated with non-coding regulatory function, including:
+              
             Promoters
+
             Enhancers
+
             CTCF binding sites
+
             Transcription factor binding (enriched for TF binding, but lacking evidence to be classihed as open chromatin, enhancer or promoter)
+            
             Open chromatin regions (with insufficient evidence to classify as a promoter or enhancer)
           sources: []
       types:
