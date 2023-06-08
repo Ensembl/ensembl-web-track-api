@@ -71,13 +71,6 @@ genome_track_categories:
     - label: Short variants by resource
       track_category_id: short-variants
       track_list:
-        - label: 1000 Genomes short variants
-          track_id: variant-1000genomes
-          description: |-
-            All short variants (SNPs and indels) data from 1000 Genomes Project Phase 3
-          sources:
-            - url: https://www.internationalgenome.org
-              name: 1000 Genomes Project
         - label: dbSNP short variants
           track_id: variant-dbsnp
           description: |-
@@ -85,20 +78,6 @@ genome_track_categories:
           sources:
             - url: https://www.ncbi.nlm.nih.gov/snp
               name: dbSNP
-        - label: ClinVar short variants
-          track_id: variant-clinvar
-          description: |-
-            All short variants (SNPs and indels) data from ClinVar (17 Sep, 2022)
-          sources:
-            - url: https://www.ncbi.nlm.nih.gov/clinvar/
-              name: ClinVar
-        - label: NHGRI-EBI GWAS Catalog short variants
-          track_id: variant-gwas
-          description: |-
-            All short variants (SNPs and indels) data from NHGRI-EBI GWAS Catalog (14 Sep, 2022)
-          sources:
-            - url: https://www.ebi.ac.uk/gwas/
-              name: NHGRI-EBI GWAS Catalog
       types:
         - Variation
 
