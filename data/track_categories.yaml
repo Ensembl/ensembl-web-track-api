@@ -93,7 +93,7 @@ genome_track_categories:
       types:
         - Variation
 
-    - label: Regulatory features
+    - label: Regulation
       track_category_id: regulatory-features
       track_list:
         - label: Regulatory annotation
@@ -220,23 +220,23 @@ genome_track_categories:
       types:
         - Variation
 
-    - label: Regulatory features
+    - label: Regulation
       track_category_id: regulatory-features
       track_list: []
       types:
-        - Expression
+        - Regulation
 
     - label: Gene expression correlations
       track_category_id: gene-expression
       track_list: []
       types:
-        - Expression
+        - Regulation
 
     - label: Other regulatory regions
       track_category_id: regulatory-regions
       track_list: []
       types:
-        - Expression
+        - Regulation
 
   a73357ab-93e7-11ec-a39d-005056b38ce3:
     - label: Genes & transcripts
@@ -342,23 +342,23 @@ genome_track_categories:
       types:
         - Variation
 
-    - label: Regulatory features
+    - label: Regulation
       track_category_id: regulatory-features
       track_list: []
       types:
-        - Expression
+        - Regulation
 
     - label: Gene expression correlations
       track_category_id: gene-expression
       track_list: []
       types:
-        - Expression
+        - Regulation
 
     - label: Other regulatory regions
       track_category_id: regulatory-regions
       track_list: []
       types:
-        - Expression
+        - Regulation
 
   a733574a-93e7-11ec-a39d-005056b38ce3:
     - label: Genes & transcripts
@@ -452,23 +452,23 @@ genome_track_categories:
       types:
         - Variation
 
-    - label: Regulatory features
+    - label: Regulation
       track_category_id: regulatory-features
       track_list: []
       types:
-        - Expression
+        - Regulation
 
     - label: Gene expression correlations
       track_category_id: gene-expression
       track_list: []
       types:
-        - Expression
+        - Regulation
 
     - label: Other regulatory regions
       track_category_id: regulatory-regions
       track_list: []
       types:
-        - Expression
+        - Regulation
 
   a73351f7-93e7-11ec-a39d-005056b38ce3:
     - label: Genes & transcripts
@@ -557,23 +557,23 @@ genome_track_categories:
       types:
         - Variation
 
-    - label: Regulatory features
+    - label: Regulation
       track_category_id: regulatory-features
       track_list: []
       types:
-        - Expression
+        - Regulation
 
     - label: Gene expression correlations
       track_category_id: gene-expression
       track_list: []
       types:
-        - Expression
+        - Regulation
 
     - label: Other regulatory regions
       track_category_id: regulatory-regions
       track_list: []
       types:
-        - Expression
+        - Regulation
 
   a733550b-93e7-11ec-a39d-005056b38ce3:
     - label: Genes & transcripts
@@ -662,23 +662,23 @@ genome_track_categories:
       types:
         - Variation
 
-    - label: Regulatory features
+    - label: Regulation
       track_category_id: regulatory-features
       track_list: []
       types:
-        - Expression
+        - Regulation
 
     - label: Gene expression correlations
       track_category_id: gene-expression
       track_list: []
       types:
-        - Expression
+        - Regulation
 
     - label: Other regulatory regions
       track_category_id: regulatory-regions
       track_list: []
       types:
-        - Expression
+        - Regulation
 
   a73356e1-93e7-11ec-a39d-005056b38ce3:
     - label: Genes & transcripts
@@ -773,20 +773,20 @@ genome_track_categories:
       types:
         - Variation
 
-    - label: Regulatory features
+    - label: Regulation
       track_category_id: regulatory-features
       track_list: []
       types:
-        - Expression
+        - Regulation
 
     - label: Gene expression correlations
       track_category_id: gene-expression
       track_list: []
       types:
-        - Expression
+        - Regulation
 
     - label: Other regulatory regions
       track_category_id: regulatory-regions
       track_list: []
       types:
-        - Expression
+        - Regulation
