@@ -162,7 +162,7 @@ Staging:WP40:HL:
     environment:
         name: wp40-hl-staging
     only:
-        - main
+        - trackAPI-k8s-deploy
     when: manual
 
 Internal:WP40:HL:
@@ -170,7 +170,7 @@ Internal:WP40:HL:
     environment:
         name: wp40-hl-internal
     only:
-        - main
+        - trackAPI-k8s-deploy
     when: manual
 
 Dev:WP40:HL:
@@ -178,7 +178,7 @@ Dev:WP40:HL:
     environment:
         name: wp40-hl-dev
     only:
-        - main
+        - trackAPI-k8s-deploy
     when: manual
 
 Dev:WP41:HX:
@@ -186,7 +186,7 @@ Dev:WP41:HX:
     environment:
         name: wp41-hx-dev
     only:
-        - main
+        - trackAPI-k8s-deploy
     when: manual
 
 Prod:WP41:HX:
@@ -194,5 +194,5 @@ Prod:WP41:HX:
     environment:
         name: wp41-hx-prod
     only:
-        - main
+        - trackAPI-k8s-deploy
     when: manual
