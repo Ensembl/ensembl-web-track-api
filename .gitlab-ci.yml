@@ -8,7 +8,7 @@ variables:
 
 .branch-rules:
     rules:
-        - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "trackAPI-k8s-deploy"'
+        - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
           when: on_success
         - when: never
 
