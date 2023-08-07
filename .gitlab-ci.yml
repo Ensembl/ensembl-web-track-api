@@ -6,9 +6,16 @@ variables:
     CONTAINER_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
     DOCKER_TLS_CERTDIR: ""
 
+.branch-rules:
+    rules:
+        - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "trackAPI-k8s-deploy"'
+          when: on_success
+        - when: never
+
 #Base templates
 #Build & upload new Docker image
 .build:
+    extends: .branch-rules
     stage: build
     image: docker
     services:
@@ -54,14 +61,8 @@ variables:
         - kubectl delete service ensembl-track-api-${CI_COMMIT_REF_SLUG}-service
         - kubectl delete deploy ensembl-track-api-${CI_COMMIT_REF_SLUG}-deployment
 
-.deploy-rules:
-    rules:
-        - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "k8s-update"'
-          when: on_success
-        - when: never
-
 .deploy-wp40:
-    extends: .deploy-rules
+    extends: .branch-rules
     stage: deploy
     image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
     script:
@@ -173,49 +174,39 @@ Live:WP-HH:
         - main
     when: manual
 
-Live:wp40:HL:
+Prod:wp40:HL:
   extends: .deploy-wp40
   environment:
     name: wp40-hl-prod
     
 #Deploy job for new k8s cluster
 Staging:WP40:HL:
-    extends: .deploy
+    extends: .deploy-wp40
     environment:
         name: wp40-hl-staging
-    only:
-        - trackAPI-k8s-deploy
     when: manual
 
 Internal:WP40:HL:
-    extends: .deploy
+    extends: .deploy-wp40
     environment:
         name: wp40-hl-internal
-    only:
-        - trackAPI-k8s-deploy
     when: manual
 
 Dev:WP40:HL:
-    extends: .deploy
+    extends: .deploy-wp40
     environment:
         name: wp40-hl-dev
-    only:
-        - trackAPI-k8s-deploy
     when: manual
 
 Dev:WP41:HX:
-    extends: .deploy
+    extends: .deploy-wp40
     environment:
-        name: wp41-hx-dev
-    only:
-        - trackAPI-k8s-deploy
+
     when: manual
 
 Prod:WP41:HX:
-    extends: .deploy
+    extends: .deploy-wp40
     environment:
         name: wp41-hx-prod
-    only:
-        - trackAPI-k8s-deploy
     when: manual
 
