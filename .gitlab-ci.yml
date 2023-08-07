@@ -155,3 +155,44 @@ Live:WP-HH:
     only:
         - main
     when: manual
+
+#Deploy job for new k8s cluster
+Staging:WP40:HL:
+    extends: .deploy
+    environment:
+        name: wp40-hl-staging
+    only:
+        - main
+    when: manual
+
+Internal:WP40:HL:
+    extends: .deploy
+    environment:
+        name: wp40-hl-internal
+    only:
+        - main
+    when: manual
+
+Dev:WP40:HL:
+    extends: .deploy
+    environment:
+        name: wp40-hl-dev
+    only:
+        - main
+    when: manual
+
+Dev:WP41:HX:
+    extends: .deploy
+    environment:
+        name: wp41-hx-dev
+    only:
+        - main
+    when: manual
+
+Prod:WP41:HX:
+    extends: .deploy
+    environment:
+        name: wp41-hx-prod
+    only:
+        - main
+    when: manual
