@@ -122,58 +122,6 @@ Dev:WP-HX:
     only:
         - main
 
-#Deploy dev branch to staging in HX (approved review apps)
-Staging:WP-HX:
-    extends: .deploy
-    environment:
-        name: wp-hx-staging
-    only:
-        - dev
-
-
-#Deploy dev branch to staging in HH
-Staging:WP-HH:
-    extends: .deploy
-    environment:
-        name: wp-hh-staging
-    only:
-        - dev
-
-
-#Deploy main branch to internal in HX
-Internal:WP-HX:
-    extends: .deploy
-    environment:
-        name: wp-hx-internal
-    only:
-        - main
-
-#Deploy main branch to internal in HH
-Internal:WP-HH:
-    extends: .deploy
-    environment:
-        name: wp-hh-internal
-    only:
-        - main
-
-#Deploy main branch to live in HX (manual confirmation)
-Live:WP-HX:
-    extends: .deploy
-    environment:
-        name: wp-hx-live
-    only:
-        - main
-    when: manual
-
-#Deploy main branch to live in HH (manual confirmation)
-Live:WP-HH:
-    extends: .deploy
-    environment:
-        name: wp-hh-live
-    only:
-        - main
-    when: manual
-
 Prod:wp40:HL:
   extends: .deploy-newk8s
   environment:
