@@ -17,7 +17,7 @@
 openapi: 3.0.3
 info:
   title: Ensembl Track API
-  description: Backend service for Ensembl client, serving a list of available tracks and track categories.
+  description: Backend service serving a list of available genome browser tracks and track categories.
   contact:
     email: andres@ebi.ac.uk
   version: 0.0.1
@@ -47,14 +47,14 @@ paths:
                   track_categories:
                     type: array
                     items:
-                      $ref: '#/components/schemas/TrackCategories'
+                      $ref: '#/components/schemas/TrackCategory'
         '400':
           description: Invalid request.
         '404':
           description: Specified genome ID was not found.
 components:
   schemas:
-    TrackCategories:
+    TrackCategory:
       type: object
       properties:
         track_category_id:
@@ -80,7 +80,12 @@ components:
       properties:
         track_id:
           type: string
-          example: track:gene-pc-fwd
+          example: gene-pc-fwd
+        trigger:
+          type: array
+          items:
+            type: string
+          example: ['track', 'gene-pc-fwd']
         label:
           type: string
           example: Protein coding genes
@@ -90,3 +95,23 @@ components:
         additional_info:
           type: string
           example: Forward strand
+        description:
+          type: string
+          example: Shows all protein coding genes on the forward strand.\nPart of the GENCODE Comprehensive gene set
+        sources:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: GENCODE
+              url:
+                type: string
+                example: https://gencodegenes.org
+        display_order:
+          type: number
+          example: 2
+        on_by_default:
+          type: boolean
+          example: true
