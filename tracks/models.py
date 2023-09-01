@@ -41,7 +41,7 @@ class Track(models.Model):
     track_id = models.CharField(max_length=100)
     trigger = models.CharField(max_length=100)
     on_by_default = models.BooleanField(default=False)
-    display_order = models.IntegerField(blank=True)
+    display_order = models.IntegerField(null=True)
     additional_info = models.TextField(blank=True, default="")
     description = models.TextField(blank=True, default="")
 
