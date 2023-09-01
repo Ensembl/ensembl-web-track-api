@@ -40,8 +40,8 @@ class Track(models.Model):
     label = models.CharField(max_length=100)
     track_id = models.CharField(max_length=100)
     trigger = models.CharField(max_length=100)
-    on_by_default = models.BooleanField()
-    display_order = models.IntegerField()
+    on_by_default = models.BooleanField(default=False)
+    display_order = models.IntegerField(blank=True)
     additional_info = models.TextField(blank=True, default="")
     description = models.TextField(blank=True, default="")
 
