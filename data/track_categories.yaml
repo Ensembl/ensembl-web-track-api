@@ -64,6 +64,7 @@ genome_track_categories:
         - label: Reference sequence
           track_id: contig
           trigger: ['track', 'contig']
+          display_order: 0
           on_by_default: true
           description: |-
             Shows the contigs underlying the reference assembly
@@ -224,6 +225,7 @@ genome_track_categories:
         - label: Reference sequence
           track_id: contig
           trigger: ['track', 'contig']
+          display_order: 0
           on_by_default: true
           description: |-
             Shows the contigs underlying the reference assembly
@@ -366,6 +368,7 @@ genome_track_categories:
         - label: Reference sequence
           track_id: contig
           trigger: ['track', 'contig']
+          display_order: 0
           on_by_default: true
           description: |-
             Shows the sequence scaffolds underlying the reference assembly
@@ -498,6 +501,7 @@ genome_track_categories:
         - label: Reference sequence
           track_id: contig
           trigger: ['track', 'contig']
+          display_order: 0
           on_by_default: true
           description: |-
             Shows the contigs underlying the reference assembly
@@ -628,6 +632,7 @@ genome_track_categories:
         - label: Reference sequence
           track_id: contig
           trigger: ['track', 'contig']
+          display_order: 0
           on_by_default: true
           description: |-
             Shows the contigs underlying the reference assembly
@@ -750,6 +755,7 @@ genome_track_categories:
         - label: Reference sequence
           track_id: contig
           trigger: ['track', 'contig']
+          display_order: 0
           on_by_default: true
           description: |-
             Shows the contigs underlying the reference assembly
@@ -878,6 +884,7 @@ genome_track_categories:
         - label: Reference sequence
           track_id: contig
           trigger: ['track', 'contig']
+          display_order: 0
           on_by_default: true
           description: |-
             Shows the contigs underlying the reference assembly
