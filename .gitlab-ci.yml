@@ -8,6 +8,12 @@ variables:
 
 .branch-rules:
     rules:
+        - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
+          when: on_success
+        - when: never
+
+.build-branch-rules:
+    rules:
         - if: '$CI_DEPLOY_FREEZE == null'
           when: on_success
         - when: never
@@ -15,7 +21,7 @@ variables:
 #Base templates
 #Build & upload new Docker image
 .build:
-    extends: .branch-rules
+    extends: .build-branch-rules
     stage: build
     image: docker
     services:
