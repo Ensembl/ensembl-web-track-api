@@ -39,6 +39,9 @@ class Track(models.Model):
     colour = models.CharField(max_length=30, blank=True, default="")
     label = models.CharField(max_length=100)
     track_id = models.CharField(max_length=100)
+    trigger = models.CharField(max_length=100)
+    on_by_default = models.BooleanField()
+    display_order = models.IntegerField()
     additional_info = models.TextField(blank=True, default="")
     description = models.TextField(blank=True, default="")
 

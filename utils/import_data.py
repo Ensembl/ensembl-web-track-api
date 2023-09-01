@@ -76,6 +76,9 @@ with open(yaml_file) as f:
                     track_obj = Track.objects.create(
                         label=track["label"],
                         track_id=track["track_id"],
+                        trigger=track["trigger"],
+                        display_order=track["display_order"],
+                        on_by_default=track["on_by_default"],
                         category=category_obj
                     )
                     # fill optional fields
