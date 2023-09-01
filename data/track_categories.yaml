@@ -7,7 +7,7 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          trigger: ['track', 'gene-pc-fwd']
+          trigger: [track, gene-pc-fwd]
           display_order: -110
           on_by_default: true
           description: |-
@@ -20,7 +20,7 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          trigger: ['track', 'gene-other-fwd']
+          trigger: [track, gene-other-fwd]
           display_order: -100
           on_by_default: true
           description: |-
@@ -33,7 +33,7 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          trigger: ['track', 'gene-pc-rev']
+          trigger: [track, gene-pc-rev]
           display_order: 100
           on_by_default: true
           description: |-
@@ -46,7 +46,7 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          trigger: ['track', 'gene-other-rev']
+          trigger: [track, gene-other-rev]
           display_order: 110
           on_by_default: true
           description: |-
@@ -63,7 +63,7 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          trigger: ['track', 'contig']
+          trigger: [track, contig]
           display_order: 0
           on_by_default: true
           description: |-
@@ -71,7 +71,7 @@ genome_track_categories:
           sources: []
         - label: '%GC'
           track_id: gc
-          trigger: ['track', 'gc']
+          trigger: [track, gc]
           display_order: 900
           on_by_default: true
           description: |-
@@ -91,7 +91,7 @@ genome_track_categories:
       track_list:
         - label: dbSNP short variants
           track_id: variant-dbsnp
-          trigger: ['track', 'expand-variation', 'variant-dbsnp']
+          trigger: [track, expand-variation, variant-dbsnp]
           display_order: 1001
           on_by_default: true
           description: |-
@@ -101,7 +101,7 @@ genome_track_categories:
               name: dbSNP
         - label: 1000 Genomes short variants
           track_id: variant-1000genomes
-          trigger: ['track', 'expand-variation', 'variant-1000genomes']
+          trigger: [track, expand-variation, variant-1000genomes]
           display_order: 1000
           on_by_default: false
           description: |-
@@ -129,7 +129,7 @@ genome_track_categories:
       track_list:
         - label: Regulatory annotation
           track_id: regulation
-          trigger: ['track', 'regulation']
+          trigger: [track, regulation]
           display_order: 890
           on_by_default: true
           description: |-
@@ -168,7 +168,7 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          trigger: ['track', 'gene-pc-fwd']
+          trigger: [track, gene-pc-fwd]
           display_order: -110
           on_by_default: true
           description: |-
@@ -181,7 +181,7 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          trigger: ['track', 'gene-other-fwd']
+          trigger: [track, gene-other-fwd]
           display_order: -100
           on_by_default: true
           description: |-
@@ -194,7 +194,7 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          trigger: ['track', 'gene-pc-rev']
+          trigger: [track, gene-pc-rev]
           display_order: 100
           on_by_default: true
           description: |-
@@ -207,7 +207,7 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          trigger: ['track', 'gene-other-rev']
+          trigger: [track, gene-other-rev]
           display_order: 110
           on_by_default: true
           description: |-
@@ -224,7 +224,7 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          trigger: ['track', 'contig']
+          trigger: [track, contig]
           display_order: 0
           on_by_default: true
           description: |-
@@ -232,7 +232,7 @@ genome_track_categories:
           sources: []
         - label: '%GC'
           track_id: gc
-          trigger: ['track', 'gc']
+          trigger: [track, gc]
           display_order: 900
           on_by_default: true
           description: |-
@@ -252,7 +252,7 @@ genome_track_categories:
       track_list:
         - label: dbSNP short variants
           track_id: variant-dbsnp
-          trigger: ['track', 'expand-variation', 'variant-dbsnp']
+          trigger: [track, expand-variation, variant-dbsnp]
           display_order: 1001
           on_by_default: true
           description: |-
@@ -301,7 +301,7 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          trigger: ['track', 'gene-pc-fwd']
+          trigger: [track, gene-pc-fwd]
           display_order: -110
           on_by_default: true
           description: |-
@@ -314,7 +314,7 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          trigger: ['track', 'gene-other-fwd']
+          trigger: [track, gene-other-fwd]
           display_order: -100
           on_by_default: true
           description: |-
@@ -332,7 +332,7 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          trigger: ['track', 'gene-pc-rev']
+          trigger: [track, gene-pc-rev]
           display_order: 100
           on_by_default: true
           description: |-
@@ -345,7 +345,7 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          trigger: ['track', 'gene-other-rev']
+          trigger: [track, gene-other-rev]
           display_order: 110
           on_by_default: true
           description: |-
@@ -367,7 +367,7 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          trigger: ['track', 'contig']
+          trigger: [track, contig]
           display_order: 0
           on_by_default: true
           description: |-
@@ -375,7 +375,7 @@ genome_track_categories:
           sources: []
         - label: '%GC'
           track_id: gc
-          trigger: ['track', 'gc']
+          trigger: [track, gc]
           display_order: 900
           on_by_default: true
           description: |-
@@ -395,7 +395,7 @@ genome_track_categories:
       track_list:
         - label: EVA short variants
           track_id: variant-eva
-          trigger: ['track', 'expand-variation', 'variant-eva']
+          trigger: [track, expand-variation, variant-eva]
           display_order: 1001
           on_by_default: true
           description: |-
@@ -444,7 +444,7 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          trigger: ['track', 'gene-pc-fwd']
+          trigger: [track, gene-pc-fwd]
           display_order: -110
           on_by_default: true
           description: |-
@@ -457,7 +457,7 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          trigger: ['track', 'gene-other-fwd']
+          trigger: [track, gene-other-fwd]
           display_order: -100
           on_by_default: true
           description: |-
@@ -470,7 +470,7 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          trigger: ['track', 'gene-pc-rev']
+          trigger: [track, gene-pc-rev]
           display_order: 100
           on_by_default: true
           description: |-
@@ -483,7 +483,7 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          trigger: ['track', 'gene-other-rev']
+          trigger: [track, gene-other-rev]
           display_order: 110
           on_by_default: true
           description: |-
@@ -500,7 +500,7 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          trigger: ['track', 'contig']
+          trigger: [track, contig]
           display_order: 0
           on_by_default: true
           description: |-
@@ -508,7 +508,7 @@ genome_track_categories:
           sources: []
         - label: '%GC'
           track_id: gc
-          trigger: ['track', 'gc']
+          trigger: [track, gc]
           display_order: 900
           on_by_default: true
           description: |-
@@ -528,7 +528,7 @@ genome_track_categories:
       track_list:
         - label: SGRP short variants
           track_id: variant-sgrp
-          trigger: ['track', 'expand-variation', 'variant-sgrp']
+          trigger: [track, expand-variation, variant-sgrp]
           display_order: 1001
           on_by_default: true
           description: |-
@@ -575,7 +575,7 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          trigger: ['track', 'gene-pc-fwd']
+          trigger: [track, gene-pc-fwd]
           display_order: -110
           on_by_default: true
           description: |-
@@ -588,7 +588,7 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          trigger: ['track', 'gene-other-fwd']
+          trigger: [track, gene-other-fwd]
           display_order: -100
           on_by_default: true
           description: |-
@@ -601,7 +601,7 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          trigger: ['track', 'gene-pc-rev']
+          trigger: [track, gene-pc-rev]
           display_order: 100
           on_by_default: true
           description: |-
@@ -614,7 +614,7 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          trigger: ['track', 'gene-other-rev']
+          trigger: [track, gene-other-rev]
           display_order: 110
           on_by_default: true
           description: |-
@@ -631,7 +631,7 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          trigger: ['track', 'contig']
+          trigger: [track, contig]
           display_order: 0
           on_by_default: true
           description: |-
@@ -639,7 +639,7 @@ genome_track_categories:
           sources: []
         - label: '%GC'
           track_id: gc
-          trigger: ['track', 'gc']
+          trigger: [track, gc]
           display_order: 900
           on_by_default: true
           description: |-
@@ -698,7 +698,7 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          trigger: ['track', 'gene-pc-fwd']
+          trigger: [track, gene-pc-fwd]
           display_order: -110
           on_by_default: true
           description: |-
@@ -711,7 +711,7 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          trigger: ['track', 'gene-other-fwd']
+          trigger: [track, gene-other-fwd]
           display_order: -100
           on_by_default: true
           description: |-
@@ -724,7 +724,7 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          trigger: ['track', 'gene-pc-rev']
+          trigger: [track, gene-pc-rev]
           display_order: 100
           on_by_default: true
           description: |-
@@ -737,7 +737,7 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          trigger: ['track', 'gene-other-rev']
+          trigger: [track, gene-other-rev]
           display_order: 110
           on_by_default: true
           description: |-
@@ -754,7 +754,7 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          trigger: ['track', 'contig']
+          trigger: [track, contig]
           display_order: 0
           on_by_default: true
           description: |-
@@ -762,7 +762,7 @@ genome_track_categories:
           sources: []
         - label: '%GC'
           track_id: gc
-          trigger: ['track', 'gc']
+          trigger: [track, gc]
           display_order: 900
           on_by_default: true
           description: |-
@@ -821,7 +821,7 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-fwd
-          trigger: ['track', 'gene-pc-fwd']
+          trigger: [track, gene-pc-fwd]
           display_order: -110
           on_by_default: true
           description: |-
@@ -834,7 +834,7 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-fwd
-          trigger: ['track', 'gene-other-fwd']
+          trigger: [track, gene-other-fwd]
           display_order: -100
           on_by_default: true
           description: |-
@@ -850,7 +850,7 @@ genome_track_categories:
           colour: DARK_GREY
           label: Protein coding genes
           track_id: gene-pc-rev
-          trigger: ['track', 'gene-pc-rev']
+          trigger: [track, gene-pc-rev]
           display_order: 100
           on_by_default: true
           description: |-
@@ -863,7 +863,7 @@ genome_track_categories:
           colour: GREY
           label: Other genes
           track_id: gene-other-rev
-          trigger: ['track', 'gene-other-rev']
+          trigger: [track, gene-other-rev]
           display_order: 110
           on_by_default: true
           description: |-
@@ -883,7 +883,7 @@ genome_track_categories:
       track_list:
         - label: Reference sequence
           track_id: contig
-          trigger: ['track', 'contig']
+          trigger: [track, contig]
           display_order: 0
           on_by_default: true
           description: |-
@@ -891,7 +891,7 @@ genome_track_categories:
           sources: []
         - label: '%GC'
           track_id: gc
-          trigger: ['track', 'gc']
+          trigger: [track, gc]
           display_order: 900
           on_by_default: true
           description: |-
