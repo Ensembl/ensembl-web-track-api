@@ -101,7 +101,7 @@ Review_db:WP-HX:
         name: wp-hx-dev-ing
         url: http://update.review.ensembl.org
     after_script: #restart deployment with new env that points to internal track database
-        - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/ingress.yaml
+        - sed -i "s#<BRANCH_NAME>#update#g" k8s/review/ingress.yaml
         - kubectl apply -f k8s/review/ingress.yaml
         - kubectl set env deployment/ensembl-track-api-update-deployment  
           --from configmap/ensembl-track-api-review-configmap
