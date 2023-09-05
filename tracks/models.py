@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 """
 Database models for storing track category lists.
@@ -39,6 +40,9 @@ class Track(models.Model):
     colour = models.CharField(max_length=30, blank=True, default="")
     label = models.CharField(max_length=100)
     track_id = models.CharField(max_length=100)
+    trigger = ArrayField(models.CharField(max_length=50))
+    on_by_default = models.BooleanField(default=False)
+    display_order = models.IntegerField(null=True)
     additional_info = models.TextField(blank=True, default="")
     description = models.TextField(blank=True, default="")
 

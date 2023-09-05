@@ -12,10 +12,16 @@ variables:
           when: on_success
         - when: never
 
+.build-branch-rules:
+    rules:
+        - if: '$CI_DEPLOY_FREEZE == null'
+          when: on_success
+        - when: never
+
 #Base templates
 #Build & upload new Docker image
 .build:
-    extends: .branch-rules
+    extends: .build-branch-rules
     stage: build
     image: docker
     services:
@@ -93,9 +99,9 @@ Review_db:WP-HX:
     extends: .deploy-review
     environment:
         name: wp-hx-dev-ing
-        url: http://update-track-api.review.ensembl.org
+        url: http://update.review.ensembl.org
     after_script: #restart deployment with new env that points to internal track database
-        - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/ingress.yaml
+        - sed -i "s#<BRANCH_NAME>#update#g" k8s/review/ingress.yaml
         - kubectl apply -f k8s/review/ingress.yaml
         - kubectl set env deployment/ensembl-track-api-update-deployment  
           --from configmap/ensembl-track-api-review-configmap

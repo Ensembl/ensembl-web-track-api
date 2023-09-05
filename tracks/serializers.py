@@ -16,7 +16,7 @@ class TrackSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Track
-        fields = ["label", "track_id", "colour", "additional_info", "description", "sources"]
+        fields = ["label", "track_id", "colour", "trigger", "display_order", "on_by_default", "additional_info", "description", "sources"]
 
 
 class CategorySerializer(serializers.ModelSerializer):
