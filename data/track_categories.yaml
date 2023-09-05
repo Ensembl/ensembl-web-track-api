@@ -92,7 +92,7 @@ genome_track_categories:
         - label: dbSNP short variants
           track_id: variant-dbsnp
           trigger: [track, expand-variation, variant-dbsnp]
-          display_order: 1001
+          display_order: 1000
           on_by_default: true
           description: |-
             All short variants (SNPs and indels) data from dbSNP build 155
@@ -102,13 +102,53 @@ genome_track_categories:
         - label: 1000 Genomes short variants
           track_id: variant-1000genomes
           trigger: [track, expand-variation, variant-1000genomes]
-          display_order: 1000
+          display_order: 1001
           on_by_default: false
           description: |-
-            All short variants (SNPs and indels) data from 1000 Genomes Project Phase 3.
+            All short variants (SNPs and indels) data from 1000 Genomes Project Phase 3
           sources:
             - url: https://www.internationalgenome.org
               name: 1000 Genomes Project
+        - label: gnomAD genomes short variants
+          track_id: variant-gnomad-genomes
+          trigger: [track, expand-variation, variant-gnomad-genomes]
+          display_order: 1002
+          on_by_default: false
+          description: |-
+            All short variants (SNPs and indels) data from gnomAD genomes v3.1.2
+          sources:
+            - url: https://gnomad.broadinstitute.org/
+              name: gnomAD
+        - label: gnomAD exomes short variants
+          track_id: variant-gnomad-exomes
+          trigger: [track, expand-variation, variant-gnomad-exomes]
+          display_order: 1003
+          on_by_default: false
+          description: |-
+            All short variants (SNPs and indels) data from gnomAD exomes v2.1.1
+          sources:
+            - url: https://gnomad.broadinstitute.org/
+              name: gnomAD
+        - label: ClinVar short variants
+          track_id: variant-clinvar
+          trigger: [track, expand-variation, variant-clinvar]
+          display_order: 1004
+          on_by_default: false
+          description: |-
+            All short variants (SNPs and indels) data from ClinVar (17 Sep, 2022)
+          sources:
+            - url: https://www.ncbi.nlm.nih.gov/clinvar/
+              name: ClinVar
+        - label: NHGRI-EBI GWAS Catalog short variants
+          track_id: variant-gwas
+          trigger: [track, expand-variation, variant-gwas]
+          display_order: 1005
+          on_by_default: false
+          description: |-
+            All short variants (SNPs and indels) data from NHGRI-EBI GWAS Catalog (14 Sep, 2022)
+          sources:
+            - url: https://www.ebi.ac.uk/gwas/
+              name: NHGRI-EBI GWAS Catalog
       types:
         - Variation
 
@@ -253,7 +293,7 @@ genome_track_categories:
         - label: dbSNP short variants
           track_id: variant-dbsnp
           trigger: [track, expand-variation, variant-dbsnp]
-          display_order: 1001
+          display_order: 1000
           on_by_default: true
           description: |-
             All short variants (SNPs and indels) data from dbSNP build 155
@@ -396,7 +436,7 @@ genome_track_categories:
         - label: EVA short variants
           track_id: variant-eva
           trigger: [track, expand-variation, variant-eva]
-          display_order: 1001
+          display_order: 1000
           on_by_default: true
           description: |-
             All short variants (SNPs and indels) data from EVA
@@ -529,7 +569,7 @@ genome_track_categories:
         - label: SGRP short variants
           track_id: variant-sgrp
           trigger: [track, expand-variation, variant-sgrp]
-          display_order: 1001
+          display_order: 1000
           on_by_default: true
           description: |-
             All short variants (SNPs and indels) data from SGRP
