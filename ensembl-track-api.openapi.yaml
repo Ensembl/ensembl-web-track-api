@@ -35,7 +35,7 @@ paths:
           description: Stable genome ID.
           schema:
             type : string
-          example: homo_sapiens_GCA_000001405_28
+          example: a7335667-93e7-11ec-a39d-005056b38ce3
       responses:
         '200':
           description: Successful request.
@@ -59,10 +59,10 @@ paths:
         - name: track_id
           in: path
           required: true
-          description: Track id
+          description: Track ID
           schema:
             type : string
-          example: some-unique-id
+          example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
       responses:
         '200':
           description: Successful request.
@@ -91,20 +91,32 @@ components:
           items:
             type: string
             enum:
-            - Genomic
-            - Variation
-            - Expression
+              - Genomic
+              - Variation
+              - Expression
     Track:
       type: object
       properties:
         track_id:
           type: string
-          example: gene-pc-fwd
+          example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
         trigger:
           type: array
           items:
             type: string
           example: ['track', 'gene-pc-fwd']
+        type:
+          type: string
+          enum:
+            - gene
+            - variants
+            - regular
+        datafiles:
+          type: object
+          additionalProperties: string
+          example:
+            details: variants-dbsnp-details.bb
+            summary: variants-dbsnp-summary.bw
         label:
           type: string
           example: Protein coding genes
