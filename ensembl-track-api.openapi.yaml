@@ -52,6 +52,25 @@ paths:
           description: Invalid request.
         '404':
           description: Specified genome ID was not found.
+  /tracks/{track_id}:
+    get:
+      summary: Returns data about a single track
+      parameters:
+        - name: track_id
+          in: path
+          required: true
+          description: Track id
+          schema:
+            type : string
+          example: some-unique-id
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Track'
 components:
   schemas:
     TrackCategory:
