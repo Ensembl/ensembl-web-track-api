@@ -109,14 +109,14 @@ components:
           type: string
           enum:
             - gene
-            - variants
+            - variant
             - regular
         datafiles:
           type: object
           additionalProperties: string
           example:
-            details: variants-dbsnp-details.bb
-            summary: variants-dbsnp-summary.bw
+            details: variant-dbsnp-details.bb
+            summary: variant-dbsnp-summary.bw
         label:
           type: string
           example: Protein coding genes
