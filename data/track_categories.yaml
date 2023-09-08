@@ -6,7 +6,7 @@ genome_track_categories:
         - additional_info: Forward strand
           colour: DARK_GREY
           label: Protein coding genes
-          track_id: gene-pc-fwd
+          track_id: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
           trigger: [track, gene-pc-fwd]
           display_order: -110
           on_by_default: true
@@ -19,7 +19,7 @@ genome_track_categories:
         - additional_info: Forward strand
           colour: GREY
           label: Other genes
-          track_id: gene-other-fwd
+          track_id: 79da8354-1635-47cf-9adc-945899d880fd
           trigger: [track, gene-other-fwd]
           display_order: -100
           on_by_default: true
@@ -32,7 +32,7 @@ genome_track_categories:
         - additional_info: Reverse strand
           colour: DARK_GREY
           label: Protein coding genes
-          track_id: gene-pc-rev
+          track_id: b7c54cc1-9249-410c-9be0-47f53005ee27
           trigger: [track, gene-pc-rev]
           display_order: 100
           on_by_default: true
@@ -45,7 +45,7 @@ genome_track_categories:
         - additional_info: Reverse strand
           colour: GREY
           label: Other genes
-          track_id: gene-other-rev
+          track_id: 4d79a4e8-fa0b-4fcc-a409-3b506d266ef7
           trigger: [track, gene-other-rev]
           display_order: 110
           on_by_default: true
@@ -62,7 +62,7 @@ genome_track_categories:
       track_category_id: assembly
       track_list:
         - label: Reference sequence
-          track_id: contig
+          track_id: 3dd95d7c-0e68-4080-8e68-e12dc0b18700
           trigger: [track, contig]
           display_order: 0
           on_by_default: true
@@ -70,7 +70,7 @@ genome_track_categories:
             Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
-          track_id: gc
+          track_id: 378c1da3-f93c-4e9f-9f60-3f8fed887c2b
           trigger: [track, gc]
           display_order: 900
           on_by_default: true
@@ -90,7 +90,7 @@ genome_track_categories:
       track_category_id: short-variants
       track_list:
         - label: dbSNP short variants
-          track_id: variant-dbsnp
+          track_id: 5406535e-b21a-45a6-b9d6-75482353206f
           trigger: [track, expand-variation, variant-dbsnp]
           display_order: 1000
           on_by_default: true
@@ -100,7 +100,7 @@ genome_track_categories:
             - url: https://www.ncbi.nlm.nih.gov/snp
               name: dbSNP
         - label: 1000 Genomes short variants
-          track_id: variant-1000genomes
+          track_id: 5202c9d6-62eb-4626-bc9c-fb874d0ebb24
           trigger: [track, expand-variation, variant-1000genomes]
           display_order: 1001
           on_by_default: false
@@ -110,7 +110,7 @@ genome_track_categories:
             - url: https://www.internationalgenome.org
               name: 1000 Genomes Project
         - label: gnomAD genomes short variants
-          track_id: variant-gnomad-genomes
+          track_id: 39045daf-f818-4f1d-82b2-980bf1f05a98
           trigger: [track, expand-variation, variant-gnomad-genomes]
           display_order: 1002
           on_by_default: false
@@ -120,7 +120,7 @@ genome_track_categories:
             - url: https://gnomad.broadinstitute.org/
               name: gnomAD
         - label: gnomAD exomes short variants
-          track_id: variant-gnomad-exomes
+          track_id: 37af3e73-5a4e-42b2-ac7e-6d8c56e47dbc
           trigger: [track, expand-variation, variant-gnomad-exomes]
           display_order: 1003
           on_by_default: false
@@ -130,7 +130,7 @@ genome_track_categories:
             - url: https://gnomad.broadinstitute.org/
               name: gnomAD
         - label: ClinVar short variants
-          track_id: variant-clinvar
+          track_id: b76e5692-085c-497a-a85b-aaf26180f583
           trigger: [track, expand-variation, variant-clinvar]
           display_order: 1004
           on_by_default: false
@@ -140,7 +140,7 @@ genome_track_categories:
             - url: https://www.ncbi.nlm.nih.gov/clinvar/
               name: ClinVar
         - label: NHGRI-EBI GWAS Catalog short variants
-          track_id: variant-gwas
+          track_id: 33c24644-f852-400f-892e-ee33dfdef4b1
           trigger: [track, expand-variation, variant-gwas]
           display_order: 1005
           on_by_default: false
@@ -168,7 +168,7 @@ genome_track_categories:
       track_category_id: regulatory-features
       track_list:
         - label: Regulatory annotation
-          track_id: regulation
+          track_id: f6c17069-049f-42e4-bb94-ffb97819871e
           trigger: [track, regulation]
           display_order: 890
           on_by_default: true
@@ -207,7 +207,7 @@ genome_track_categories:
         - additional_info: Forward strand
           colour: DARK_GREY
           label: Protein coding genes
-          track_id: gene-pc-fwd
+          track_id: 902b39a7-ff79-4b35-93e6-05db64814f02
           trigger: [track, gene-pc-fwd]
           display_order: -110
           on_by_default: true
@@ -220,7 +220,7 @@ genome_track_categories:
         - additional_info: Forward strand
           colour: GREY
           label: Other genes
-          track_id: gene-other-fwd
+          track_id: 30e46804-d66b-4b00-942a-e22bf0f4029e
           trigger: [track, gene-other-fwd]
           display_order: -100
           on_by_default: true
@@ -233,7 +233,7 @@ genome_track_categories:
         - additional_info: Reverse strand
           colour: DARK_GREY
           label: Protein coding genes
-          track_id: gene-pc-rev
+          track_id: b9337c3a-5d8c-4e24-a365-afb6d85a49f9
           trigger: [track, gene-pc-rev]
           display_order: 100
           on_by_default: true
@@ -246,7 +246,7 @@ genome_track_categories:
         - additional_info: Reverse strand
           colour: GREY
           label: Other genes
-          track_id: gene-other-rev
+          track_id: d920999b-61c0-4dc5-bb25-83f72a39203a
           trigger: [track, gene-other-rev]
           display_order: 110
           on_by_default: true
@@ -263,7 +263,7 @@ genome_track_categories:
       track_category_id: assembly
       track_list:
         - label: Reference sequence
-          track_id: contig
+          track_id: 56fd76e9-e500-4c3e-83b5-b7f4e467f1f0
           trigger: [track, contig]
           display_order: 0
           on_by_default: true
@@ -271,7 +271,7 @@ genome_track_categories:
             Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
-          track_id: gc
+          track_id: 55bd24cc-a8a8-434e-9c76-e059e8aab836
           trigger: [track, gc]
           display_order: 900
           on_by_default: true
@@ -291,7 +291,7 @@ genome_track_categories:
       track_category_id: short-variants
       track_list:
         - label: dbSNP short variants
-          track_id: variant-dbsnp
+          track_id: 5ccd0c9c-726e-4601-aeb8-3d9f489f5c5a
           trigger: [track, expand-variation, variant-dbsnp]
           display_order: 1000
           on_by_default: true
@@ -340,7 +340,7 @@ genome_track_categories:
         - additional_info: Forward strand
           colour: DARK_GREY
           label: Protein coding genes
-          track_id: gene-pc-fwd
+          track_id: d0324af7-19e3-4714-bb2f-4a04bc546f63
           trigger: [track, gene-pc-fwd]
           display_order: -110
           on_by_default: true
@@ -353,7 +353,7 @@ genome_track_categories:
         - additional_info: Forward strand
           colour: GREY
           label: Other genes
-          track_id: gene-other-fwd
+          track_id: b70d0824-6015-4125-a5eb-1baf44b73fd4
           trigger: [track, gene-other-fwd]
           display_order: -100
           on_by_default: true
@@ -371,7 +371,7 @@ genome_track_categories:
         - additional_info: Reverse strand
           colour: DARK_GREY
           label: Protein coding genes
-          track_id: gene-pc-rev
+          track_id: 85d58057-88f4-42d7-a11d-f29e99f53114
           trigger: [track, gene-pc-rev]
           display_order: 100
           on_by_default: true
@@ -384,7 +384,7 @@ genome_track_categories:
         - additional_info: Reverse strand
           colour: GREY
           label: Other genes
-          track_id: gene-other-rev
+          track_id: 2612fd23-0c2e-4501-a010-eca8418887d9
           trigger: [track, gene-other-rev]
           display_order: 110
           on_by_default: true
@@ -406,7 +406,7 @@ genome_track_categories:
       track_category_id: assembly
       track_list:
         - label: Reference sequence
-          track_id: contig
+          track_id: 127da644-e11c-4a59-994f-226812200d60
           trigger: [track, contig]
           display_order: 0
           on_by_default: true
@@ -414,7 +414,7 @@ genome_track_categories:
             Shows the sequence scaffolds underlying the reference assembly
           sources: []
         - label: '%GC'
-          track_id: gc
+          track_id: 50b586ef-8765-40ec-b440-fae3ee138368
           trigger: [track, gc]
           display_order: 900
           on_by_default: true
@@ -434,7 +434,7 @@ genome_track_categories:
       track_category_id: short-variants
       track_list:
         - label: EVA short variants
-          track_id: variant-eva
+          track_id: 7f9871de-856b-41d2-9fd6-95586da87e0f
           trigger: [track, expand-variation, variant-eva]
           display_order: 1000
           on_by_default: true
@@ -483,7 +483,7 @@ genome_track_categories:
         - additional_info: Forward strand
           colour: DARK_GREY
           label: Protein coding genes
-          track_id: gene-pc-fwd
+          track_id: c064b939-c8e8-4803-85a1-0ca26e4198fa
           trigger: [track, gene-pc-fwd]
           display_order: -110
           on_by_default: true
@@ -496,7 +496,7 @@ genome_track_categories:
         - additional_info: Forward strand
           colour: GREY
           label: Other genes
-          track_id: gene-other-fwd
+          track_id: a92d4150-1a1c-43e2-bc2f-78bb57de669c
           trigger: [track, gene-other-fwd]
           display_order: -100
           on_by_default: true
@@ -509,7 +509,7 @@ genome_track_categories:
         - additional_info: Reverse strand
           colour: DARK_GREY
           label: Protein coding genes
-          track_id: gene-pc-rev
+          track_id: 3df0034f-756e-489f-b085-49fd55d7e1c7
           trigger: [track, gene-pc-rev]
           display_order: 100
           on_by_default: true
@@ -522,7 +522,7 @@ genome_track_categories:
         - additional_info: Reverse strand
           colour: GREY
           label: Other genes
-          track_id: gene-other-rev
+          track_id: 496702ce-3ba8-4328-8ec9-4946b6a35b39
           trigger: [track, gene-other-rev]
           display_order: 110
           on_by_default: true
@@ -539,7 +539,7 @@ genome_track_categories:
       track_category_id: assembly
       track_list:
         - label: Reference sequence
-          track_id: contig
+          track_id: f018d933-ad60-4d79-85f2-d3285ffd9097
           trigger: [track, contig]
           display_order: 0
           on_by_default: true
@@ -547,7 +547,7 @@ genome_track_categories:
             Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
-          track_id: gc
+          track_id: 1e90ffee-64c5-47b4-9567-7e8e22b72a02
           trigger: [track, gc]
           display_order: 900
           on_by_default: true
@@ -567,7 +567,7 @@ genome_track_categories:
       track_category_id: short-variants
       track_list:
         - label: SGRP short variants
-          track_id: variant-sgrp
+          track_id: fb2983fa-6a5f-40b5-848b-3f8b8a666bde
           trigger: [track, expand-variation, variant-sgrp]
           display_order: 1000
           on_by_default: true
@@ -614,7 +614,7 @@ genome_track_categories:
         - additional_info: Forward strand
           colour: DARK_GREY
           label: Protein coding genes
-          track_id: gene-pc-fwd
+          track_id: a3aea318-81d2-4519-ad3b-bfd599752722
           trigger: [track, gene-pc-fwd]
           display_order: -110
           on_by_default: true
@@ -627,7 +627,7 @@ genome_track_categories:
         - additional_info: Forward strand
           colour: GREY
           label: Other genes
-          track_id: gene-other-fwd
+          track_id: a6297043-2aeb-458d-92c3-3682330e319e
           trigger: [track, gene-other-fwd]
           display_order: -100
           on_by_default: true
@@ -640,7 +640,7 @@ genome_track_categories:
         - additional_info: Reverse strand
           colour: DARK_GREY
           label: Protein coding genes
-          track_id: gene-pc-rev
+          track_id: c73c65b9-ed9c-4aca-8fe7-5a15af747d81
           trigger: [track, gene-pc-rev]
           display_order: 100
           on_by_default: true
@@ -653,7 +653,7 @@ genome_track_categories:
         - additional_info: Reverse strand
           colour: GREY
           label: Other genes
-          track_id: gene-other-rev
+          track_id: fdeb77bb-4bd0-4ad2-bb82-b9cb40d5403f
           trigger: [track, gene-other-rev]
           display_order: 110
           on_by_default: true
@@ -670,7 +670,7 @@ genome_track_categories:
       track_category_id: assembly
       track_list:
         - label: Reference sequence
-          track_id: contig
+          track_id: 2448ef24-3096-43e3-a231-bfcb7785af70
           trigger: [track, contig]
           display_order: 0
           on_by_default: true
@@ -678,7 +678,7 @@ genome_track_categories:
             Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
-          track_id: gc
+          track_id: f6d28ca5-b2b3-4f86-9acc-51365f697cd9
           trigger: [track, gc]
           display_order: 900
           on_by_default: true
@@ -737,7 +737,7 @@ genome_track_categories:
         - additional_info: Forward strand
           colour: DARK_GREY
           label: Protein coding genes
-          track_id: gene-pc-fwd
+          track_id: d68b3370-cbd6-4fe8-a88b-81e10dc14e47
           trigger: [track, gene-pc-fwd]
           display_order: -110
           on_by_default: true
@@ -750,7 +750,7 @@ genome_track_categories:
         - additional_info: Forward strand
           colour: GREY
           label: Other genes
-          track_id: gene-other-fwd
+          track_id: 7ba464c3-5ee5-49f7-80b7-29ffb6e8f588
           trigger: [track, gene-other-fwd]
           display_order: -100
           on_by_default: true
@@ -763,7 +763,7 @@ genome_track_categories:
         - additional_info: Reverse strand
           colour: DARK_GREY
           label: Protein coding genes
-          track_id: gene-pc-rev
+          track_id: de53ee9f-bfa0-4885-ad40-fc25ab085ba2
           trigger: [track, gene-pc-rev]
           display_order: 100
           on_by_default: true
@@ -776,7 +776,7 @@ genome_track_categories:
         - additional_info: Reverse strand
           colour: GREY
           label: Other genes
-          track_id: gene-other-rev
+          track_id: 68ea5667-3d9b-4a06-841f-985cfb28f63f
           trigger: [track, gene-other-rev]
           display_order: 110
           on_by_default: true
@@ -793,7 +793,7 @@ genome_track_categories:
       track_category_id: assembly
       track_list:
         - label: Reference sequence
-          track_id: contig
+          track_id: 96d24b58-822d-43ed-b655-ff14d449fb0b
           trigger: [track, contig]
           display_order: 0
           on_by_default: true
@@ -801,7 +801,7 @@ genome_track_categories:
             Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
-          track_id: gc
+          track_id: d68b663c-af22-4079-ba08-0ab5912a70f1
           trigger: [track, gc]
           display_order: 900
           on_by_default: true
@@ -860,7 +860,7 @@ genome_track_categories:
         - additional_info: Forward strand
           colour: DARK_GREY
           label: Protein coding genes
-          track_id: gene-pc-fwd
+          track_id: a52dee93-fb89-4ac8-b6f8-f7a241189fae
           trigger: [track, gene-pc-fwd]
           display_order: -110
           on_by_default: true
@@ -873,7 +873,7 @@ genome_track_categories:
         - additional_info: Forward strand
           colour: GREY
           label: Other genes
-          track_id: gene-other-fwd
+          track_id: 9147c45f-dd4e-4a2f-aa98-8634c4829798
           trigger: [track, gene-other-fwd]
           display_order: -100
           on_by_default: true
@@ -889,7 +889,7 @@ genome_track_categories:
         - additional_info: Reverse strand
           colour: DARK_GREY
           label: Protein coding genes
-          track_id: gene-pc-rev
+          track_id: e4898f08-5421-4770-b677-7923f5ed219b
           trigger: [track, gene-pc-rev]
           display_order: 100
           on_by_default: true
@@ -902,7 +902,7 @@ genome_track_categories:
         - additional_info: Reverse strand
           colour: GREY
           label: Other genes
-          track_id: gene-other-rev
+          track_id: e079534e-aeaa-4687-8a65-b082cf9ba819
           trigger: [track, gene-other-rev]
           display_order: 110
           on_by_default: true
@@ -922,7 +922,7 @@ genome_track_categories:
       track_category_id: assembly
       track_list:
         - label: Reference sequence
-          track_id: contig
+          track_id: adf92b34-2f11-432a-9e6f-f8e40c62c778
           trigger: [track, contig]
           display_order: 0
           on_by_default: true
@@ -930,7 +930,7 @@ genome_track_categories:
             Shows the contigs underlying the reference assembly
           sources: []
         - label: '%GC'
-          track_id: gc
+          track_id: de31f27c-afb0-4676-b8b8-ecc29d9479f0
           trigger: [track, gc]
           display_order: 900
           on_by_default: true
