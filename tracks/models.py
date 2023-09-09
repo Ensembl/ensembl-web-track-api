@@ -42,7 +42,7 @@ class Track(models.Model):
     label = models.CharField(max_length=100)
     track_id = models.UUIDField(default=uuid.uuid4)
     trigger = ArrayField(models.CharField(max_length=50))
-    type = ArrayField(models.CharField(max_length=50))
+    type = models.CharField(max_length=50)
     datafiles = models.JSONField(default=dict)
     on_by_default = models.BooleanField(default=False)
     display_order = models.IntegerField(null=True)
