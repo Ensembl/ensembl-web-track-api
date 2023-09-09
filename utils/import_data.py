@@ -55,6 +55,8 @@ with open(yaml_file) as f:
                     genome_obj, created = Genome.objects.get_or_create(genome_id=genome_id)
                     if not created:
                         sys.exit("Previous data still in the database, giving up.")
+                    else:
+                        print("Flush OK. Continuing with import.")
                 else:
                     sys.exit("Flush failed, cancelling the data import.")
             categories = data[genome_id]
