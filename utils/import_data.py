@@ -51,7 +51,6 @@ with open(yaml_file) as f:
                 print("Genome ID '%s' already imported!\nNeed to clear the database. Proceeding to flush..."
                     % genome_id)
                 ret = django.core.management.call_command('flush')
-                "Return code: %d" % ret
                 if ret:
                     genome_obj, created = Genome.objects.get_or_create(genome_id=genome_id)
                     if not created:
