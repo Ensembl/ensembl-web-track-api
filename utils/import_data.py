@@ -77,8 +77,8 @@ with open(yaml_file) as f:
                         label=track["label"],
                         track_id=track["track_id"],
                         trigger=track["trigger"],
-                        trigger=track["type"],
-                        trigger=track["datafiles"],
+                        type=track["type"],
+                        datafiles=track["datafiles"],
                         display_order=track["display_order"],
                         on_by_default=track["on_by_default"],
                         category=category_obj
