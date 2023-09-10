@@ -1,5 +1,5 @@
 from tracks.models import Genome, Track
-from tracks.serializers import GenomeTracksSerializer, TrackSerializer
+from tracks.serializers import GenomeTracksSerializer, BackendTrackSerializer
 from rest_framework import generics
 
 
@@ -17,6 +17,6 @@ class TrackObject(generics.RetrieveAPIView):
     Retrieve a single track object by its track uuid.
     """
     queryset = Track.objects.all()
-    serializer_class = TrackSerializer
+    serializer_class = BackendTrackSerializer
     lookup_field = "track_id"
     pagination_class = None
