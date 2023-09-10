@@ -20,8 +20,6 @@ class ClientTrackSerializer(serializers.ModelSerializer):
             "display_order", "on_by_default", "additional_info", "description", "sources"]
 
 class BackendTrackSerializer(serializers.ModelSerializer):
-    sources = SourceSerializer(many=True, read_only=True)
-
     class Meta:
         model = Track
         fields = ["label", "track_id", "colour", "trigger", "type", "datafiles",
