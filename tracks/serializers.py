@@ -19,7 +19,7 @@ class ClientTrackSerializer(serializers.ModelSerializer):
         fields = ["label", "track_id", "colour", "trigger", "type",
             "display_order", "on_by_default", "additional_info", "description", "sources"]
 
-class BackendTrackSerializer(serializers.ModelSerializer):
+class GenomeBrowserTrackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Track
         fields = ["label", "track_id", "colour", "trigger", "type", "datafiles",
