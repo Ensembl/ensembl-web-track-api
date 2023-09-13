@@ -1,8 +1,5 @@
 """
 URL Configuration for the Tracks Django app in Ensembl Track API endpoint
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.1/topics/http/urls/
 """
 from django.urls import path
 from . import views
@@ -10,5 +7,6 @@ from . import views
 app_name = "tracks"
 
 urlpatterns = [
-    path("<slug:genome_id>", views.GenomeTrackList.as_view(), name="genome_tracks"),
+    path("track_categories/<uuid:genome_id>", views.GenomeTrackList.as_view(), name="genome_tracks"),
+    path("track/<uuid:track_id>", views.TrackObject.as_view(), name="track"),
 ]

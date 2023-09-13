@@ -51,11 +51,12 @@ with open(yaml_file) as f:
                 print("Genome ID '%s' already imported!\nNeed to clear the database. Proceeding to flush..."
                     % genome_id)
                 ret = django.core.management.call_command('flush')
-                "Return code: %d" % ret
                 if ret:
                     genome_obj, created = Genome.objects.get_or_create(genome_id=genome_id)
                     if not created:
                         sys.exit("Previous data still in the database, giving up.")
+                    else:
+                        print("Flush OK. Continuing with import.")
                 else:
                     sys.exit("Flush failed, cancelling the data import.")
             categories = data[genome_id]
@@ -77,6 +78,8 @@ with open(yaml_file) as f:
                         label=track["label"],
                         track_id=track["track_id"],
                         trigger=track["trigger"],
+                        type=track["type"],
+                        datafiles=track["datafiles"],
                         display_order=track["display_order"],
                         on_by_default=track["on_by_default"],
                         category=category_obj
