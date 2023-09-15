@@ -103,7 +103,7 @@ genome_track_categories:
       track_list:
         - label: dbSNP short variants
           track_id: 5406535e-b21a-45a6-b9d6-75482353206f
-          trigger: [track, expand-variation, variant-dbsnp]
+          trigger: [track, expand-variation, 5406535e-b21a-45a6-b9d6-75482353206f]
           type: variant
           datafiles:
             details: variant-dbsnp-details.bb
@@ -272,7 +272,7 @@ genome_track_categories:
       track_list:
         - label: dbSNP short variants
           track_id: 5ccd0c9c-726e-4601-aeb8-3d9f489f5c5a
-          trigger: [track, expand-variation, variant-dbsnp]
+          trigger: [track, expand-variation, 5ccd0c9c-726e-4601-aeb8-3d9f489f5c5a]
           type: variant
           datafiles:
             details: variant-dbsnp-details.bb
@@ -431,7 +431,7 @@ genome_track_categories:
       track_list:
         - label: EVA short variants
           track_id: 7f9871de-856b-41d2-9fd6-95586da87e0f
-          trigger: [track, expand-variation, variant-eva]
+          trigger: [track, expand-variation, 7f9871de-856b-41d2-9fd6-95586da87e0f]
           type: variant
           datafiles:
             details: variant-eva-details.bb
@@ -580,7 +580,7 @@ genome_track_categories:
       track_list:
         - label: SGRP short variants
           track_id: fb2983fa-6a5f-40b5-848b-3f8b8a666bde
-          trigger: [track, expand-variation, variant-sgrp]
+          trigger: [track, expand-variation, fb2983fa-6a5f-40b5-848b-3f8b8a666bde]
           type: variant
           datafiles:
             details: variant-sgrp-details.bb
