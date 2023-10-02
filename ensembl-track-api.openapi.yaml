@@ -43,15 +43,31 @@ paths:
             application/json:
               schema:
                 type: object
-                properties:
-                  track_categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/TrackCategory'
+                $ref: '#/components/schemas/TrackCategories'
         '400':
           description: Invalid request.
         '404':
           description: Specified genome ID was not found.
+      post:
+        summary: Creates new track categories for a given genome.
+        requestBody:
+          description: The track categories to create.
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackCategories'
+        responses:
+          '201':
+            description: The track categories were successfully created.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/TrackCategories'
+          '400':
+            description: Invalid request.
+          '404':
+            description: Specified genome ID was not found.
   /tracks/{track_id}:
     get:
       summary: Returns data about a single track
@@ -71,8 +87,48 @@ paths:
               schema:
                 type: object
                 $ref: '#/components/schemas/Track'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Specified track ID was not found.
+    put:
+      summary: Updates metadata for a single track.
+      parameters:
+        - name: track_id
+          in: path
+          required: true
+          description: Track ID
+          schema:
+            type : string
+          example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
+      requestBody:
+        description: The track to update.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Track'
+      responses:
+        '200':
+          description: Successful request.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Track'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Specified track ID was not found.
 components:
   schemas:
+    TrackCategories:
+      type: object
+      properties:
+        track_categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackCategory'
     TrackCategory:
       type: object
       properties:
