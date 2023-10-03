@@ -46,6 +46,8 @@ paths:
                 $ref: '#/components/schemas/TrackCategories'
         '400':
           description: Invalid request.
+        '404':
+          description: Specified genome ID was not found.
     post:
       summary: Creates new track categories for a given genome.
       parameters:
