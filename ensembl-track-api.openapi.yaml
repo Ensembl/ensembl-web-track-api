@@ -73,8 +73,6 @@ paths:
                 $ref: '#/components/schemas/TrackCategories'
         '400':
           description: Invalid request.
-        '404':
-          description: Specified genome ID was not found.
   /tracks/{track_id}:
     get:
       summary: Returns data about a single track
@@ -93,36 +91,6 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Track'
-        '400':
-          description: Invalid request.
-        '404':
-          description: Specified track ID was not found.
-    put:
-      summary: Updates metadata for a single track.
-      parameters:
-        - name: track_id
-          in: path
-          required: true
-          description: Track ID
-          schema:
-            type : string
-            format: uuid
-          example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
-      requestBody:
-        description: The track to update.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Track'
-      responses:
-        '200':
-          description: Successful request.
-          content:
-            application/json:
-              schema:
-                type: object
                 $ref: '#/components/schemas/Track'
         '400':
           description: Invalid request.
