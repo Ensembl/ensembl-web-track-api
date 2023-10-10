@@ -112,6 +112,7 @@ paths:
           description: Invalid request.
         '404':
           description: Specified track ID was not found.
+
 components:
   schemas:
     TrackCategories:
@@ -130,12 +131,6 @@ components:
         label:
           type: string
           example: Genes & transcripts
-        track_list:
-          type: array
-          items:
-            allOf:
-              - $ref: '#/components/schemas/Track'
-              - $ref: '#/components/schemas/TrackDescription'
         types:
           type: array
           items:
@@ -144,6 +139,12 @@ components:
               - Genomic
               - Variation
               - Expression
+        track_list:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/Track'
+              - $ref: '#/components/schemas/TrackDescription'
     Track:
       type: object
       properties:
