@@ -38,15 +38,15 @@ paths:
             format: uuid
           example: a7335667-93e7-11ec-a39d-005056b38ce3
       responses:
-        "200":
+        '200':
           description: Successful request.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TrackCategories"
-        "400":
+                $ref: '#/components/schemas/TrackCategories'
+        '400':
           description: Invalid request.
-        "404":
+        '404':
           description: Specified genome ID was not found.
   /track:
     post:
@@ -58,11 +58,11 @@ paths:
           application/json:
             schema:
               allOf:
-                - $ref: "#/components/schemas/Track"
-                - $ref: "#/components/schemas/TrackDatafiles"
-                - $ref: "#/components/schemas/TrackDescription"
+                - $ref: '#/components/schemas/Track'
+                - $ref: '#/components/schemas/TrackDatafiles'
+                - $ref: '#/components/schemas/TrackDescription'
       responses:
-        "201":
+        '201':
           description: Track was successfully created.
           content:
             application/json:
@@ -74,7 +74,7 @@ paths:
                     type: string
                     format: uuid
                     example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
-        "400":
+        '400':
           description: Invalid request.
           content:
             application/json:
@@ -100,17 +100,17 @@ paths:
             format: uuid
           example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
       responses:
-        "200":
+        '200':
           description: Successful request.
           content:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#/components/schemas/Track"
-                  - $ref: "#/components/schemas/TrackDatafiles"
-        "400":
+                  - $ref: '#/components/schemas/Track'
+                  - $ref: '#/components/schemas/TrackDatafiles'
+        '400':
           description: Invalid request.
-        "404":
+        '404':
           description: Specified track ID was not found.
 components:
   schemas:
@@ -120,7 +120,7 @@ components:
         track_categories:
           type: array
           items:
-            $ref: "#/components/schemas/TrackCategory"
+            $ref: '#/components/schemas/TrackCategory'
     TrackCategory:
       type: object
       properties:
@@ -134,8 +134,8 @@ components:
           type: array
           items:
             allOf:
-              - $ref: "#/components/schemas/Track"
-              - $ref: "#/components/schemas/TrackDescription"
+              - $ref: '#/components/schemas/Track'
+              - $ref: '#/components/schemas/TrackDescription'
         types:
           type: array
           items:
@@ -161,7 +161,7 @@ components:
           type: array
           items:
             type: string
-          example: ["track", "gene-pc-fwd"]
+          example: ['track', 'gene-pc-fwd']
         type:
           type: string
           enum:
