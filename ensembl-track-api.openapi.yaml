@@ -108,8 +108,6 @@ paths:
                 allOf:
                   - $ref: '#/components/schemas/Track'
                   - $ref: '#/components/schemas/TrackDatafiles'
-        '400':
-          description: Invalid request.
         '404':
           description: Specified track ID was not found.
 
