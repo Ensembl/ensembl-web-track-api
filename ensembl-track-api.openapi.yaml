@@ -1,26 +1,26 @@
 #
-#    See the NOTICE file distributed with this work for additional information
-#    regarding copyright ownership.
+#  See the NOTICE file distributed with this work for additional information
+#  regarding copyright ownership.
 #
-#    Licensed under the Apache License, Version 2.0 (the "License");
-#    you may not use this file except in compliance with the License.
-#    You may obtain a copy of the License at
-#    http://www.apache.org/licenses/LICENSE-2.0
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#  http://www.apache.org/licenses/LICENSE-2.0
 #
-#    Unless required by applicable law or agreed to in writing, software
-#    distributed under the License is distributed on an "AS IS" BASIS,
-#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#    See the License for the specific language governing permissions and
-#    limitations under the License.
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
 #
 
 openapi: 3.0.3
 info:
   title: Ensembl Track API
-  description: Backend service serving a list of available genome browser tracks and track categories.
+  description: REST interface for managing track metadata in Ensembl Beta.
   contact:
-    email: andres@ebi.ac.uk
-  version: 0.0.1
+    email: ensembl-webteam@ebi.ac.uk
+  version: 0.1.0
 servers:
   - url: http://beta.ensembl.org/api/tracks
     description: Production server
@@ -34,7 +34,8 @@ paths:
           required: true
           description: Stable genome ID.
           schema:
-            type : string
+            type: string
+            format: uuid
           example: a7335667-93e7-11ec-a39d-005056b38ce3
       responses:
         '200':
@@ -42,17 +43,51 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  track_categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/TrackCategory'
+                $ref: '#/components/schemas/TrackCategories'
         '400':
           description: Invalid request.
         '404':
           description: Specified genome ID was not found.
-  /tracks/{track_id}:
+  /track:
+    post:
+      summary: Creates a new track.
+      requestBody:
+        description: Data for the new track.
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Track'
+                - $ref: '#/components/schemas/TrackDatafiles'
+                - $ref: '#/components/schemas/TrackDescription'
+      responses:
+        '201':
+          description: Track was successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  track_id:
+                    description: UUID of the created track.
+                    type: string
+                    format: uuid
+                    example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    description: >
+                      Error message (for example, if a track with the same 
+                      genome ID, label and datafiles already exists).
+                    type: string
+                    example: Track already exists.
+  /track/{track_id}:
     get:
       summary: Returns data about a single track
       parameters:
@@ -61,7 +96,8 @@ paths:
           required: true
           description: Track ID
           schema:
-            type : string
+            type: string
+            format: uuid
           example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
       responses:
         '200':
@@ -69,10 +105,21 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                $ref: '#/components/schemas/Track'
+                allOf:
+                  - $ref: '#/components/schemas/Track'
+                  - $ref: '#/components/schemas/TrackDatafiles'
+        '404':
+          description: Specified track ID was not found.
+
 components:
   schemas:
+    TrackCategories:
+      type: object
+      properties:
+        track_categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackCategory'
     TrackCategory:
       type: object
       properties:
@@ -82,10 +129,6 @@ components:
         label:
           type: string
           example: Genes & transcripts
-        track_list:
-          type: array
-          items:
-            $ref: '#/components/schemas/Track'
         types:
           type: array
           items:
@@ -94,12 +137,25 @@ components:
               - Genomic
               - Variation
               - Expression
+        track_list:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/Track'
+              - $ref: '#/components/schemas/TrackDescription'
     Track:
       type: object
       properties:
         track_id:
           type: string
+          format: uuid
+          readOnly: true
           example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
+        genome_id:
+          type: string
+          format: uuid
+          writeOnly: true
+          example: a7335667-93e7-11ec-a39d-005056b38ce3
         trigger:
           type: array
           items:
@@ -111,12 +167,6 @@ components:
             - gene
             - variant
             - regular
-        datafiles:
-          type: object
-          additionalProperties: string
-          example:
-            details: variant-dbsnp-details.bb
-            summary: variant-dbsnp-summary.bw
         label:
           type: string
           example: Protein coding genes
@@ -126,9 +176,30 @@ components:
         additional_info:
           type: string
           example: Forward strand
+        display_order:
+          type: number
+          example: 2
+        on_by_default:
+          type: boolean
+          example: true
+    TrackDatafiles:
+      type: object
+      properties:
+        datafiles:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            details: variant-dbsnp-details.bb
+            summary: variant-dbsnp-summary.bw
+    TrackDescription:
+      type: object
+      properties:
         description:
           type: string
-          example: Shows all protein coding genes on the forward strand.\nPart of the GENCODE Comprehensive gene set
+          example: |-
+            Shows all protein coding genes on the forward strand.
+            Part of the GENCODE Comprehensive gene set
         sources:
           type: array
           items:
@@ -140,9 +211,3 @@ components:
               url:
                 type: string
                 example: https://gencodegenes.org
-        display_order:
-          type: number
-          example: 2
-        on_by_default:
-          type: boolean
-          example: true
