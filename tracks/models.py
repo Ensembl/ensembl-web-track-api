@@ -12,7 +12,7 @@ class Category(models.Model):
     category_type = models.CharField(models.TextChoices('CategoryType', ['Genomic','Variation','Regulation']), max_length=20)
 
 class Track(models.Model):
-    track_id = models.UUIDField(primary_key=True, default=uuid.uuid4) #auto-generate track IDs
+    track_id = models.UUIDField(unique=True, default=uuid.uuid4) #auto-generate track IDs
     genome_id = models.UUIDField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     label = models.CharField(max_length=50)
