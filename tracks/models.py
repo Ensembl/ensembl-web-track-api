@@ -3,58 +3,33 @@ from django.contrib.postgres.fields import ArrayField
 import uuid
 
 """
-Database models for storing track category lists.
-Structure: Genome => [Category => [Track, ...], ...], Genome => ...
-Sample data: data/track_categories.yaml
+Django datamodels representing tracks in Track API database.
 """
 
-
-class Genome(models.Model):
-    genome_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-
-
 class Category(models.Model):
-    genome = models.ForeignKey(
-        Genome, related_name="track_categories", on_delete=models.CASCADE
-    )
-    label = models.CharField(max_length=100)
-    track_category_id = models.CharField(max_length=100, blank=True, default="")
-
-    class Meta:
-        ordering = ['id']
-
-
-class CategoryType(models.Model):
-    category = models.ManyToManyField(Category, related_name="types")
-    type = models.CharField(
-        max_length=30, unique=True
-    )  # type = 'Genomic'|'Expression'|'Variation'
-
-    def __str__(self):
-        return str(self.type)
-
+    label = models.CharField(max_length=50)
+    track_category_id = models.CharField(unique=True, max_length=50)
+    category_type = models.CharField(models.TextChoices('CategoryType', ['Genomic','Variation','Regulation']), max_length=20)
 
 class Track(models.Model):
-    category = models.ForeignKey(
-        Category, related_name="track_list", on_delete=models.CASCADE
-    )
-    colour = models.CharField(max_length=30, blank=True, default="")
-    label = models.CharField(max_length=100)
-    track_id = models.UUIDField(default=uuid.uuid4)
+    track_id = models.UUIDField(primary_key=True, default=uuid.uuid4) #auto-generate track IDs
+    genome_id = models.UUIDField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    label = models.CharField(max_length=50)
     trigger = ArrayField(models.CharField(max_length=50))
-    type = models.CharField(max_length=50)
+    type = models.CharField(models.TextChoices('TrackType', ['gene','variant','regular']), max_length=20)
     datafiles = models.JSONField(default=dict)
+    colour = models.CharField(max_length=20, blank=True, default="")
     on_by_default = models.BooleanField(default=False)
     display_order = models.IntegerField(null=True)
-    additional_info = models.TextField(blank=True, default="")
+    additional_info = models.CharField(blank=True, default="")
     description = models.TextField(blank=True, default="")
 
     class Meta:
         ordering = ['id'] #order tracks by its insertion order
+        constraints = [models.UniqueConstraint(fields=['genome_id', 'label', 'datafiles'])]
 
 class Source(models.Model):
-    track = models.ManyToManyField( #reuse source objects in tracks
-        Track, related_name="sources"
-    )
-    name = models.CharField(max_length=100)
+    track = models.ManyToManyField(Track, related_name="sources")
+    name = models.CharField(max_length=50)
     url = models.URLField()
