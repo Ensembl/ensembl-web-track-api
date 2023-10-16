@@ -2,7 +2,7 @@ from .models import Genome, Category, Track, Source
 from rest_framework import serializers
 
 """
-DRF Serializers corresponding to tracks app datamodels
+Serializers for Track API datamodels
 """
 
 class SourceSerializer(serializers.ModelSerializer):
@@ -10,34 +10,38 @@ class SourceSerializer(serializers.ModelSerializer):
         model = Source
         fields = ["name", "url"]
 
-
-class ClientTrackSerializer(serializers.ModelSerializer):
-    sources = SourceSerializer(many=True, read_only=True)
+class BaseTrackSerializer(serializers.ModelSerializer):
+    sources = SourceSerializer(many=True)
 
     class Meta:
         model = Track
-        fields = ["label", "track_id", "colour", "trigger", "type",
-            "display_order", "on_by_default", "additional_info", "description", "sources"]
+        fields = ["track_id", "label", "colour", "trigger", "type",
+            "display_order", "on_by_default", "sources"]
 
-class GenomeBrowserTrackSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Track
-        fields = ["label", "track_id", "colour", "trigger", "type", "datafiles",
-            "display_order", "on_by_default"]
+class CategoryTrackSerializer(BaseTrackSerializer):
+    class Meta(BaseTrackSerializer.Meta):
+        fields = BaseTrackSerializer.Meta.fields + ["additional_info", "description"]
 
+class ReadTrackSerializer(BaseTrackSerializer):
+    class Meta(BaseTrackSerializer.Meta):
+        fields = BaseTrackSerializer.Meta.fields + ["datafiles"]
+
+class WriteTrackSerializer(BaseTrackSerializer):
+    class Meta(BaseTrackSerializer.Meta):
+        fields = BaseTrackSerializer.Meta.fields + ["genome_id", "datafiles", "additional_info", "description"]
+    
+    def create(self, validated_data):
+        category_data = validated_data.pop('category')
+        category = Category.objects.get_or_create(**category_data)
+        track = Track.objects.create(category=category, **validated_data)
+        return track
 
 class CategorySerializer(serializers.ModelSerializer):
-    types = serializers.StringRelatedField(many=True)
-    track_list = ClientTrackSerializer(many=True, read_only=True)
+    track_list = CategoryTrackSerializer(many=True, read_only=True)
 
     class Meta:
         model = Category
-        fields = ["label", "track_category_id", "types", "track_list"]
+        fields = ["label", "track_category_id", "category_type", "track_list"]
 
-
-class GenomeTracksSerializer(serializers.ModelSerializer):
+class CategoryListSerializer(serializers.ModelSerializer):
     track_categories = CategorySerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Genome
-        fields = ["track_categories"]
