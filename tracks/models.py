@@ -27,7 +27,7 @@ class Track(models.Model):
 
     class Meta:
         ordering = ["id"] #order tracks by its insertion order
-        constraints = [models.UniqueConstraint(fields=["genome_id", "label", "datafiles"])]
+        constraints = [models.UniqueConstraint(fields=["genome_id", "label", "datafiles"], name="unique_track")]
 
 class Source(models.Model):
     track = models.ManyToManyField(Track, related_name="sources")
