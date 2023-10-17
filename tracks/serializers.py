@@ -1,4 +1,4 @@
-from .models import Genome, Category, Track, Source
+from .models import Category, Track, Source
 from rest_framework import serializers
 
 """
