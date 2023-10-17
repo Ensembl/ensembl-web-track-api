@@ -9,7 +9,8 @@ Django datamodels representing tracks in Track API database.
 class Category(models.Model):
     label = models.CharField(max_length=50)
     track_category_id = models.CharField(unique=True, max_length=50)
-    category_type = models.CharField(models.TextChoices("CategoryType", ["Genomic","Variation","Regulation"]), max_length=20)
+    CategoryType = models.TextChoices("CategoryType", ["Genomic","Variation","Regulation"])
+    category_type = models.CharField(choices=CategoryType.choices, max_length=20)
 
 class Track(models.Model):
     track_id = models.UUIDField(unique=True, editable=False, default=uuid.uuid4) #auto-generate track IDs
