@@ -19,10 +19,10 @@ class Track(models.Model):
     trigger = ArrayField(models.CharField(max_length=50))
     type = models.CharField(models.TextChoices("TrackType", ["gene","variant","regular"]), max_length=20)
     datafiles = models.JSONField(default=dict)
-    colour = models.CharField(max_length=20, blank=True, default="")
+    colour = models.CharField(blank=True, default="", max_length=20)
     on_by_default = models.BooleanField(default=False)
     display_order = models.IntegerField(null=True)
-    additional_info = models.CharField(blank=True, default="")
+    additional_info = models.CharField(blank=True, default="", max_length=50)
     description = models.TextField(blank=True, default="")
 
     class Meta:
