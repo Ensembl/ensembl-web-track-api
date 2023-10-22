@@ -135,7 +135,7 @@ components:
         track_categories:
           type: array
           items:
-            $ref: '#/components/schemas/TrackCategory'
+            $ref: '#/components/schemas/CategoryTracks'
     TrackCategory:
       type: object
       properties:
@@ -153,12 +153,19 @@ components:
               - Genomic
               - Variation
               - Expression
+    TrackList:
+      type: object
+      properties:
         track_list:
           type: array
           items:
             allOf:
               - $ref: '#/components/schemas/Track'
               - $ref: '#/components/schemas/TrackDescription'
+    CategoryTracks:
+      allOf:
+        - $ref: '#/components/schemas/TrackCategory'
+        - $ref: '#/components/schemas/TrackList'
     Track:
       type: object
       properties:
