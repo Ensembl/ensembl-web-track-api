@@ -57,5 +57,5 @@ class TracksCategorySerializer(CategorySerializer):
     class Meta:
         fields = CategorySerializer.Meta.fields + ["track_list"]
 
-class CategoryListSerializer(serializers.ModelSerializer):
+class CategoryListSerializer(serializers.Serializer):
     track_categories = TracksCategorySerializer(many=True, read_only=True)
