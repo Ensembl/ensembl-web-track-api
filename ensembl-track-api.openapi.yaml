@@ -27,7 +27,7 @@ servers:
 paths:
   /track_categories/{genome_id}:
     get:
-      summary: Returns a list of track categories for a given genome.
+      summary: Returns all track categories (and tracks) for a given genome.
       parameters:
         - name: genome_id
           in: path
@@ -49,7 +49,7 @@ paths:
         '404':
           description: Specified genome ID was not found.
     delete:
-      summary: Deletes all tracks for a given genome.
+      summary: Deletes all tracks/track categories for a given genome.
       parameters:
         - name: genome_id
           in: path
@@ -105,7 +105,7 @@ paths:
                     example: Track already exists.
   /track/{track_id}:
     get:
-      summary: Returns data about a single track
+      summary: Returns data about a single track (tailored for genome browser).
       parameters:
         - name: track_id
           in: path
@@ -135,7 +135,7 @@ components:
         track_categories:
           type: array
           items:
-            $ref: '#/components/schemas/CategoryTracks'
+            $ref: '#/components/schemas/TrackCategoryWithTracks'
     TrackCategory:
       type: object
       properties:
@@ -162,7 +162,7 @@ components:
             allOf:
               - $ref: '#/components/schemas/Track'
               - $ref: '#/components/schemas/TrackDescription'
-    CategoryTracks:
+    TrackCategoryWithTracks:
       allOf:
         - $ref: '#/components/schemas/TrackCategory'
         - $ref: '#/components/schemas/TrackList'
