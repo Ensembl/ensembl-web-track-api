@@ -15,8 +15,7 @@ class BaseTrackSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Track
-        fields = ["track_id", "label", "colour", "trigger", "type",
-            "display_order", "on_by_default", "sources"]
+        fields = ["track_id", "label", "colour", "trigger", "type", "display_order", "on_by_default", "sources"]
 
 # track payload in "track_categories" endpoint (consumed by client)
 class CategoryTrackSerializer(BaseTrackSerializer):
@@ -38,7 +37,7 @@ class WriteTrackSerializer(BaseTrackSerializer):
     category = CategorySerializer(write_only=True)
 
     class Meta(BaseTrackSerializer.Meta):
-        fields = BaseTrackSerializer.Meta.fields + ["genome_id", "datafiles", "additional_info", "description"]
+        fields = BaseTrackSerializer.Meta.fields + ["genome_id", "category", "datafiles", "additional_info", "description"]
     
     def create(self, validated_data):
         category_data = validated_data.pop('category')
