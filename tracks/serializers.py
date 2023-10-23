@@ -30,7 +30,7 @@ class ReadTrackSerializer(BaseTrackSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ["label", "track_category_id", "category_type"]
+        fields = ["label", "track_category_id", "type"]
 
 # track submission payload
 class WriteTrackSerializer(BaseTrackSerializer):

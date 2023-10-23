@@ -145,14 +145,12 @@ components:
         label:
           type: string
           example: Genes & transcripts
-        types:
-          type: array
-          items:
-            type: string
-            enum:
-              - Genomic
-              - Variation
-              - Expression
+        type:
+          type: string
+          enum:
+            - Genomic
+            - Variation
+            - Expression
     TrackList:
       type: object
       properties:
