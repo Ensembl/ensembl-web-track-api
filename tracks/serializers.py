@@ -43,7 +43,10 @@ class WriteTrackSerializer(BaseTrackSerializer):
         category_data = validated_data.pop('category')
         category_id = category_data.pop('track_category_id')
         category, created = Category.objects.get_or_create(track_category_id=category_id, defaults=category_data)
+        sources = validated_data.pop('sources')
         track = Track.objects.create(category=category, **validated_data)
+        for source in sources:
+            Source.objects.create(track=track, **source)
         return track
 
 # payload wrappers in "track_categories" endpoint
