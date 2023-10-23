@@ -35,3 +35,6 @@ class Source(models.Model):
     track = models.ManyToManyField(Track, related_name="sources")
     name = models.CharField(max_length=50)
     url = models.URLField()
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["name", "url"], name="unique_source")]
