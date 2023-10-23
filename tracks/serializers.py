@@ -41,7 +41,7 @@ class WriteTrackSerializer(BaseTrackSerializer):
     
     def create(self, validated_data):
         category_data = validated_data.pop('category')
-        category = Category.objects.get_or_create(**category_data)
+        category, created = Category.objects.get_or_create(**category_data)
         track = Track.objects.create(category=category, **validated_data)
         return track
 
