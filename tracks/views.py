@@ -19,7 +19,7 @@ class GenomeTrackList(APIView):
                 category_obj = Category.objects.get(id=track.category_id)
                 categories[track.category_id] = CategorySerializer(category_obj).data
                 categories[track.category_id]["track_list"] = []
-            categories[track.category_id]["tracks"].append(ReadTrackSerializer(track).data)
+            categories[track.category_id]["track_list"].append(ReadTrackSerializer(track).data)
         return Response([categories[category_id] for category_id in categories], status=status.HTTP_200_OK)
     
     def delete(self, request, genome_id): #delete all tracks linked to a genome uuid
