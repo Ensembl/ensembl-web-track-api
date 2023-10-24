@@ -31,6 +31,9 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ["label", "track_category_id", "type"]
+        extra_kwargs = {
+            "track_category_id": {"validators": []}
+        }
 
 # track submission payload
 class WriteTrackSerializer(BaseTrackSerializer):
@@ -38,6 +41,10 @@ class WriteTrackSerializer(BaseTrackSerializer):
 
     class Meta(BaseTrackSerializer.Meta):
         fields = BaseTrackSerializer.Meta.fields + ["genome_id", "category", "datafiles", "additional_info", "description"]
+        extra_kwargs = {
+            "genome_id": {"write_only": True},
+            "sources": {"required": False}
+        }
     
     def create(self, validated_data):
         category_data = validated_data.pop('category')

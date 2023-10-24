@@ -40,4 +40,4 @@ class TrackObject(APIView):
         if(serializer.is_valid()):
             serializer.save()
             return Response({"track id": serializer.data.get("track_id")}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(f"Payload validation error: {serializer.errors}", status=status.HTTP_400_BAD_REQUEST)
