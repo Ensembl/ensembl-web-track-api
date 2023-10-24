@@ -1,5 +1,5 @@
-from tracks.models import Track
-from tracks.serializers import ReadTrackSerializer, WriteTrackSerializer, CategoryListSerializer
+from tracks.models import Track, Category
+from tracks.serializers import ReadTrackSerializer, WriteTrackSerializer, CategorySerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,8 +13,14 @@ class GenomeTrackList(APIView):
         tracks = Track.objects.filter(genome_id=genome_id)
         if(not tracks.exists()):
             return Response({"error": "No tracks found for this genome."}, status=status.HTTP_404_NOT_FOUND)
-        serializer = CategoryListSerializer(tracks, many=True) #group track lists to categories
-        return Response(serializer.data)
+        categories = {}
+        for track in tracks:
+            if(track.category_id not in categories):
+                category_obj = Category.objects.get(id=track.category_id)
+                categories[track.category_id] = CategorySerializer(category_obj).data
+                categories[track.category_id]["track_list"] = []
+            categories[track.category_id]["tracks"].append(ReadTrackSerializer(track).data)
+        return Response([categories[category_id] for category_id in categories], status=status.HTTP_200_OK)
     
     def delete(self, request, genome_id): #delete all tracks linked to a genome uuid
         tracks = Track.objects.filter(genome_id=genome_id)

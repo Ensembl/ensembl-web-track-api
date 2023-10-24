@@ -16,6 +16,9 @@ class BaseTrackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Track
         fields = ["track_id", "label", "colour", "trigger", "type", "display_order", "on_by_default", "sources"]
+        extra_kwargs = {
+            "sources": {"required": False}
+        }
 
 # track payload in "track_categories" endpoint (consumed by client)
 class CategoryTrackSerializer(BaseTrackSerializer):
@@ -42,8 +45,7 @@ class WriteTrackSerializer(BaseTrackSerializer):
     class Meta(BaseTrackSerializer.Meta):
         fields = BaseTrackSerializer.Meta.fields + ["genome_id", "category", "datafiles", "additional_info", "description"]
         extra_kwargs = {
-            "genome_id": {"write_only": True},
-            "sources": {"required": False}
+            "genome_id": {"write_only": True}
         }
     
     def create(self, validated_data):
@@ -56,13 +58,3 @@ class WriteTrackSerializer(BaseTrackSerializer):
             source_obj, created = Source.objects.get_or_create(**source)
             track_obj.sources.add(source_obj)
         return track_obj
-
-# payload wrappers in "track_categories" endpoint
-class TracksCategorySerializer(CategorySerializer):
-    track_list = CategoryTrackSerializer(many=True, read_only=True)
-
-    class Meta:
-        fields = CategorySerializer.Meta.fields + ["track_list"]
-
-class CategoryListSerializer(serializers.Serializer):
-    track_categories = TracksCategorySerializer(many=True, read_only=True)
