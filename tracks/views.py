@@ -3,6 +3,7 @@ from tracks.serializers import ReadTrackSerializer, WriteTrackSerializer, Catego
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.db import IntegrityError
 
 
 class GenomeTrackList(APIView):
@@ -14,7 +15,7 @@ class GenomeTrackList(APIView):
         if(not tracks.exists()):
             return Response({"error": "No tracks found for this genome."}, status=status.HTTP_404_NOT_FOUND)
         categories = {}
-        for track in tracks:
+        for track in tracks: #group tracks by category
             if(track.category_id not in categories):
                 category_obj = Category.objects.get(id=track.category_id)
                 categories[track.category_id] = CategorySerializer(category_obj).data
@@ -22,7 +23,7 @@ class GenomeTrackList(APIView):
             categories[track.category_id]["track_list"].append(ReadTrackSerializer(track).data)
         return Response([categories[category_id] for category_id in categories], status=status.HTTP_200_OK)
     
-    def delete(self, request, genome_id): #delete all tracks linked to a genome uuid
+    def delete(self, request, genome_id):
         tracks = Track.objects.filter(genome_id=genome_id)
         if(not tracks.exists()):
             return Response({"error": "No tracks found for this genome."}, status=status.HTTP_404_NOT_FOUND)
@@ -44,6 +45,9 @@ class TrackObject(APIView):
     def post(self, request):
         serializer = WriteTrackSerializer(data=request.data)
         if(serializer.is_valid()):
-            serializer.save()
-            return Response({"track id": serializer.data.get("track_id")}, status=status.HTTP_201_CREATED)
-        return Response(f"Payload validation error: {serializer.errors}", status=status.HTTP_400_BAD_REQUEST)
+            try:
+                serializer.save()
+            except IntegrityError:
+                return Response({"error": "Track already exists."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"track_id": serializer.data.get("track_id")}, status=status.HTTP_201_CREATED)
+        return Response({"error": f"Payload validation failed: {serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)

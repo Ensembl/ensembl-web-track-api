@@ -11,14 +11,11 @@ class SourceSerializer(serializers.ModelSerializer):
         fields = ["name", "url"]
 
 class BaseTrackSerializer(serializers.ModelSerializer):
-    sources = SourceSerializer(many=True)
+    sources = SourceSerializer(many=True, required=False)
 
     class Meta:
         model = Track
         fields = ["track_id", "label", "colour", "trigger", "type", "display_order", "on_by_default", "sources"]
-        extra_kwargs = {
-            "sources": {"required": False}
-        }
 
 # track payload in "track_categories" endpoint (consumed by client)
 class CategoryTrackSerializer(BaseTrackSerializer):
