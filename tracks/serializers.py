@@ -1,8 +1,8 @@
-from .models import Genome, Category, Track, Source
+from .models import Category, Track, Source
 from rest_framework import serializers
 
 """
-DRF Serializers corresponding to tracks app datamodels
+Serializers for Track API datamodels
 """
 
 class SourceSerializer(serializers.ModelSerializer):
@@ -10,34 +10,48 @@ class SourceSerializer(serializers.ModelSerializer):
         model = Source
         fields = ["name", "url"]
 
-
-class ClientTrackSerializer(serializers.ModelSerializer):
-    sources = SourceSerializer(many=True, read_only=True)
+class BaseTrackSerializer(serializers.ModelSerializer):
+    sources = SourceSerializer(many=True, required=False)
 
     class Meta:
         model = Track
-        fields = ["label", "track_id", "colour", "trigger", "type",
-            "display_order", "on_by_default", "additional_info", "description", "sources"]
+        fields = ["track_id", "label", "colour", "trigger", "type", "display_order", "on_by_default", "sources"]
 
-class GenomeBrowserTrackSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Track
-        fields = ["label", "track_id", "colour", "trigger", "type", "datafiles",
-            "display_order", "on_by_default"]
+# track payload in "track_categories" endpoint (consumed by client)
+class CategoryTrackSerializer(BaseTrackSerializer):
+    class Meta(BaseTrackSerializer.Meta):
+        fields = BaseTrackSerializer.Meta.fields + ["additional_info", "description"]
 
+# track payload in "track" endpoint (consumed by genome browser)
+class ReadTrackSerializer(BaseTrackSerializer):
+    class Meta(BaseTrackSerializer.Meta):
+        fields = BaseTrackSerializer.Meta.fields + ["datafiles"]
 
 class CategorySerializer(serializers.ModelSerializer):
-    types = serializers.StringRelatedField(many=True)
-    track_list = ClientTrackSerializer(many=True, read_only=True)
-
     class Meta:
         model = Category
-        fields = ["label", "track_category_id", "types", "track_list"]
+        fields = ["label", "track_category_id", "type"]
+        extra_kwargs = {
+            "track_category_id": {"validators": []}
+        }
 
+# track submission payload
+class WriteTrackSerializer(BaseTrackSerializer):
+    category = CategorySerializer(write_only=True)
 
-class GenomeTracksSerializer(serializers.ModelSerializer):
-    track_categories = CategorySerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Genome
-        fields = ["track_categories"]
+    class Meta(BaseTrackSerializer.Meta):
+        fields = BaseTrackSerializer.Meta.fields + ["genome_id", "category", "datafiles", "additional_info", "description"]
+        extra_kwargs = {
+            "genome_id": {"write_only": True}
+        }
+    
+    def create(self, validated_data):
+        category_data = validated_data.pop('category')
+        category_id = category_data.pop('track_category_id')
+        category_obj, created = Category.objects.get_or_create(track_category_id=category_id, defaults=category_data)
+        sources = validated_data.pop('sources')
+        track_obj = Track.objects.create(category=category_obj, **validated_data)
+        for source in sources:
+            source_obj, created = Source.objects.get_or_create(**source)
+            track_obj.sources.add(source_obj)
+        return track_obj

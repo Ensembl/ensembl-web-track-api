@@ -14,8 +14,6 @@ pip-delete-this-directory.txt
 
 # Django stuff
 staticfiles/
-**/migrations/**
-!**/migrations/__init__.py
 
 # pyenv
 .python-version

@@ -27,7 +27,7 @@ servers:
 paths:
   /track_categories/{genome_id}:
     get:
-      summary: Returns a list of track categories for a given genome.
+      summary: Returns all track categories (and tracks) for a given genome.
       parameters:
         - name: genome_id
           in: path
@@ -44,8 +44,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TrackCategories'
-        '400':
-          description: Invalid request.
+        '404':
+          description: Specified genome ID was not found.
+    delete:
+      summary: Deletes all tracks/track categories for a given genome.
+      parameters:
+        - name: genome_id
+          in: path
+          required: true
+          description: Stable genome ID.
+          schema:
+            type: string
+            format: uuid
+          example: a7335667-93e7-11ec-a39d-005056b38ce3
+      responses:
+        '204':
+          description: Tracks successfuly removed.
         '404':
           description: Specified genome ID was not found.
   /track:
@@ -89,7 +103,7 @@ paths:
                     example: Track already exists.
   /track/{track_id}:
     get:
-      summary: Returns data about a single track
+      summary: Returns data about a single track (tailored for genome browser).
       parameters:
         - name: track_id
           in: path
@@ -119,7 +133,7 @@ components:
         track_categories:
           type: array
           items:
-            $ref: '#/components/schemas/TrackCategory'
+            $ref: '#/components/schemas/TrackCategoryWithTracks'
     TrackCategory:
       type: object
       properties:
@@ -129,20 +143,25 @@ components:
         label:
           type: string
           example: Genes & transcripts
-        types:
-          type: array
-          items:
-            type: string
-            enum:
-              - Genomic
-              - Variation
-              - Expression
+        type:
+          type: string
+          enum:
+            - Genomic
+            - Variation
+            - Expression
+    TrackList:
+      type: object
+      properties:
         track_list:
           type: array
           items:
             allOf:
               - $ref: '#/components/schemas/Track'
               - $ref: '#/components/schemas/TrackDescription'
+    TrackCategoryWithTracks:
+      allOf:
+        - $ref: '#/components/schemas/TrackCategory'
+        - $ref: '#/components/schemas/TrackList'
     Track:
       type: object
       properties:
@@ -156,6 +175,10 @@ components:
           format: uuid
           writeOnly: true
           example: a7335667-93e7-11ec-a39d-005056b38ce3
+        category:
+          allOf:
+            - writeOnly: true
+            - $ref: '#/components/schemas/TrackCategory'
         trigger:
           type: array
           items:
