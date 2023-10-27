@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.db import IntegrityError
+from ensembl_track_api import settings
 
 
 class GenomeTrackList(APIView):
@@ -43,6 +44,8 @@ class TrackObject(APIView):
         return Response(serializer.data)
     
     def post(self, request):
+        if(settings.DEPLOYMENT_ENV not in ["local","dev","internal","staging"]):
+            return Response({"error": "Track submission disabled."}, status=status.HTTP_403_FORBIDDEN)
         serializer = WriteTrackSerializer(data=request.data)
         if(serializer.is_valid()):
             try:
