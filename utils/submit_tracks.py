@@ -119,7 +119,7 @@ elif(mode == 'genomic'):
         "trigger": ["track","contig"],
         "type": "regular",
         "display_order": 0,
-        "description": "Shows the contigs underlying the reference assembly",
+        "description": "Displays the sequence underlying the assembly",
         "sources": []
       }
       submit_track(seq)
@@ -133,6 +133,10 @@ elif(mode == 'genomic'):
       submit_track(gc)
 elif(mode == 'regulation'):
   print('Not implemented yet')
+  reg_track = {
+    "description": """Promoters, enhancers and open chromatin regions are available for all species. 
+    Transcription factor binding and CTCF binding sites are only available for human and mouse.""" #from ENSWBSITES-1969
+  }
 elif(mode == 'remove'):
   if not input:
     print('Species UUID missing')
