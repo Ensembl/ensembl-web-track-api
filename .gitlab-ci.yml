@@ -8,7 +8,7 @@ variables:
 
 .branch-rules:
     rules:
-        - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
+        - if: '$CI_DEPLOY_FREEZE == null && ($CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "dev")'
           when: on_success
         - when: never
 
@@ -82,6 +82,7 @@ variables:
 Docker:
     extends: .build
 
+#Deploy jobs for old k8s cluster (review apps)
 #Deploy feature branch to dev (review apps with custom BE and production DB)
 Review:WP-HX:
     extends: .deploy-review
@@ -128,39 +129,48 @@ Dev:WP-HX:
     only:
         - main
 
-Prod:wp40:HL:
-  extends: .deploy-newk8s
-  environment:
-    name: wp40-hl-prod
-    
-#Deploy job for new k8s cluster
-Staging:WP40:HL:
+#Deploy jobs for new k8s cluster
+Dev:WP41:HX:
     extends: .deploy-newk8s
     environment:
-        name: wp40-hl-staging
-    when: manual
-
-Internal:WP40:HL:
-    extends: .deploy-newk8s
-    environment:
-        name: wp40-hl-internal
-    when: manual
+        name: wp41-hx-development
+    only:
+        - dev
 
 Dev:WP40:HL:
     extends: .deploy-newk8s
     environment:
         name: wp40-hl-development
-    when: manual
+    only:
+        - dev
 
-Dev:WP41:HX:
+Internal:WP40:HL:
     extends: .deploy-newk8s
     environment:
-        name: wp41-hx-development
-    when: manual
+        name: wp40-hl-internal
+    only:
+        - dev
+
+Staging:WP40:HL:
+    extends: .deploy-newk8s
+    environment:
+        name: wp40-hl-staging
+    only:
+        - dev
 
 Prod:WP41:HX:
     extends: .deploy-newk8s
     environment:
         name: wp41-hx-prod
     when: manual
+    only:
+        - main
+
+Prod:wp40:HL:
+    extends: .deploy-newk8s
+    environment:
+        name: wp40-hl-prod
+    when: manual
+    only:
+        - main
 
