@@ -50,7 +50,11 @@ elif(mode == 'genomic'):
     print('Input CSV file missing')
     exit(1)
   with open(input) as f:
+    header = True
     for line in f:
+      if header:
+        header = False
+        continue
       line = line.strip()
       if not line:
         continue

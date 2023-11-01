@@ -1,0 +1,4 @@
+Core DB,Species,Genome UUID,Source Name,Annotated or Imported,Source URL,File Path,File Names
+aegilops_tauschii_core_57_110_3,aegilops_tauschii,750e67f5-4811-441d-be46-a436786dfb27,UCD,Imported,https://www.ucdavis.edu/,,"chrom.hashes.ncd,chrom.sizes.ncd,genome_report.txt,contigs.bb,gc.bw,transcripts.bb,jump.ncd"
+arabidopsis_thaliana_core_57_110_11,arabidopsis_thaliana,c0410902-1007-404d-a8dd-3adee003811e,Araport11,Imported,https://araport.org,,"chrom.hashes.ncd,chrom.sizes.ncd,genome_report.txt,genome_summary.bed,contigs.bb,contigs.bed,gc.bw,transcripts.bb,transcripts.bed,jump.ncd"
+bos_taurus_core_110_12,bos_taurus,4106e9ef-1bb1-4ca4-974c-8de8875b8456,Ensembl,Annotated,https://rapid.ensembl.org/info/genome/genebuild/full_genebuild.html,,"chrom.hashes.ncd,chrom.sizes.ncd,genome_report.txt,genome_summary.bed,contigs.bb,contigs.bed,gc.bw,transcripts.bb,transcripts.bed,jump.ncd"

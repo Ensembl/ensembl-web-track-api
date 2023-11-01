@@ -1,0 +1,26 @@
+{
+  "a733574a-93e7-11ec-a39d-005056b38ce3": {
+    "label": "Ensembl short variants",
+    "datafiles": {
+      "details": "variant-ensembl-details.bb",
+      "summary": "variant-ensembl-summary.bw"
+    },
+    "description": "All short variants (SNPs and indel) data from Ensembl - e110",
+    "source": {
+      "name": "Ensembl",
+      "url": "https://www.ensembl.org/index.html"
+    }
+  },
+  "4c07817b-c7c5-463f-8624-982286bc4355": {
+    "label": "dbSNP short variants",
+    "datafiles": {
+      "details": "variant-dbsnp-details.bb",
+      "summary": "variant-dbsnp-summary.bw"
+    },
+    "description": "All short variants (SNPs and indel) data from dbSNP - build 156",
+    "source": {
+      "name": "dbSNP",
+      "url": "https://www.ncbi.nlm.nih.gov/snp"
+    }
+  }
+}
