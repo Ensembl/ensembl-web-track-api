@@ -25,7 +25,9 @@ if(mode == 'variation'):
   with open(input) as f:
     input_data = json.load(f)
 
+  print(f"Submitting {len(input_data)} variation tracks:")  
   for uuid in input_data:
+    print(f"Species {uuid}")
     for field in ['label','datafiles','description','source']:
       if field not in input_data[uuid] or not input_data[uuid][field]:
         print(f"Missing field in input JSON: {uuid}->{field}")
@@ -49,6 +51,7 @@ elif(mode == 'genomic'):
   if not input or not input.endswith('.csv'):
     print('Input CSV file missing')
     exit(1)
+  print("Submitting genomic tracks:")
   with open(input) as f:
     header = True
     for line in f:
@@ -62,6 +65,7 @@ elif(mode == 'genomic'):
       if len(fields) != 8:
         print(f"Invalid line in input CSV: {line}")
         exit(1)
+      print(f"Species {fields[2]}")
       method = 'annotated by' if fields[4] == 'Annotated' else 'imported from'
       gene_pc_fwd = {
         "genome_id": fields[2],
@@ -134,7 +138,11 @@ elif(mode == 'remove'):
     print('Species UUID missing')
     exit(1)
   request = requests.delete(f"{track_api_url}/track_categories/{input}")
-  print(request.content)
+  if(request.status_code == 200):
+    print(f"Removed tracks for species {input}")
+  else:
+    print(f"Error removing tracks for species {input} ({request.status_code}): {request.content}")
+    exit(1)
 else:
   print(f"Usage: {sys.argv[0]} <mode> <input>")
   print("Examples: variation input.json / genomic input.csv / regulation / remove <species_uuid>")
