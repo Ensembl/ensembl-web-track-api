@@ -54,6 +54,7 @@ if(mode == 'variation'):
     }
     variation_track['sources'] = [variation_track.pop('source')]
     submit_track(variation_track)
+
 elif(mode == 'genomic'):
   lines = parse_csv(input)
   print(f"Submitting {len(lines)*6} genomic tracks:")
@@ -61,6 +62,7 @@ elif(mode == 'genomic'):
     if len(fields) < 8:
       print(f"Invalid line in input CSV ({len(fields)} fields): {fields}")
       exit(1)
+
     print(f"Species {fields[2]}:")
     method = 'annotated by' if fields[4] == 'Annotated' else 'imported from'
     gene_pc_fwd = {
@@ -82,6 +84,7 @@ elif(mode == 'genomic'):
       "sources": [{ "name": fields[3], "url": fields[5] }]
     }
     submit_track(gene_pc_fwd)
+
     gene_pc_rev = {
       **gene_pc_fwd,
       "trigger": ["track","gene-pc-rev"],
@@ -89,6 +92,7 @@ elif(mode == 'genomic'):
       "display_order": 100
     }
     submit_track(gene_pc_rev)
+
     gene_other_fwd = {
       **gene_pc_fwd,
       "trigger": ["track","gene-other-fwd"],
@@ -97,6 +101,7 @@ elif(mode == 'genomic'):
       "colour": "DARK_GREY"
     }
     submit_track(gene_other_fwd)
+
     gene_other_rev = {
       **gene_other_fwd,
       "trigger": ["track","gene-other-rev"],
@@ -104,6 +109,7 @@ elif(mode == 'genomic'):
       "display_order": 110
     }
     submit_track(gene_other_rev)
+
     seq = {
       **gene_pc_fwd,
       "label": "Reference sequence",
@@ -119,6 +125,7 @@ elif(mode == 'genomic'):
       "sources": []
     }
     submit_track(seq)
+
     gc = {
       **seq,
       "label": "%GC",
@@ -127,13 +134,16 @@ elif(mode == 'genomic'):
       "description": "Shows the percentage of Gs and Cs in a region"
     }
     submit_track(gc)
+
 elif(mode == 'regulation'):
   lines = parse_csv(input)
   print(f"Submitting {len(lines)} regulation tracks:")
+
   for fields in lines:
     if len(fields) < 8:
       print(f"Invalid line in input CSV ({len(fields)} fields): {fields}")
       exit(1)
+
     print(f"Species {fields[0]}")
     reg_track = {
       "genome_id": fields[0],
@@ -153,16 +163,19 @@ elif(mode == 'regulation'):
       "sources": []
     }
     submit_track(reg_track)
+
 elif(mode == 'delete'):
   if not input:
     print('Species UUID missing')
     exit(1)
+
   request = requests.delete(f"{track_api_root}/track_categories/{input}")
   if(request.status_code == 204):
     print(f"Removed tracks for species {input}")
   else:
     print(f"Error removing tracks for species {input} ({request.status_code}): {request.content}")
     exit(1)
+    
 else:
   print(f"Usage: {sys.argv[0]} <mode> <input>")
   print(f"Example args: variation input.json / genomic input.csv / regulation input.csv / delete some-species-uuid")
