@@ -56,7 +56,7 @@ if(mode == 'variation'):
     submit_track(variation_track)
 elif(mode == 'genomic'):
   lines = parse_csv(input)
-  print(f"Submitting {len(lines)} genomic tracks:")
+  print(f"Submitting {len(lines)*6} genomic tracks:")
   for fields in lines:
     if len(fields) < 8:
       print(f"Invalid line in input CSV ({len(fields)} fields): {fields}")
