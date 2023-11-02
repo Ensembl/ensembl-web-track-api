@@ -16,15 +16,16 @@ def submit_track(track_data, retry=False):
     else:
       print(f"Connection timed out. Retrying...")
       submit_track(track_data, True)
+  
+  msg = request.content.decode()
   if request.status_code != 201:
-    error = request.content.decode()
-    if 'Track already exists' in error:
+    if 'Track already exists' in msg:
       print(f"Track {track_data['trigger'][-1]} already exists, skipping.")
       return
-    print(f"Error submitting track ({request.status_code}): {error}")
+    print(f"Error submitting track ({request.status_code}): {msg}")
     print(f"Payload: {track_data}")
     exit(1)
-  print(request.content.decode()) #expected response: {"track_id": "some-uuid"}
+  print(msg) #expected response: {"track_id": "some-uuid"}
 
 def parse_csv(path):
   if not path or not path.endswith('.csv'):
