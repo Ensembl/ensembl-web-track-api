@@ -1,5 +1,5 @@
 from tracks.models import Track, Category
-from tracks.serializers import ReadTrackSerializer, WriteTrackSerializer, CategorySerializer
+from tracks.serializers import ReadTrackSerializer, WriteTrackSerializer, CategorySerializer, CategoryTrackSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -21,7 +21,7 @@ class GenomeTrackList(APIView):
                 category_obj = Category.objects.get(id=track.category_id)
                 categories[track.category_id] = CategorySerializer(category_obj).data
                 categories[track.category_id]["track_list"] = []
-            categories[track.category_id]["track_list"].append(ReadTrackSerializer(track).data)
+            categories[track.category_id]["track_list"].append(CategoryTrackSerializer(track).data)
         return Response({"track_categories": [categories[category_id] for category_id in categories]}, status=status.HTTP_200_OK)
     
     def delete(self, request, genome_id):
