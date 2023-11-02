@@ -6,8 +6,16 @@ import requests
 
 track_api_root = 'http://submit-tracks.review.ensembl.org/api/tracks'
 
-def submit_track(track_data):
-  request = requests.post(f"{track_api_root}/track", json=track_data)
+def submit_track(track_data, retry):
+  try:
+    request = requests.post(f"{track_api_root}/track", json=track_data)
+  except requests.exceptions.ConnectTimeout:
+    if(retry):
+      print(f"No luck, bailing out.")
+      exit(1)
+    else:
+      print(f"Connection timed out. Retrying...")
+      submit_track(track_data, 1)
   if request.status_code != 201:
     error = request.content.decode()
     if 'Track already exists' in error:
