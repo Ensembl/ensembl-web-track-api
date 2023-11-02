@@ -9,7 +9,11 @@ track_api_root = 'http://submit-tracks.review.ensembl.org/api/tracks'
 def submit_track(track_data):
   request = requests.post(f"{track_api_root}/track", json=track_data)
   if request.status_code != 201:
-    print(f"Error submitting track ({request.status_code}): {request.content}")
+    error = request.content.decode()
+    if 'Track already exists' in error:
+      print(f"Track {track_data['trigger'][-1]} already exists, skipping.")
+      return
+    print(f"Error submitting track ({request.status_code}): {error}")
     print(f"Payload: {track_data}")
     exit(1)
   print(request.content.decode()) #expected response: {"track_id": "some-uuid"}
@@ -175,7 +179,7 @@ elif(mode == 'delete'):
   else:
     print(f"Error removing tracks for species {input} ({request.status_code}): {request.content}")
     exit(1)
-    
+
 else:
   print(f"Usage: {sys.argv[0]} <mode> <input>")
   print(f"Example args: variation input.json / genomic input.csv / regulation input.csv / delete some-species-uuid")
