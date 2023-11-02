@@ -110,7 +110,7 @@ elif(mode == 'genomic'):
       "trigger": ["track","gene-other-fwd"],
       "label": "Other genes",
       "display_order": -100,
-      "colour": "DARK_GREY"
+      "colour": "GREY"
     }
     submit_track(gene_other_fwd)
 
@@ -136,6 +136,7 @@ elif(mode == 'genomic'):
       "description": "Displays the sequence underlying the assembly",
       "sources": []
     }
+    del seq["colour"]
     submit_track(seq)
 
     gc = {
