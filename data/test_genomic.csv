@@ -1,0 +1,3 @@
+Core DB,Species,Genome UUID,Source Name,Annotated or Imported,Source URL,File Path,File Names
+salmo_salar_core_110_31,salmo_salar,ba305820-0d8a-4f53-0000-084a1fb0ea34,Ensembl,Annotated,https://rapid.ensembl.org/info/genome/genebuild/full_genebuild.html,,"chrom.hashes.ncd,chrom.sizes.ncd,genome_report.txt,genome_summary.bed,contigs.bb,contigs.bed,gc.bw,transcripts.bb,transcripts.bed,jump.ncd"
+mus_musculus_core_110_39,mus_musculus,8bce37f6-5353-4fb4-0000-f7e9a6c4303d,GENCODE,Annotated,https://gencodegenes.org,,"chrom.hashes.ncd,chrom.sizes.ncd,genome_report.txt,genome_summary.bed,contigs.bb,contigs.bed,gc.bw,transcripts.bb,transcripts.bed,jump.ncd"

@@ -1,5 +1,5 @@
 {
-  "a733574a-93e7-11ec-a39d-005056b38ce3": {
+  "ba305820-0d8a-4f53-0000-084a1fb0ea34": {
     "label": "Ensembl short variants",
     "datafiles": {
       "details": "variant-ensembl-details.bb",
@@ -11,7 +11,7 @@
       "url": "https://www.ensembl.org/index.html"
     }
   },
-  "4c07817b-c7c5-463f-8624-982286bc4355": {
+  "8bce37f6-5353-4fb4-0000-f7e9a6c4303d": {
     "label": "dbSNP short variants",
     "datafiles": {
       "details": "variant-dbsnp-details.bb",
