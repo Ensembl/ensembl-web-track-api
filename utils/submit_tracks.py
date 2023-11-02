@@ -165,5 +165,5 @@ elif(mode == 'delete'):
     exit(1)
 else:
   print(f"Usage: {sys.argv[0]} <mode> <input>")
-  print(f"Example args: variation input.json / genomic input.csv / regulation / delete <species-uuid>")
+  print(f"Example args: variation input.json / genomic input.csv / regulation input.csv / delete some-species-uuid")
   exit(1)
