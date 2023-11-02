@@ -22,7 +22,7 @@ class GenomeTrackList(APIView):
                 categories[track.category_id] = CategorySerializer(category_obj).data
                 categories[track.category_id]["track_list"] = []
             categories[track.category_id]["track_list"].append(ReadTrackSerializer(track).data)
-        return Response([categories[category_id] for category_id in categories], status=status.HTTP_200_OK)
+        return Response({"track_categories": [categories[category_id] for category_id in categories]}, status=status.HTTP_200_OK)
     
     def delete(self, request, genome_id):
         if(settings.DEPLOYMENT_ENV not in ["local","dev","internal","staging"]):
