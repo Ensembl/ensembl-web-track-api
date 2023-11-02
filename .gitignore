@@ -30,5 +30,5 @@ env/
 
 ### Project template
 # Hidden environment values
-k8s/configmap_*
+k8s/configmap_*.yaml
 prod.env

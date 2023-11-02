@@ -6,9 +6,15 @@ variables:
     CONTAINER_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
     DOCKER_TLS_CERTDIR: ""
 
-.branch-rules:
+.branch-rules-main:
     rules:
         - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
+          when: manual
+        - when: never
+
+.branch-rules-dev:
+    rules:
+        - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "dev"'
           when: on_success
         - when: never
 
@@ -68,7 +74,6 @@ variables:
         - kubectl delete deploy ensembl-track-api-${CI_COMMIT_REF_SLUG}-deployment
 
 .deploy-newk8s:
-    extends: .branch-rules
     stage: deploy
     image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
     script:
@@ -78,10 +83,21 @@ variables:
         - kustomize edit set image DOCKER_IMAGE=${CONTAINER_IMAGE}
         - kubectl apply -k ./
 
+.deploy-newk8s-main:
+    extends:
+        - .deploy-newk8s
+        - .branch-rules-main
+
+.deploy-newk8s-dev:
+    extends:
+        - .deploy-newk8s
+        - .branch-rules-dev
+
 #Build docker image 
 Docker:
     extends: .build
 
+#Deploy jobs for old k8s cluster (review apps)
 #Deploy feature branch to dev (review apps with custom BE and production DB)
 Review:WP-HX:
     extends: .deploy-review
@@ -108,7 +124,6 @@ Review_db:WP-HX:
     only:
         - update
 
-
 #Stop review appp
 Stop_review:
     extends: .stop-review
@@ -125,42 +140,34 @@ Dev:WP-HX:
     extends: .deploy
     environment:
         name: wp-hx-dev
-    only:
-        - main
 
-Prod:wp40:HL:
-  extends: .deploy-newk8s
-  environment:
-    name: wp40-hl-prod
-    
-#Deploy job for new k8s cluster
-Staging:WP40:HL:
-    extends: .deploy-newk8s
-    environment:
-        name: wp40-hl-staging
-    when: manual
-
-Internal:WP40:HL:
-    extends: .deploy-newk8s
-    environment:
-        name: wp40-hl-internal
-    when: manual
-
-Dev:WP40:HL:
-    extends: .deploy-newk8s
-    environment:
-        name: wp40-hl-development
-    when: manual
-
+#Deploy jobs for new k8s cluster
 Dev:WP41:HX:
-    extends: .deploy-newk8s
+    extends: .deploy-newk8s-dev
     environment:
         name: wp41-hx-development
-    when: manual
+
+Dev:WP40:HL:
+    extends: .deploy-newk8s-dev
+    environment:
+        name: wp40-hl-development
+
+Internal:WP40:HL:
+    extends: .deploy-newk8s-dev
+    environment:
+        name: wp40-hl-internal
+
+Staging:WP40:HL:
+    extends: .deploy-newk8s-dev
+    environment:
+        name: wp40-hl-staging
 
 Prod:WP41:HX:
-    extends: .deploy-newk8s
+    extends: .deploy-newk8s-main
     environment:
         name: wp41-hx-prod
-    when: manual
 
+Prod:wp40:HL:
+    extends: .deploy-newk8s-main
+    environment:
+        name: wp40-hl-prod
