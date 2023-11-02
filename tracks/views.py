@@ -25,6 +25,8 @@ class GenomeTrackList(APIView):
         return Response([categories[category_id] for category_id in categories], status=status.HTTP_200_OK)
     
     def delete(self, request, genome_id):
+        if(settings.DEPLOYMENT_ENV not in ["local","dev","internal","staging"]):
+            return Response({"error": "Track submission disabled."}, status=status.HTTP_403_FORBIDDEN)
         tracks = Track.objects.filter(genome_id=genome_id)
         if(not tracks.exists()):
             return Response({"error": "No tracks found for this genome."}, status=status.HTTP_404_NOT_FOUND)
