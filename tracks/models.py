@@ -28,7 +28,7 @@ class Track(models.Model):
     description = models.TextField(blank=True, default="")
 
     class Meta:
-        ordering = ["id"] #order tracks by its insertion order
+        ordering = ["display_order"]
         constraints = [models.UniqueConstraint(fields=["genome_id", "label", "additional_info", "datafiles"], name="unique_track")]
 
 class Source(models.Model):

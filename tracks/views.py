@@ -1,5 +1,5 @@
 from tracks.models import Track, Category
-from tracks.serializers import ReadTrackSerializer, WriteTrackSerializer, CategorySerializer
+from tracks.serializers import ReadTrackSerializer, WriteTrackSerializer, CategorySerializer, CategoryTrackSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,6 +11,8 @@ class GenomeTrackList(APIView):
     """
     Retrieve or remove all tracks and track categories linked to a genome uuid.
     """
+    http_method_names = settings.ALLOWED_METHODS
+
     def get(self, request, genome_id):
         tracks = Track.objects.filter(genome_id=genome_id)
         if(not tracks.exists()):
@@ -21,8 +23,8 @@ class GenomeTrackList(APIView):
                 category_obj = Category.objects.get(id=track.category_id)
                 categories[track.category_id] = CategorySerializer(category_obj).data
                 categories[track.category_id]["track_list"] = []
-            categories[track.category_id]["track_list"].append(ReadTrackSerializer(track).data)
-        return Response([categories[category_id] for category_id in categories], status=status.HTTP_200_OK)
+            categories[track.category_id]["track_list"].append(CategoryTrackSerializer(track).data)
+        return Response({"track_categories": [categories[category_id] for category_id in categories]}, status=status.HTTP_200_OK)
     
     def delete(self, request, genome_id):
         tracks = Track.objects.filter(genome_id=genome_id)
@@ -35,6 +37,8 @@ class TrackObject(APIView):
     """
     Retrieve or create a single track object.
     """
+    http_method_names = settings.ALLOWED_METHODS
+    
     def get(self, request, track_id):
         try:
             track = Track.objects.get(track_id=track_id)
@@ -44,8 +48,6 @@ class TrackObject(APIView):
         return Response(serializer.data)
     
     def post(self, request):
-        if(settings.DEPLOYMENT_ENV not in ["local","dev","internal","staging"]):
-            return Response({"error": "Track submission disabled."}, status=status.HTTP_403_FORBIDDEN)
         serializer = WriteTrackSerializer(data=request.data)
         if(serializer.is_valid()):
             try:
