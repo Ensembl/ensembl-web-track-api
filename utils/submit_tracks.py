@@ -4,7 +4,7 @@ import sys
 import json
 import requests
 
-track_api_root = 'http://submit-tracks.review.ensembl.org/api/tracks'
+track_api_root = 'https://staging-2020.ensembl.org/api/tracks'
 
 def submit_track(track_data, retry=False):
   try:
@@ -23,7 +23,7 @@ def submit_track(track_data, retry=False):
       print(f"Track {track_data['trigger'][-1]} already exists, skipping.")
       return
     print(f"Error submitting track ({request.status_code}): {msg}")
-    print(f"Payload: {track_data}")
+    print(f"Track payload: {track_data}")
     exit(1)
   print(msg) #expected response: {"track_id": "some-uuid"}
 
