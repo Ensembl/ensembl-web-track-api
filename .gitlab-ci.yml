@@ -135,11 +135,13 @@ Stop_review:
         - dev
         - update
 
-#Deploy main branch to dev (default/production BE for review apps)
+#Deploy dev branch to dev (default/production BE for review apps)
 Dev:WP-HX:
     extends: .deploy
     environment:
         name: wp-hx-dev
+    only:
+        - dev
 
 #Deploy jobs for new k8s cluster
 Dev:WP41:HX:
