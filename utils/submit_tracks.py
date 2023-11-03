@@ -4,7 +4,34 @@ import sys
 import json
 import requests
 
-track_api_root = 'https://staging-2020.ensembl.org/api/tracks'
+def print_help(msg=None):
+  if(msg):
+    print(msg)
+  print(f"""Usage: {sys.argv[0]} <mode> <env> [input]
+  mode: variation | genomic | regulation | delete
+  env: staging | beta | review-app-name
+  input: path to JSON file (variation) or CSV file (genomic/regulation) or species UUID (delete)""")
+  exit(1)
+
+def parse_csv(path):
+  if not path or not path.endswith('.csv'):
+    print_help('Input CSV file missing')
+
+  with open(path) as f:
+    lines = f.readlines()
+  lines.pop(0) #remove header
+  return [line.strip().split(',') for line in lines]
+
+mode, env, input = (sys.argv[1], sys.argv[2], sys.argv[3]) if len(sys.argv) > 3 else print_help()
+
+if(env == 'beta'):
+  prefix = 'https://beta'
+elif(env == 'staging'):
+  prefix = 'https://staging-2020'
+else:
+  prefix = f"http://{env}.review"
+
+track_api_root = f"{prefix}.ensembl.org/api/tracks"
 
 def submit_track(track_data, retry=False):
   try:
@@ -27,21 +54,10 @@ def submit_track(track_data, retry=False):
     exit(1)
   print(msg) #expected response: {"track_id": "some-uuid"}
 
-def parse_csv(path):
-  if not path or not path.endswith('.csv'):
-    print('Input CSV file missing')
-    exit(1)
-  with open(path) as f:
-    lines = f.readlines()
-  lines.pop(0) #remove header
-  return [line.strip().split(',') for line in lines]
-
-mode, input = (sys.argv[1], sys.argv[2]) if len(sys.argv) > 2 else (None, None)
-
 if(mode == 'variation'):
   if not input or not input.endswith('.json'):
-    print('Input JSON file missing')
-    exit(1)
+    print_help('Input JSON file missing')
+
   with open(input) as f:
     input_data = json.load(f)
 
@@ -52,6 +68,7 @@ if(mode == 'variation'):
       if field not in input_data[uuid] or not input_data[uuid][field]:
         print(f"Missing field in input JSON: {uuid}->{field}")
         exit(1)
+
     variation_track = {
       **input_data[uuid],
       "genome_id": uuid,
@@ -181,8 +198,7 @@ elif(mode == 'regulation'):
 
 elif(mode == 'delete'):
   if not input:
-    print('Species UUID missing')
-    exit(1)
+    print_help('Species UUID missing')
 
   request = requests.delete(f"{track_api_root}/track_categories/{input}")
   if(request.status_code == 204):
@@ -192,6 +208,4 @@ elif(mode == 'delete'):
     exit(1)
 
 else:
-  print(f"Usage: {sys.argv[0]} <mode> <input>")
-  print(f"Example args: variation input.json / genomic input.csv / regulation input.csv / delete some-species-uuid")
-  exit(1)
+  print_help(f"Unknown mode: {mode}")
