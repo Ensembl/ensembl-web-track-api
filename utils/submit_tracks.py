@@ -7,9 +7,9 @@ import requests
 def print_help(msg=None):
   if(msg):
     print(msg)
-  print(f"""Usage: {sys.argv[0]} <mode> <env> [input]
-  mode: variation | genomic | regulation | delete
+  print(f"""Usage: {sys.argv[0]} <env> <mode> [input]
   env: staging | beta | review-app-name
+  mode: variation | genomic | regulation | delete
   input: path to JSON file (variation) or CSV file (genomic/regulation) or genome UUID (delete)""")
   exit(1)
 
@@ -22,7 +22,7 @@ def parse_csv(path):
   lines.pop(0) #remove header
   return [line.strip().split(',') for line in lines]
 
-mode, env, input = (sys.argv[1], sys.argv[2], sys.argv[3]) if len(sys.argv) > 3 else print_help()
+env, mode, input = (sys.argv[1], sys.argv[2], sys.argv[3]) if len(sys.argv) > 3 else print_help()
 
 if(env == 'beta'):
   prefix = 'https://beta'
@@ -32,6 +32,7 @@ else:
   prefix = f"http://{env}.review"
 
 track_api_root = f"{prefix}.ensembl.org/api/tracks"
+print(f"Submitting tracks to {track_api_root}")
 
 def submit_track(track_data, retry=False):
   try:
