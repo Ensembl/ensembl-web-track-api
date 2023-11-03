@@ -11,6 +11,8 @@ class GenomeTrackList(APIView):
     """
     Retrieve or remove all tracks and track categories linked to a genome uuid.
     """
+    http_method_names = settings.ALLOWED_METHODS
+
     def get(self, request, genome_id):
         tracks = Track.objects.filter(genome_id=genome_id)
         if(not tracks.exists()):
@@ -25,8 +27,6 @@ class GenomeTrackList(APIView):
         return Response({"track_categories": [categories[category_id] for category_id in categories]}, status=status.HTTP_200_OK)
     
     def delete(self, request, genome_id):
-        if(settings.DEPLOYMENT_ENV not in ["local","dev","internal","staging"]):
-            return Response({"error": "Track deletion disabled."}, status=status.HTTP_403_FORBIDDEN)
         tracks = Track.objects.filter(genome_id=genome_id)
         if(not tracks.exists()):
             return Response({"error": "No tracks found for this genome."}, status=status.HTTP_404_NOT_FOUND)
@@ -37,6 +37,8 @@ class TrackObject(APIView):
     """
     Retrieve or create a single track object.
     """
+    http_method_names = settings.ALLOWED_METHODS
+    
     def get(self, request, track_id):
         try:
             track = Track.objects.get(track_id=track_id)
@@ -46,8 +48,6 @@ class TrackObject(APIView):
         return Response(serializer.data)
     
     def post(self, request):
-        if(settings.DEPLOYMENT_ENV not in ["local","dev","internal","staging"]):
-            return Response({"error": "Track submission disabled."}, status=status.HTTP_403_FORBIDDEN)
         serializer = WriteTrackSerializer(data=request.data)
         if(serializer.is_valid()):
             try:
