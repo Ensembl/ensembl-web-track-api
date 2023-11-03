@@ -10,7 +10,7 @@ def print_help(msg=None):
   print(f"""Usage: {sys.argv[0]} <mode> <env> [input]
   mode: variation | genomic | regulation | delete
   env: staging | beta | review-app-name
-  input: path to JSON file (variation) or CSV file (genomic/regulation) or species UUID (delete)""")
+  input: path to JSON file (variation) or CSV file (genomic/regulation) or genome UUID (delete)""")
   exit(1)
 
 def parse_csv(path):
@@ -63,11 +63,11 @@ if(mode == 'variation'):
 
   print(f"Submitting {len(input_data)} variation tracks:")  
   for uuid in input_data:
-    print(f"Species {uuid}:")
+    print(f"Genome {uuid}:")
     for field in ['label','datafiles','description','source']:
       if field not in input_data[uuid] or not input_data[uuid][field]:
-        print(f"Missing field in input JSON: {uuid}->{field}")
-        exit(1)
+        print(f"Missing field in input JSON: {field}. Skipping genome {uuid}.")
+        continue
 
     variation_track = {
       **input_data[uuid],
@@ -89,14 +89,16 @@ elif(mode == 'genomic'):
   lines = parse_csv(input)
   print(f"Submitting {len(lines)*6} genomic tracks:")
   for fields in lines:
-    if len(fields) < 8:
+    uuid = fields[2] if len(fields)>2 else ''
+    if len(fields) < 8 or not uuid:
       print(f"Invalid line in input CSV ({len(fields)} fields): {fields}")
-      exit(1)
+      print(f"Skipping genome {uuid}")
+      continue
 
-    print(f"Species {fields[2]}:")
+    print(f"Genome {uuid}:")
     method = 'annotated by' if fields[4] == 'Annotated' else 'imported from'
     gene_pc_fwd = {
-      "genome_id": fields[2],
+      "genome_id": uuid,
       "label": "Protein coding genes",
       "category": {
         "track_category_id": "genes-transcripts",
@@ -172,13 +174,15 @@ elif(mode == 'regulation'):
   print(f"Submitting {len(lines)} regulation tracks:")
 
   for fields in lines:
-    if len(fields) < 8:
+    uuid = fields[0] if len(fields) else ''
+    if len(fields) < 8 or not uuid:
       print(f"Invalid line in input CSV ({len(fields)} fields): {fields}")
-      exit(1)
+      print(f"Skipping genome {uuid}")
+      continue
 
-    print(f"Species {fields[0]}")
+    print(f"Genome {uuid}")
     reg_track = {
-      "genome_id": fields[0],
+      "genome_id": uuid,
       "label": "Regulatory annotation",
       "category": {
         "track_category_id": "regulatory-features",
@@ -198,13 +202,13 @@ elif(mode == 'regulation'):
 
 elif(mode == 'delete'):
   if not input:
-    print_help('Species UUID missing')
+    print_help('Genome UUID missing')
 
   request = requests.delete(f"{track_api_root}/track_categories/{input}")
   if(request.status_code == 204):
-    print(f"Removed tracks for species {input}")
+    print(f"Removed tracks for genome {input}")
   else:
-    print(f"Error removing tracks for species {input} ({request.status_code}): {request.content}")
+    print(f"Error removing tracks for genome {input} ({request.status_code}): {request.content}")
     exit(1)
 
 else:
