@@ -96,7 +96,7 @@ elif(mode == 'genomic'):
       continue
 
     print(f"Genome {uuid}:")
-    method = 'annotated by' if fields[4] == 'Annotated' else 'imported from'
+    method = f"Genes {'annotated by' if fields[4]=='Annotated' else 'imported from'} {fields[3]}"
     gene_pc_fwd = {
       "genome_id": uuid,
       "label": "Protein coding genes",
@@ -112,7 +112,7 @@ elif(mode == 'genomic'):
       "display_order": -110,
       "on_by_default": True,
       "datafiles": {},
-      "description": f"Genes {method} {fields[3]}",
+      "description": f"Shows all protein coding genes on the forward strand.\n{method}",
       "sources": [{ "name": fields[3], "url": fields[5] }]
     }
     submit_track(gene_pc_fwd)
@@ -121,7 +121,8 @@ elif(mode == 'genomic'):
       **gene_pc_fwd,
       "trigger": ["track","gene-pc-rev"],
       "additional_info": "Reverse strand",
-      "display_order": 100
+      "display_order": 100,
+      "description": f"Shows all protein coding genes on the reverse strand.\n{method}"
     }
     submit_track(gene_pc_rev)
 
@@ -130,7 +131,8 @@ elif(mode == 'genomic'):
       "trigger": ["track","gene-other-fwd"],
       "label": "Other genes",
       "display_order": -100,
-      "colour": "GREY"
+      "colour": "GREY",
+      "description": f"Shows all non-coding genes on the forward strand.\n{method}"
     }
     submit_track(gene_other_fwd)
 
@@ -138,7 +140,8 @@ elif(mode == 'genomic'):
       **gene_other_fwd,
       "trigger": ["track","gene-other-rev"],
       "additional_info": "Reverse strand",
-      "display_order": 110
+      "display_order": 110,
+      "description": f"Shows all non-coding genes on the reverse strand.\n{method}"
     }
     submit_track(gene_other_rev)
 
