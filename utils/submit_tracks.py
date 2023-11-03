@@ -135,9 +135,10 @@ elif(mode == 'genomic'):
       "type": "regular",
       "display_order": 0,
       "description": "Displays the sequence underlying the assembly",
-      "sources": []
+      "sources": [],
+      "colour": "",
+      "additional_info": ""
     }
-    del seq["colour"]
     submit_track(seq)
 
     gc = {
