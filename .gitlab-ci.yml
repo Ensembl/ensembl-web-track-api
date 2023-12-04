@@ -168,8 +168,10 @@ Prod:WP41:HX:
     extends: .deploy-newk8s-main
     environment:
         name: wp41-hx-prod
+    when: manual
 
 Prod:wp40:HL:
     extends: .deploy-newk8s-main
     environment:
         name: wp40-hl-prod
+    when: manual
