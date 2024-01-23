@@ -51,7 +51,7 @@ class WriteTrackSerializer(BaseTrackSerializer):
         category_obj, created = Category.objects.get_or_create(track_category_id=category_id, defaults=category_data)
         sources = validated_data.pop('sources')
         track_obj = Track.objects.create(category=category_obj, **validated_data)
-        if(track_obj.type == 'variant'): #hack for expansion tracks
+        if(track_obj.trigger[1].startswith("expand-")): #hack for expansion tracks
             track_obj.trigger.append(track_obj.track_id)
             track_obj.save()
         for source in sources:

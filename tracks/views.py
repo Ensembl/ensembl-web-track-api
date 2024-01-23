@@ -56,3 +56,11 @@ class TrackObject(APIView):
                 return Response({"error": "Track already exists."}, status=status.HTTP_400_BAD_REQUEST)
             return Response({"track_id": serializer.data.get("track_id")}, status=status.HTTP_201_CREATED)
         return Response({"error": f"Payload validation failed: {serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, track_id):
+        try:
+            track = Track.objects.get(track_id=track_id)
+        except Track.DoesNotExist:
+            return Response({"error": "No track found with this track id."}, status=status.HTTP_404_NOT_FOUND)
+        track.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
