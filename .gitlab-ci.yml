@@ -43,7 +43,7 @@ variables:
 #Deploy to k8s cluster (for main/dev branch)
 .deploy:
     stage: deploy
-    image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:0.1
+    image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
     script:
         - sed -i "s#<DOCKER_IMAGE>#${CONTAINER_IMAGE}#g" k8s/deployment.yaml
         - kubectl apply -f k8s/deployment.yaml
@@ -51,7 +51,7 @@ variables:
 #Deploy review app (for feature branch)
 .deploy-review:
     stage: deploy
-    image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:0.1
+    image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
     script: #Fill placeholders and apply manifest files
         - sed -i "s#<DOCKER_IMAGE>#${CONTAINER_IMAGE}#g" k8s/review/deployment.yaml
         - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/deployment.yaml
@@ -64,7 +64,7 @@ variables:
 #Stop review app (cleanup resources) 
 .stop-review:
     stage: deploy
-    image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:0.1
+    image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
     variables:
         GIT_STRATEGY: none
     when: manual
