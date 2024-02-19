@@ -7,7 +7,7 @@ metadata:
   name: ensembl-track-api-ingress
 spec:
   rules:
-  - host: beta.ensembl.org #edit for internal/staging (applied manually)
+  - host: <HOST>
     http:
       paths:
       - backend:

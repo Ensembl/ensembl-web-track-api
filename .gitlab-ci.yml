@@ -1,4 +1,5 @@
 stages:
+#    - setup
     - build
     - deploy
 
@@ -40,14 +41,6 @@ variables:
         - docker rmi ${CONTAINER_IMAGE}
         - docker logout $CI_REGISTRY
 
-#Deploy to k8s cluster (for main/dev branch)
-.deploy:
-    stage: deploy
-    image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
-    script:
-        - sed -i "s#<DOCKER_IMAGE>#${CONTAINER_IMAGE}#g" k8s/deployment.yaml
-        - kubectl apply -f k8s/deployment.yaml
-
 #Deploy review app (for feature branch)
 .deploy-review:
     stage: deploy
@@ -73,7 +66,7 @@ variables:
         - kubectl delete service ensembl-track-api-${CI_COMMIT_REF_SLUG}-service
         - kubectl delete deploy ensembl-track-api-${CI_COMMIT_REF_SLUG}-deployment
 
-.deploy-newk8s:
+.deploy:
     stage: deploy
     image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
     script:
@@ -83,14 +76,14 @@ variables:
         - kustomize edit set image DOCKER_IMAGE=${CONTAINER_IMAGE}
         - kubectl apply -k ./
 
-.deploy-newk8s-main:
+.deploy-main:
     extends:
-        - .deploy-newk8s
+        - .deploy
         - .branch-rules-main
 
-.deploy-newk8s-dev:
+.deploy-dev:
     extends:
-        - .deploy-newk8s
+        - .deploy
         - .branch-rules-dev
 
 #Build docker image 
@@ -135,43 +128,67 @@ Stop_review:
         - dev
         - update
 
-#Deploy dev branch to dev (default/production BE for review apps)
-Dev:WP-HX:
-    extends: .deploy
-    environment:
-        name: wp-hx-dev
-    only:
-        - dev
-
 #Deploy jobs for new k8s cluster
-Dev:WP41:HX:
-    extends: .deploy-newk8s-dev
+Dev:WP51:HL:
+    extends: .deploy-main
     environment:
-        name: wp41-hx-development
-
-Dev:WP40:HL:
-    extends: .deploy-newk8s-dev
-    environment:
-        name: wp40-hl-development
+        name: wp51-hl-development
 
 Internal:WP40:HL:
-    extends: .deploy-newk8s-dev
+    extends: .deploy-dev
     environment:
         name: wp40-hl-internal
 
 Staging:WP40:HL:
-    extends: .deploy-newk8s-dev
+    extends: .deploy-dev
     environment:
         name: wp40-hl-staging
 
 Prod:WP41:HX:
-    extends: .deploy-newk8s-main
+    extends: .deploy-main
     environment:
         name: wp41-hx-prod
     when: manual
 
 Prod:wp40:HL:
-    extends: .deploy-newk8s-main
+    extends: .deploy-main
     environment:
         name: wp40-hl-prod
     when: manual
+
+# .setup-review:
+#    stage: setup
+#    image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
+#    before_script:
+#        - ( if [ $(kubectl get ns | grep -c ${CI_COMMIT_REF_SLUG}) == "0" ]; then kubectl create namespace  ${CI_COMMIT_REF_SLUG} --dry-run=client -o yaml | kubectl apply -f -; fi)        
+#        - git clone https://gitlab.ebi.ac.uk/ensembl-web/ensembl-k8s-manifests.git
+#        - git -C ensembl-k8s-manifests/ checkout k8s123-migration
+#        - cd ensembl-k8s-manifests/ensembl-web-track-api
+#    script:
+#        - sed -i "s#<HOST>#${CI_COMMIT_REF_SLUG}.review.ensembl.org#g" ingress.yaml
+#        - kubectl -n ${CI_COMMIT_REF_SLUG} apply -f service.yaml
+#        - kubectl -n ${CI_COMMIT_REF_SLUG} apply -f ingress.yaml
+       
+#    rules:
+#        - if: $CI_PIPELINE_SOURCE == "push" && 
+#              $CI_COMMIT_BEFORE_SHA == "0000000000000000000000000000000000000000" && 
+#              $CI_COMMIT_REF_NAME !~  "/^nodeploy\/.*$/"
+#          when: always
+
+#SetupReview:HL51:
+#    extends: .setup-review
+#    environment:
+#        name: wp51-hl-development
+#    rules:
+#        - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BRANCH != "dev"'
+#          when: on_success
+
+#Review:WP51:HL:
+#    extends: .deploy-newk8s-dev
+#    environment:
+#        name: wp51-hl-development
+#        kubernetes:
+#            namespace: $CI_COMMIT_REF_SLUG
+#    rules:
+#        - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BRANCH != "dev"'
+#          when: on_success
