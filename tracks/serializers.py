@@ -9,6 +9,7 @@ class SourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Source
         fields = ["name", "url"]
+        validators = []
 
 class BaseTrackSerializer(serializers.ModelSerializer):
     sources = SourceSerializer(many=True, required=False)
