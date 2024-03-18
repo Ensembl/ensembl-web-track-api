@@ -32,3 +32,5 @@ env/
 # Hidden environment values
 k8s/configmap_*.yaml
 prod.env
+
+tmp/
