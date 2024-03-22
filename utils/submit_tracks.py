@@ -8,7 +8,7 @@ def print_help(msg=None):
   if(msg):
     print(msg)
   print(f"""Usage: {sys.argv[0]} <env> <mode> [input]
-  env: staging | beta | review-app-name
+  env: local | dev | staging | prod | <review-app-name>
   mode: variation | genomic | regulation | delete
   input: path to JSON file (variation) or CSV file (genomic/regulation) or genome UUID (delete)""")
   exit(1)
@@ -24,14 +24,19 @@ def parse_csv(path):
 
 env, mode, input = (sys.argv[1], sys.argv[2], sys.argv[3]) if len(sys.argv) > 3 else print_help()
 
-if(env == 'beta'):
-  prefix = 'https://beta'
-elif(env == 'staging'):
-  prefix = 'https://staging-2020'
+if (env == 'local'):
+  track_api_root = "http://localhost:8000"
 else:
-  prefix = f"http://{env}.review"
+  if (env == 'dev'):
+    prefix = 'https://dev-2020'
+  elif (env == 'staging'):
+    prefix = 'https://staging-2020'
+  elif (env == 'prod'):
+    prefix = 'https://beta'
+  else:
+    prefix = f"http://{env}.review"
+  track_api_root = f"{prefix}.ensembl.org/api/tracks"
 
-track_api_root = f"{prefix}.ensembl.org/api/tracks"
 print(f"Submitting tracks to {track_api_root}")
 
 def submit_track(track_data, retry=False):
@@ -65,7 +70,7 @@ if(mode == 'variation'):
   print(f"Submitting {len(input_data)} variation tracks:")  
   for uuid in input_data:
     print(f"Genome {uuid}:")
-    for field in ['label','datafiles','description','source']:
+    for field in ['label','datafiles','description']:
       if field not in input_data[uuid] or not input_data[uuid][field]:
         print(f"Missing field in input JSON: {field}. Skipping genome {uuid}.")
         continue
@@ -83,7 +88,8 @@ if(mode == 'variation'):
       "display_order": 1000,
       "on_by_default": True
     }
-    variation_track['sources'] = [variation_track.pop('source')]
+    if 'source' in variation_track: variation_track['sources'] = [variation_track.pop('source')]
+    else: variation_track['sources'] = []
     submit_track(variation_track)
 
 elif(mode == 'genomic'):
