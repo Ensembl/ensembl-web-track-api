@@ -18,7 +18,7 @@ variables:
           when: on_success
         - when: never
 
-.build-branch-rules:
+.build-rules:
     rules:
         - if: '$CI_DEPLOY_FREEZE == null'
           when: on_success
@@ -49,7 +49,7 @@ variables:
 
 #Build docker image 
 Docker:
-    extends: .build-branch-rules
+    extends: .build-rules
     stage: build
     image: docker
     services:
