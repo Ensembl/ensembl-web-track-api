@@ -1,5 +1,4 @@
 stages:
-#    - setup
     - build
     - deploy
 
@@ -26,55 +25,17 @@ variables:
         - when: never
 
 #Base templates
-#Build & upload new Docker image
-.build:
-    extends: .build-branch-rules
-    stage: build
-    image: docker
-    services:
-        - docker:dind
-    before_script:
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    script:
-        - docker build -t ${CONTAINER_IMAGE} --no-cache -f Dockerfile .
-        - docker push ${CONTAINER_IMAGE}
-        - docker rmi ${CONTAINER_IMAGE}
-        - docker logout $CI_REGISTRY
-
-#Deploy review app (for feature branch)
-.deploy-review:
-    stage: deploy
-    image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
-    script: #Fill placeholders and apply manifest files
-        - sed -i "s#<DOCKER_IMAGE>#${CONTAINER_IMAGE}#g" k8s/review/deployment.yaml
-        - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/deployment.yaml
-        - sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/service.yaml
-        #- sed -i "s#<BRANCH_NAME>#${CI_COMMIT_REF_SLUG}#g" k8s/review/ingress.yaml
-        - kubectl apply -f k8s/review/deployment.yaml
-        - kubectl apply -f k8s/review/service.yaml
-        #- kubectl apply -f k8s/review/ingress.yaml #done by FE review app deployment
-
-#Stop review app (cleanup resources) 
-.stop-review:
-    stage: deploy
-    image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
-    variables:
-        GIT_STRATEGY: none
-    when: manual
-    script:
-        #- kubectl delete ingress ensembl-track-api-${CI_COMMIT_REF_SLUG}-ingress
-        - kubectl delete service ensembl-track-api-${CI_COMMIT_REF_SLUG}-service
-        - kubectl delete deploy ensembl-track-api-${CI_COMMIT_REF_SLUG}-deployment
-
 .deploy:
     stage: deploy
     image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
+    before_script:
+        - kubectl config use-context ${AGENT}
+        - kubectl config set-context --current --namespace=${NS}
     script:
-        - git clone https://gitlab.ebi.ac.uk/ensembl-web/ensembl-k8s-manifests.git
-        - git -C ensembl-k8s-manifests/ checkout k8s123-migration
+        - git clone --depth 1 --branch k8s123-migration https://gitlab.ebi.ac.uk/ensembl-web/ensembl-k8s-manifests.git
         - cd ensembl-k8s-manifests/ensembl-web-track-api
         - kustomize edit set image DOCKER_IMAGE=${CONTAINER_IMAGE}
-        - kubectl apply -k ./
+        - kubectl apply -k .
 
 .deploy-main:
     extends:
@@ -88,107 +49,56 @@ variables:
 
 #Build docker image 
 Docker:
-    extends: .build
+    extends: .build-branch-rules
+    stage: build
+    image: docker
+    services:
+        - docker:dind
+    before_script:
+        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    script:
+        - docker build -t ${CONTAINER_IMAGE} --no-cache -f Dockerfile .
+        - docker push ${CONTAINER_IMAGE}
+        - docker rmi ${CONTAINER_IMAGE}
+        - docker logout $CI_REGISTRY
 
-#Deploy jobs for old k8s cluster (review apps)
-#Deploy feature branch to dev (review apps with custom BE and production DB)
-Review:WP-HX:
-    extends: .deploy-review
-    environment:
-        name: wp-hx-dev-ing
-        url: http://$CI_COMMIT_REF_SLUG.review.ensembl.org
-        on_stop: Stop_review
-    except:
-        - main
-        - dev
-        - update
+#Deploy to k8s
+Prod:
+  extends: .deploy-main
+  environment:
+    name: production
+  variables:
+    AGENT: ${PROD_AGENT}
+    NS: ${PROS_NS}
 
-#Deploy special feature branch to dev (review apps with custom BE and internal DB)
-Review_db:WP-HX:
-    extends: .deploy-review
-    environment:
-        name: wp-hx-dev-ing
-        url: http://update.review.ensembl.org
-    after_script: #restart deployment with new env that points to internal track database
-        - sed -i "s#<BRANCH_NAME>#update#g" k8s/review/ingress.yaml
-        - kubectl apply -f k8s/review/ingress.yaml
-        - kubectl set env deployment/ensembl-track-api-update-deployment  
-          --from configmap/ensembl-track-api-review-configmap
-    only:
-        - update
+Fallback:
+  extends: .deploy-main
+  environment:
+    name: fallback
+  variables:
+    AGENT: ${FALLBACK_AGENT}
+    NS: ${FALLBACK_NS}
 
-#Stop review appp
-Stop_review:
-    extends: .stop-review
-    environment:
-        name: wp-hx-dev-ing
-        action: stop
-    except:
-        - main
-        - dev
-        - update
+Staging:
+  extends: .deploy-main
+  environment:
+    name: staging
+  variables:
+    AGENT: ${STAGING_AGENT}
+    NS: ${STAGING_NS}
 
-#Deploy jobs for new k8s cluster
-Dev:WP51:HL:
-    extends: .deploy-main
-    environment:
-        name: wp51-hl-development
+Internal:
+  extends: .deploy-main
+  environment:
+    name: internal
+  variables:
+    AGENT: ${INTERNAL_AGENT}
+    NS: ${INTERNAL_NS}
 
-Internal:WP40:HL:
-    extends: .deploy-dev
-    environment:
-        name: wp40-hl-internal
-
-Staging:WP40:HL:
-    extends: .deploy-dev
-    environment:
-        name: wp40-hl-staging
-
-Prod:WP41:HX:
-    extends: .deploy-main
-    environment:
-        name: wp41-hx-prod
-    when: manual
-
-Prod:wp40:HL:
-    extends: .deploy-main
-    environment:
-        name: wp40-hl-prod
-    when: manual
-
-# .setup-review:
-#    stage: setup
-#    image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
-#    before_script:
-#        - ( if [ $(kubectl get ns | grep -c ${CI_COMMIT_REF_SLUG}) == "0" ]; then kubectl create namespace  ${CI_COMMIT_REF_SLUG} --dry-run=client -o yaml | kubectl apply -f -; fi)        
-#        - git clone https://gitlab.ebi.ac.uk/ensembl-web/ensembl-k8s-manifests.git
-#        - git -C ensembl-k8s-manifests/ checkout k8s123-migration
-#        - cd ensembl-k8s-manifests/ensembl-web-track-api
-#    script:
-#        - sed -i "s#<HOST>#${CI_COMMIT_REF_SLUG}.review.ensembl.org#g" ingress.yaml
-#        - kubectl -n ${CI_COMMIT_REF_SLUG} apply -f service.yaml
-#        - kubectl -n ${CI_COMMIT_REF_SLUG} apply -f ingress.yaml
-       
-#    rules:
-#        - if: $CI_PIPELINE_SOURCE == "push" && 
-#              $CI_COMMIT_BEFORE_SHA == "0000000000000000000000000000000000000000" && 
-#              $CI_COMMIT_REF_NAME !~  "/^nodeploy\/.*$/"
-#          when: always
-
-#SetupReview:HL51:
-#    extends: .setup-review
-#    environment:
-#        name: wp51-hl-development
-#    rules:
-#        - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BRANCH != "dev"'
-#          when: on_success
-
-#Review:WP51:HL:
-#    extends: .deploy-newk8s-dev
-#    environment:
-#        name: wp51-hl-development
-#        kubernetes:
-#            namespace: $CI_COMMIT_REF_SLUG
-#    rules:
-#        - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BRANCH != "dev"'
-#          when: on_success
+Dev:
+  extends: .deploy-dev
+  environment:
+    name: development
+  variables:
+    AGENT: ${DEV_AGENT}
+    NS: ${DEV_NS}
