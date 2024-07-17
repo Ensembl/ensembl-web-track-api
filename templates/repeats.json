@@ -1,0 +1,46 @@
+{
+  "genome_id": "da38d82b-df50-419b-af74-886463b7bfa3",
+  "category": {
+    "track_category_id": "assembly",
+    "label": "Assembly",
+    "type": "Genomic"
+  },
+  "trigger": [
+    "track",
+    "expand"
+  ],
+  "type": "regular",
+  "label": "Repeat elements",
+  "display_order": 980,
+  "on_by_default": true,
+  "description": "Displays repeat elements on genome, identified by Repeatmasker (using RepBase and custom RepeatModeler library), RED, Tandem Repeats Finder and Dust (low complexity regions).",
+  "sources": [
+    {
+      "name": "RepeatMasker",
+      "url": "https://www.repeatmasker.org"
+    },
+    {
+      "name": "RepBase",
+      "url": "https://www.girinst.org/repbase"
+    },
+    {
+      "name": "RepeatModeler",
+      "url": "https://www.repeatmasker.org/RepeatModeler"
+    },
+    {
+      "name": "Red",
+      "url": "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0654-5"
+    },
+    {
+      "name": "Tandem Repeats Finder",
+      "url": "https://tandem.bu.edu/trf"
+    },
+    {
+      "name": "DUST",
+      "url": "https://www.liebertpub.com/doi/10.1089/cmb.2006.13.1028"
+    }
+  ],
+  "datafiles": {
+    "repeats": "repeat-elements.bb"
+  }
+}

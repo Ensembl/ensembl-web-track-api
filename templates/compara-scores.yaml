@@ -1,0 +1,18 @@
+genome_id: <genome_id>
+category:
+  track_category_id: assembly
+  label: Assembly
+  type: Genomic
+trigger:
+  - track
+  - expand
+type: regular
+label: Conservation scores
+display_order: 950
+on_by_default: true
+description: Displays per-basepair conservation scores, indicating how many species in a given multiple alignment match at each locus. Data calculated using GERP.
+sources:
+  - name: GERP
+    url: http://mendel.stanford.edu/SidowLab/downloads/gerp/
+datafiles:
+  compara-summary: gerp-scores.bw

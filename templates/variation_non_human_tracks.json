@@ -1,0 +1,408 @@
+{
+    "0cbc227a-7179-43c2-8061-a50d94423c4d": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "14fe0744-4b47-4d31-bddf-dc2b6ffc7f4e": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "2b8df0a0-7000-495c-a9db-a093740f0264": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "c7d60942-b5b0-49f1-976f-8946cebd9ff1": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "c44a36bc-75f1-43dc-88ea-decc8573a850": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "da38d82b-df50-419b-af74-886463b7bfa3": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "48dd6ebd-04f4-433b-b79f-7afb752b8904": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "80c925c8-5c7d-4757-8a04-a53d2a689719": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "a6edaf0c-daed-4f0f-8de3-f732502973b2": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "4106e9ef-1bb1-4ca4-974c-8de8875b8456": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "ba305820-0d8a-4f53-9326-084a1fb0ea34": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "ca0c4d80-e0e7-4d4b-920f-f88ad90ff753": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "3fb2bed5-aecd-4e36-88f1-7a464d64515d": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "17ab5873-5000-41a8-a78d-105d01573c28": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "8bce37f6-5353-4fb4-962f-f7e9a6c4303d": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "4273b9f0-c927-4215-87bf-828ef65de984": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "a73356e1-93e7-11ec-a39d-005056b38ce3": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "52a74477-ca84-4d83-95ec-22a7418ec6a3": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "51e4f3a0-8e22-436d-ad2f-3fdd2a7e1ad7": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "c0410902-1007-404d-a8dd-3adee003811e": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "968e99a2-bb9b-44e9-a4ad-13c7a9672600": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "0b534dfd-97d5-4acc-a242-f31604237a6a": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "e327126e-c395-4028-a8f9-a36d29436ad9": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "b29f62e6-992e-4049-a26b-b6bd673c51e7": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-eva-details.bb",
+            "summary": "variant-eva-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "2284d28a-2cf7-41f0-bed6-0982601f7888": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-ensembl-details.bb",
+            "summary": "variant-ensembl-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "92ae33e2-666b-4eeb-aaaf-43606315bd28": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-ensembl-details.bb",
+            "summary": "variant-ensembl-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "7cc4a1b6-dd69-44ad-a8f1-ae5136e6dcdd": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-ensembl-details.bb",
+            "summary": "variant-ensembl-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "385f8f7f-00bd-42f4-b057-f04d0d1e6cb3": {
+        "label": "EVA short variants",
+        "datafiles": {
+            "details": "variant-ensembl-details.bb",
+            "summary": "variant-ensembl-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5",
+        "source": {
+            "name": "EVA",
+            "url": "https://www.ebi.ac.uk/eva"
+        }
+    },
+    "a733574a-93e7-11ec-a39d-005056b38ce3": {
+        "label": "SGRP short variants",
+        "datafiles": {
+            "details": "variant-ensembl-details.bb",
+            "summary": "variant-ensembl-summary.bw"
+        },
+        "description": "Variation features from SGRP, with Ensembl identifiers",
+        "source": {
+            "name": "SGRP",
+            "url": "http://www.moseslab.csb.utoronto.ca/sgrp/"
+        }
+    },
+    "08c83543-c3d9-4a7a-85d8-52f75d61aab0": {
+        "label": "CSHL/Cornell short variants",
+        "datafiles": {
+            "details": "variant-ensembl-details.bb",
+            "summary": "variant-ensembl-summary.bw"
+        },
+        "description": "Cold Spring Harbor Laboratory / Cornell University [remapped to PN40024.v4]",
+        "source": {
+            "name": "Cold Spring Harbor Laboratory",
+            "url": "https://www.cshl.edu"
+        }
+    },
+    "bc9cb479-b1e3-460b-b4ac-d20b0fe1b350": {
+        "label": "CNR-ITB short variants",
+        "datafiles": {
+            "details": "variant-ensembl-details.bb",
+            "summary": "variant-ensembl-summary.bw"
+        },
+        "description": "Markers from Axiom 820K, 35K and iSelect 90K SNP Infinium are provided by CerealsDB. Markers from TaBW280K Affymetrix arrary refer to Rimbert, H. et al. (2018)",
+        "sources": [
+            {
+                "name": "CerealsDB",
+                "url": "http://www.cerealsdb.uk.net"
+            },
+            {
+                "name": "Rimbert, H. et al.",
+                "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5749704/#!po=58.6957"
+            }
+        ]
+    },
+    "35a40586-9cb2-4d89-a7db-d00511691d09": {
+        "label": "The 150 TGRSP Short variants",
+        "datafiles": {
+            "details": "variant-ensembl-details.bb",
+            "summary": "variant-ensembl-summary.bw"
+        },
+        "description": "The 150 Tomato Genome ReSequencing Project (150 TGRSP) is revealing the genetic variation available in tomato, one of the most important vegetable crops, for breeding in the face of climate change, sustainability, and demand for more and better food",
+        "source": {
+            "name": "150 Tomato Genome ReSequencing Project",
+            "url": "https://www.tomatogenome.wur.nl"
+        }
+    },
+    "a73357ab-93e7-11ec-a39d-005056b38ce3": {
+        "label": "All short variants",
+        "datafiles": {
+            "details": "variant-ensembl-details.bb",
+            "summary": "variant-ensembl-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from all sources"
+    },
+    "e355c9df-75a2-411b-a470-36897d4f1515": {
+        "label": "All short variants",
+        "datafiles": {
+            "details": "variant-ensembl-details.bb",
+            "summary": "variant-ensembl-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from all sources"
+    }
+}

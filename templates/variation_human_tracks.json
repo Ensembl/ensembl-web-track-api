@@ -1,0 +1,26 @@
+{
+    "a7335667-93e7-11ec-a39d-005056b38ce3": {
+        "label": "dbSNP short variants",
+        "datafiles": {
+            "details": "variant-dbsnp-details.bb",
+            "summary": "variant-dbsnp-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from dbSNP - build 156",
+        "source": {
+            "name": "dbSNP",
+            "url": "https://www.ncbi.nlm.nih.gov/snp"
+        }
+    },
+    "3704ceb1-948d-11ec-a39d-005056b38ce3": {
+        "label": "dbSNP short variants",
+        "datafiles": {
+            "details": "variant-dbsnp-details.bb",
+            "summary": "variant-dbsnp-summary.bw"
+        },
+        "description": "All short variants (SNPs and indel) data from dbSNP - build 156",
+        "source": {
+            "name": "dbSNP",
+            "url": "https://www.ncbi.nlm.nih.gov/snp"
+        }
+    }
+}
