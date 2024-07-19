@@ -1,0 +1,25 @@
+genome_id: <genome_id>
+category:
+  track_category_id: assembly
+  label: Assembly
+  type: Genomic
+trigger:
+  - track
+  - expand
+settings:
+  repeat-details:
+    scales: [1, 8, 2]
+  repeat-summary:
+    scales: [9, 100, 4]
+type: regular
+label: "Repeats: Repeatmasker"
+additional_info: RepBase human low complexity
+display_order: 982
+on_by_default: true
+description: Shows repeat regions on the genome, identified by RepeatMasker using a RepBase repeat library
+sources:
+  - name: RepeatMasker
+    url: https://www.repeatmasker.org
+datafiles:
+  repeat-details: repeats.repeatmask_repbase_human_low.bb
+  repeat-summary: ""

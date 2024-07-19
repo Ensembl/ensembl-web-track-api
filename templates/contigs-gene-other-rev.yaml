@@ -1,0 +1,20 @@
+genome_id: <genome_id>
+category:
+  track_category_id: genes-transcripts
+  label: Genes & transcripts
+  type: Genomic
+trigger:
+  - track
+  - gene-other-rev
+type: gene
+label: Other genes
+additional_info: Reverse strand
+colour: GREY
+display_order: 110
+on_by_default: true
+description: Shows all non-coding genes on the reverse strand. <annotation_description>
+sources:
+  - name: <annotation_method>
+    url: <annotation_url>
+datafiles:
+  gene: contigs.bb
