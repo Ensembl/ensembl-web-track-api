@@ -1,16 +1,16 @@
-import os
-import glob
-import requests
-import sys
-import yaml
 import argparse
+import glob
+import os.path
+import requests
+import yaml
 
-args = {}
+args:argparse.Namespace = argparse.Namespace()
 def process_input_parameters():
   parser = argparse.ArgumentParser(description='Submit tracks to Track API based on input datafiles')
   parser.add_argument('-e', '--env', choices=['local', 'dev', 'staging', 'prod'], default='dev', metavar='ENV', help='target Track API deployment')
   parser.add_argument('-g', '--genome', nargs='*', metavar='GENOME_UUID', help='limit to specific genomes')
   parser.add_argument('-f', '--file', nargs='*', metavar='FILENAME', help='limit to specific tracks (datafiles)')
+  parser.add_argument('-t', '--template', nargs='*', metavar='TEMPLATE', help='limit to specific track template')
   parser.add_argument('-d', '--dry-run', action='store_true', help='do not submit tracks, just print them')
   parser.add_argument('data_dir', nargs='?', default='/hps/nobackup/flicek/ensembl/infrastructure/arne/e2020-datafile-2024-03', 
     help='root directory containing the datafiles (in genome subdirectories)')
@@ -19,7 +19,7 @@ def process_input_parameters():
   args = parser.parse_args(namespace=args)
 
 # 1) Loop through all the available bigbed/bigwig datafiles
-def process_bigbeds(root_dir):
+def process_bigbeds(root_dir: str) -> None:
   for subdir, dirs, files in os.walk(root_dir):
     if args.genome and subdir not in args.genome:
       continue
@@ -29,28 +29,29 @@ def process_bigbeds(root_dir):
         find_template(subdir, file)
 
 # 2) Load the corresponding track payload template
-def find_template(genome_id, datafile):
+def find_template(genome_id: str, datafile: str) -> None:
   if args.file and datafile not in args.file:
     return
-  print(f"Processing {datafile}")
   filename = os.path.splitext(datafile)[0]
   template_files = [os.path.basename(f) for f in glob.glob("../templates/*.yaml")]
   if filename in template_files: # 1-to-1 match
     return apply_template(genome_id, datafile, filename)
   for template_file in template_files: # multiple tracks (templates) per datafile
-    if template_file.startswith(f"{filename}_"):
+    if template_file.startswith(filename):
       return apply_template(genome_id, datafile, template_file)
 
 # 3) Fill in the template
-def apply_template(genome_id, filename, template_file):
+def apply_template(genome_id: str, filename: str, template_file: str) -> None:
+  if args.template and template_file not in args.template:
+    return
   print(f"Applying {template_file} to {filename}")
   with open(template_file, 'r') as file:
-    track_data = yaml.safe_load(file)
+    track_data: dict = yaml.safe_load(file)
   track_data['genome_id'] = genome_id
   submit_track(track_data)
 
 # 4) Submit the track payload to Track API
-def submit_track(track_data, second_try=False):
+def submit_track(track_data: dict, second_try: bool = False) -> None:
   print(f"Submitting track {track_data['label']}")
   if args.dry_run:
     print(track_data)

@@ -17,5 +17,5 @@ sources:
   - name: <annotation_method>
     url: <annotation_url>
 datafiles:
-  gene: contigs.bb
+  gene: transcripts.bb
   

@@ -5,16 +5,16 @@ category:
   type: Genomic
 trigger:
   - track
-  - gene-pc-fwd
+  - gene-other-fwd
 type: gene
-label: Protein coding genes
+label: Other genes
 additional_info: Forward strand
-colour: DARK_GREY
-display_order: -110
+colour: GREY
+display_order: -100
 on_by_default: true
-description: Shows all protein coding genes on the forward strand. <annotation_description>
+description: Shows all non-coding genes on the forward strand. <annotation_description>
 sources:
   - name: <annotation_method>
     url: <annotation_url>
 datafiles:
-  gene: contigs.bb
+  gene: transcripts.bb
