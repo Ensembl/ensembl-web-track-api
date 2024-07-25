@@ -18,4 +18,3 @@ sources:
     url: <annotation_url>
 datafiles:
   gene: transcripts.bb
-  
