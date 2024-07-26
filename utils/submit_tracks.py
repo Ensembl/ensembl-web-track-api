@@ -14,22 +14,26 @@ data_dir = os.environ.get("TRACK_DATA_DIR", "")
 
 def process_input_parameters():
   global args, track_api_url, data_dir
-  parser = argparse.ArgumentParser(description="Submit tracks to Track API based on input datafiles",
-              epilog='''Required environment variables: 
-              - TRACK_API_URL: Track API root address (e.g. https://dev-2020.ensembl.org/api/tracks)
-              - TRACK_DATA_DIR: Directory containing the datafiles (in genome ID subdirectories)
-              TRACK_DATA_DIR can be skipped if both -g and -f or -t are provided (no checks for datafile presence).
+  parser = argparse.ArgumentParser(
+    description="Submit tracks to Track API based on input datafiles",
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    epilog='''
+Required environment variables: 
+  - TRACK_API_URL: Track API root address (e.g. https://dev-2020.ensembl.org/api/tracks)
+  - TRACK_DATA_DIR: Directory containing the datafiles (in genome ID subdirectories)
+    TRACK_DATA_DIR can be skipped if both -g and -f or -t are provided (no checks for datafile presence).
 
-              Examples:
-              - Submit all tracks in TRACK_DATA_DIR (skipping already existing tracks): submit_tracks.py
-              - Replace the GC% track in Pig assembly: submit_tracks.py -g a7335667-93e7-11ec-a39d-005056b38ce3 -t gc -o
-                (skipping the gc.bw datafile check when TRACK_DATA_DIR is not set)
-              ''')
+Examples:
+  - Submit all tracks in TRACK_DATA_DIR (skipping already existing tracks): submit_tracks.py
+  - Replace the GC% track in Pig assembly: submit_tracks.py -g a7335667-93e7-11ec-a39d-005056b38ce3 -t gc -o
+    (skipping the filecheck for gc.bw when TRACK_DATA_DIR is not set)
+  ''')
   parser.add_argument("-g", "--genome", nargs="*", metavar="GENOME_ID", help="limit to specific genomes")
   parser.add_argument("-f", "--file", nargs="*", metavar="FILENAME", help="limit to specific track datafiles")
   parser.add_argument("-t", "--template", nargs="*", metavar="TEMPLATE", help="limit to specific track templates")
-  parser.add_argument("-d", "--dry-run", action="store_true", help="do not submit tracks, just print the payload")
-  parser.add_argument("-o", "--overwrite", action="store_true", help="overwrite existing tracks")
+  group = parser.add_mutually_exclusive_group()
+  group.add_argument("-d", "--dry-run", action="store_true", help="do not submit tracks, just print the payload")
+  group.add_argument("-o", "--overwrite", action="store_true", help="overwrite existing tracks")
  
   parser.parse_args(namespace=args)
   if not track_api_url:
