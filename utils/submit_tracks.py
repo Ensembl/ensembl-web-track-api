@@ -10,26 +10,37 @@ import yaml
 args = argparse.Namespace()
 template_dir = os.path.join(os.path.dirname(__file__), "..", "templates")
 track_api_url = os.environ.get("TRACK_API_URL", "")
+data_dir = os.environ.get("TRACK_DATA_DIR", "")
 
 def process_input_parameters():
-  global args, track_api_url
+  global args, track_api_url, data_dir
   parser = argparse.ArgumentParser(description="Submit tracks to Track API based on input datafiles",
-              epilog="Required environment variable: TRACK_API_URL (e.g. https://dev-2020.ensembl.org/api/tracks)")
-  parser.add_argument("-g", "--genome", nargs="*", metavar="GENOME_UUID", help="limit to specific genomes")
-  parser.add_argument("-f", "--file", nargs="*", metavar="FILENAME", help="limit to specific tracks (datafiles)")
-  parser.add_argument("-t", "--template", nargs="*", metavar="TEMPLATE", help="limit to specific track template")
-  parser.add_argument("-d", "--dry-run", action="store_true", help="do not submit tracks, just print them")
+              epilog='''Required environment variables: 
+              - TRACK_API_URL: Track API root address (e.g. https://dev-2020.ensembl.org/api/tracks)
+              - TRACK_DATA_DIR: Directory containing the datafiles (in genome ID subdirectories)
+              TRACK_DATA_DIR can be skipped if both -g and -f or -t are provided (no checks for datafile presence).
+
+              Examples:
+              - Submit all tracks in TRACK_DATA_DIR (skipping already existing tracks): submit_tracks.py
+              - Replace the GC% track in Pig assembly: submit_tracks.py -g a7335667-93e7-11ec-a39d-005056b38ce3 -t gc -o
+                (skipping the gc.bw datafile check when TRACK_DATA_DIR is not set)
+              ''')
+  parser.add_argument("-g", "--genome", nargs="*", metavar="GENOME_ID", help="limit to specific genomes")
+  parser.add_argument("-f", "--file", nargs="*", metavar="FILENAME", help="limit to specific track datafiles")
+  parser.add_argument("-t", "--template", nargs="*", metavar="TEMPLATE", help="limit to specific track templates")
+  parser.add_argument("-d", "--dry-run", action="store_true", help="do not submit tracks, just print the payload")
   parser.add_argument("-o", "--overwrite", action="store_true", help="overwrite existing tracks")
-  parser.add_argument("data_dir", metavar="DATA_DIR", help="root directory containing the datafiles (in genome subdirectories)")
-  #repeat tracks: /hps/nobackup/flicek/ensembl/infrastructure/repeats-beta/results
-  #other genomic tracks: /hps/nobackup/flicek/ensembl/infrastructure/arne/e2020-datafile-2024-03
+ 
   parser.parse_args(namespace=args)
   if not track_api_url:
     print("Error: TRACK_API_URL environment variable not set")
     exit(1)
+  if not data_dir and not (args.genome and (args.file or args.template)):
+    print("Error: TRACK_DATA_DIR environment variable not set")
+    exit(1)
 
 # 1) Loop through all the available bigbed/bigwig datafiles
-def process_datafiles(data_dir: str) -> None:
+def process_data_dir() -> None:
   if not os.path.isdir(data_dir):
     print(f"Error: data directory {data_dir} not found")
     exit(1)
@@ -48,26 +59,37 @@ def process_datafiles(data_dir: str) -> None:
       delete_tracks(subdir)
     for file in os.listdir(f"{data_dir}/{subdir}"):
       if file.endswith(".bb") or file.endswith(".bw"):
-        find_template(subdir, file)
+        match_template(subdir, file)
 
-# 2) Load the corresponding track payload template
-def find_template(genome_id: str, datafile: str) -> None:
-  if args.file and datafile not in args.file:
+# 1b) Use a list of file/template names instead of data directory
+def process_track_list() -> None:
+  files = args.template or args.file
+  for genome_id in args.genome:
+      print(f"Processing genome {genome_id}")
+      if args.overwrite: # delete existing tracks first
+        delete_tracks(genome_id)
+      for filename in files:
+        match_template(genome_id, filename)
+
+# 2) Load the corresponding track payload template(s)
+def match_template(genome_id: str, datafile: str) -> None:
+  if args.file and not args.template and datafile not in args.file:
     return
   filename = os.path.splitext(datafile)[0]
   template_files = [os.path.basename(f) for f in glob.glob(f"{template_dir}/*.yaml")]
-  if filename in template_files: # 1-to-1 match
-    apply_template(genome_id, datafile, filename)
+  if f"{filename}.yaml" in template_files: # 1-to-1 match
+    apply_template(genome_id, filename)
     return
   for template_file in template_files: # multiple tracks (templates) per datafile
     if template_file.startswith(filename):
-      apply_template(genome_id, datafile, template_file)
+      apply_template(genome_id, template_file)
 
 # 3) Fill in the template
-def apply_template(genome_id: str, filename: str, template_file: str) -> None:
+def apply_template(genome_id: str, template_file: str) -> None:
   if args.template and template_file not in args.template:
     return
-  print(f"{filename} => {template_file}")
+  if(not template_file.endswith(".yaml")):
+    template_file += ".yaml"
   with open(f"{template_dir}/{template_file}", "r") as file:
     track_data: dict = yaml.safe_load(file)
   track_data['genome_id'] = genome_id
@@ -111,4 +133,7 @@ def delete_tracks(genome_id: str) -> None:
 
 if __name__ == "__main__":
   process_input_parameters()
-  process_datafiles(args.data_dir)
+  if data_dir:
+    process_data_dir()
+  else:
+    process_track_list()
