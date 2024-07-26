@@ -119,7 +119,7 @@ def submit_track(track_data: dict, second_try: bool = False) -> None:
   msg = request.content.decode()
   if request.status_code != 201:
     if "Track already exists" in msg:
-      print(f"Track already exists, skipping.")
+      print("Track already exists, skipping.")
       return
     print(f"Error submitting track ({request.status_code}): {msg}")
     print(f"Track payload: {track_data}")
