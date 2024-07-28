@@ -123,15 +123,15 @@ def submit_track(track_data: dict, second_try: bool = False) -> None:
       submit_track(track_data, True)
 
   msg = request.content.decode()
-  if request.status_code != 201:
-    if "Track already exists" in msg:
-      log("Track already exists, skipping.")
-      return
-    print(f"Error submitting track ({request.status_code}): {msg}")
+  if request.status_code == 201:
+    log(msg)  # expected response: {"track_id": "some-uuid"}
+  elif request.status_code == 400 and "exists" in msg:
+    log("Track already exists, skipping.")
+  else:
+    print(f"Error submitting track ({request.status_code}): {msg[:100]}")
     print(f"Track payload: {track_data}")
     exit(1)
-  log(msg)  # expected response: {"track_id": "some-uuid"}
-
+  
 def delete_tracks(genome_id: str) -> None:
   if args.dry_run:
     log(f"Deleting tracks for genome {genome_id}")
