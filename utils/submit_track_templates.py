@@ -21,19 +21,20 @@ def process_input_parameters():
 Required environment variables: 
   - TRACK_API_URL: Track API root address (e.g. https://dev-2020.ensembl.org/api/tracks)
   - TRACK_DATA_DIR: Directory containing the datafiles (in genome ID subdirectories)
-    TRACK_DATA_DIR can be skipped if both -g and -f or -t are provided (no checks for datafile presence).
+    TRACK_DATA_DIR is optional if explicit track list is given with -g + -f or -t (skips datafile checks).
 
 Examples:
   - Submit all tracks in TRACK_DATA_DIR (skipping already existing tracks): submit_tracks.py
-  - Replace the GC% track in Pig assembly: submit_tracks.py -g a7335667-93e7-11ec-a39d-005056b38ce3 -t gc -o
-    (skipping the filecheck for gc.bw when TRACK_DATA_DIR is not set)
+  - Replace all tracks in reference Pig with a GC% track: submit_tracks.py -g a7335667-93e7-11ec-a39d-005056b38ce3 -t gc -o
+  - Submit all four gene tracks for all genomes: submit_tracks.py -f transcripts.bb
   ''')
   parser.add_argument("-g", "--genome", nargs="*", metavar="GENOME_ID", help="limit to specific genomes")
   parser.add_argument("-f", "--file", nargs="*", metavar="FILENAME", help="limit to specific track datafiles")
   parser.add_argument("-t", "--template", nargs="*", metavar="TEMPLATE", help="limit to specific track templates")
+  parser.add_argument("-q", "--quiet", action="store_true", help="suppress status messages")
   group = parser.add_mutually_exclusive_group()
   group.add_argument("-d", "--dry-run", action="store_true", help="do not submit tracks, just print the payload")
-  group.add_argument("-o", "--overwrite", action="store_true", help="overwrite existing tracks")
+  group.add_argument("-o", "--overwrite", action="store_true", help="overwrite (all) existing tracks")
  
   parser.parse_args(namespace=args)
   if not track_api_url:
@@ -43,22 +44,27 @@ Examples:
     print("Error: TRACK_DATA_DIR environment variable not set")
     exit(1)
 
+def log(msg: str) -> None:
+  if not args.quiet:
+    print(msg)
+
 # 1) Loop through all the available bigbed/bigwig datafiles
 def process_data_dir() -> None:
   if not os.path.isdir(data_dir):
     print(f"Error: data directory {data_dir} not found")
     exit(1)
-  for subdir in os.listdir(data_dir):
+  subdirs = os.listdir(data_dir)
+  for i, subdir in enumerate(subdirs):
     if not os.path.isdir(f"{data_dir}/{subdir}"):
       continue
     try:
       UUID(subdir, version=4)
     except ValueError:
-      print(f"Skipping non-genome directory {subdir}")
+      log(f"Skipping non-genome directory {subdir} ({i+1}/{len(subdirs)})")
       continue
     if args.genome and subdir not in args.genome:
       continue
-    print(f"Processing genome {subdir}")
+    log(f"Processing genome {subdir} ()")
     if args.overwrite: # delete existing tracks first
       delete_tracks(subdir)
     for file in os.listdir(f"{data_dir}/{subdir}"):
@@ -68,8 +74,8 @@ def process_data_dir() -> None:
 # 1b) Use a list of file/template names instead of data directory
 def process_track_list() -> None:
   files = args.template or args.file
-  for genome_id in args.genome:
-      print(f"Processing genome {genome_id}")
+  for i, genome_id in enumerate(args.genome):
+      log(f"Processing genome {genome_id} ({i+1}/{len(args.genome)})")
       if args.overwrite: # delete existing tracks first
         delete_tracks(genome_id)
       for filename in files:
@@ -101,7 +107,7 @@ def apply_template(genome_id: str, template_file: str) -> None:
 
 # 4) Submit the track payload to Track API
 def submit_track(track_data: dict, second_try: bool = False) -> None:
-  print(f"Submitting track: {track_data['label']}")
+  log(f"Submitting track: {track_data['label']}")
   if args.dry_run:
     print(track_data)
     return
@@ -110,25 +116,25 @@ def submit_track(track_data: dict, second_try: bool = False) -> None:
     request = requests.post(f"{track_api_url}/track", json=track_data)
   except requests.exceptions.ConnectTimeout:
     if (second_try):
-      print("No luck, bailing out.")
+      log("No luck, bailing out.")
       exit(1)
     else:
-      print("Connection timed out. Retrying...")
+      log("Connection timed out. Retrying...")
       submit_track(track_data, True)
 
   msg = request.content.decode()
   if request.status_code != 201:
     if "Track already exists" in msg:
-      print("Track already exists, skipping.")
+      log("Track already exists, skipping.")
       return
     print(f"Error submitting track ({request.status_code}): {msg}")
     print(f"Track payload: {track_data}")
     exit(1)
-  print(msg)  # expected response: {"track_id": "some-uuid"}
+  log(msg)  # expected response: {"track_id": "some-uuid"}
 
 def delete_tracks(genome_id: str) -> None:
   if args.dry_run:
-    print(f"Deleting tracks for genome {genome_id}")
+    log(f"Deleting tracks for genome {genome_id}")
     return
   request = requests.delete(f"{track_api_url}/track_categories/{genome_id}")
   if request.status_code != 204:
