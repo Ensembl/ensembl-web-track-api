@@ -143,6 +143,7 @@ def delete_tracks(genome_id: str) -> None:
 
 if __name__ == "__main__":
   process_input_parameters()
+  log(f"Submitting tracks to {track_api_url}")
   if data_dir:
     process_data_dir()
   else:
