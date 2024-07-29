@@ -52,8 +52,8 @@ class TrackObject(APIView):
         if(serializer.is_valid()):
             try:
                 serializer.save()
-            except IntegrityError:
-                return Response({"error": "Track already exists."}, status=status.HTTP_400_BAD_REQUEST)
+            except IntegrityError as e:
+                return Response({f"error": "Track already exists: {e}"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({"track_id": serializer.data.get("track_id")}, status=status.HTTP_201_CREATED)
         return Response({"error": f"Payload validation failed: {serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
     

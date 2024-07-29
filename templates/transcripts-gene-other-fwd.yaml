@@ -1,0 +1,20 @@
+genome_id: <genome_id>
+category:
+  track_category_id: genes-transcripts
+  label: Genes & transcripts
+  type: Genomic
+trigger:
+  - track
+  - gene-other-fwd
+type: gene
+label: Other genes
+additional_info: Forward strand
+colour: GREY
+display_order: -100
+on_by_default: true
+description: Shows all non-coding genes on the forward strand. <annotation_description>
+sources:
+  - name: <annotation_method>
+    url: <annotation_url>
+datafiles:
+  gene: transcripts.bb

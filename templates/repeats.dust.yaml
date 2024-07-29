@@ -1,0 +1,24 @@
+genome_id: <genome_id>
+category:
+  track_category_id: assembly
+  label: Assembly
+  type: Genomic
+trigger:
+  - track
+  - expand
+settings:
+  repeat-details:
+    scales: [1, 8, 2]
+  repeat-summary:
+    scales: [9, 100, 4]
+type: regular
+label: "Low complexity: Dust"
+display_order: 984
+on_by_default: true
+description: Shows low complexity regions (regions of the genome with a biased distribution of nucleotides, such as a repeat) on the genome, identified by Dust
+sources:
+  - name: Dust
+    url: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0654-5
+datafiles:
+  repeat-details: repeats.dust.bb
+  repeat-summary: ""

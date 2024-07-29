@@ -26,6 +26,7 @@ class Track(models.Model):
     display_order = models.IntegerField(null=True)
     additional_info = models.CharField(blank=True, default="", max_length=50)
     description = models.TextField(blank=True, default="")
+    settings = models.JSONField(default=dict)
 
     class Meta:
         ordering = ["display_order"]

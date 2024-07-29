@@ -1,0 +1,20 @@
+genome_id: <genome_id>
+category:
+  track_category_id: assembly
+  label: Assembly
+  type: Genomic
+trigger:
+  - track
+  - expand
+type: regular
+label: Constrained elements
+display_order: 960
+on_by_default: true
+description: |-
+  Displays constrained elements, which are stretches of genomic sequences that are highly conserved according to the conservation score. 
+  Data calculated using GERP.
+sources:
+  - name: GERP
+    url: http://mendel.stanford.edu/SidowLab/downloads/gerp/
+datafiles:
+  compara-details: gerp-elements.bb
