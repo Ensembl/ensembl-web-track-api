@@ -26,7 +26,7 @@ class CategoryTrackSerializer(BaseTrackSerializer):
 # track payload in "track" endpoint (consumed by genome browser)
 class ReadTrackSerializer(BaseTrackSerializer):
     class Meta(BaseTrackSerializer.Meta):
-        fields = BaseTrackSerializer.Meta.fields + ["datafiles"]
+        fields = BaseTrackSerializer.Meta.fields + ["datafiles", "settings"]
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,7 +41,7 @@ class WriteTrackSerializer(BaseTrackSerializer):
     category = CategorySerializer(write_only=True)
 
     class Meta(BaseTrackSerializer.Meta):
-        fields = BaseTrackSerializer.Meta.fields + ["genome_id", "category", "datafiles", "additional_info", "description"]
+        fields = BaseTrackSerializer.Meta.fields + ["genome_id", "category", "datafiles", "additional_info", "description", "settings"]
         extra_kwargs = {
             "genome_id": {"write_only": True}
         }
