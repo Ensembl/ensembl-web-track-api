@@ -20,6 +20,7 @@ staticfiles/
 
 # Environments
 env/
+.venv/
 
 ### VisualStudioCode template
 .vscode/*

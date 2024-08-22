@@ -11,6 +11,7 @@ args = argparse.Namespace()
 template_dir = os.path.join(os.path.dirname(__file__), "..", "templates")
 track_api_url = os.environ.get("TRACK_API_URL", "")
 data_dir = os.environ.get("TRACK_DATA_DIR", "")
+gene_desc = {}
 
 def process_input_parameters():
   global args, track_api_url, data_dir
@@ -31,6 +32,7 @@ Examples:
   parser.add_argument("-g", "--genome", nargs="*", metavar="GENOME_ID", help="limit to specific genomes")
   parser.add_argument("-f", "--file", nargs="*", metavar="FILENAME", help="limit to specific track datafiles")
   parser.add_argument("-t", "--template", nargs="*", metavar="TEMPLATE", help="limit to specific track templates")
+  parser.add_argument("-c", "--csv", metavar="CSV", help="CSV file with gene track descriptions")
   parser.add_argument("-q", "--quiet", action="store_true", help="suppress status messages")
   group = parser.add_mutually_exclusive_group()
   group.add_argument("-d", "--dry-run", action="store_true", help="do not submit tracks, just print the payload")
@@ -43,10 +45,28 @@ Examples:
   if not data_dir and not (args.genome and (args.file or args.template)):
     print("Error: TRACK_DATA_DIR environment variable not set")
     exit(1)
+  # csv needed when gene tracks are submitted
+  if (not args.file or args.file.startswith("transcripts")) and (not args.template or args.template.startswith("transcripts")):
+    if not args.csv or not args.csv.endswith(".csv"):
+      print("Error: CSV file missing for gene tracks")
+      exit(1)
+    parse_csv(args.csv)
+    
 
 def log(msg: str) -> None:
   if not args.quiet:
     print(msg)
+
+
+def parse_csv(path):
+  global gene_desc
+  with open(path) as f:
+    lines = f.readlines()
+  lines.pop(0)  # remove header
+  for line in lines:
+    fields = line.strip().split(',')
+    gene_desc[fields[1]] = {'method': fields[5], 'source': fields[3], 'url': fields[4]}
+
 
 # 1) Loop through all the available bigbed/bigwig datafiles
 def process_data_dir() -> None:
@@ -71,7 +91,7 @@ def process_data_dir() -> None:
       if file.endswith(".bb") or file.endswith(".bw"):
         match_template(subdir, file)
 
-# 1b) Use a list of file/template names instead of data directory
+# 1b) or use a list of file/template names instead
 def process_track_list() -> None:
   files = args.template or args.file
   for i, genome_id in enumerate(args.genome):
@@ -103,6 +123,17 @@ def apply_template(genome_id: str, template_file: str) -> None:
   with open(f"{template_dir}/{template_file}", "r") as file:
     track_data: dict = yaml.safe_load(file)
   track_data['genome_id'] = genome_id
+  # gene tracks need a species-specific description
+  if template_file.startswith("transcripts"):
+    if genome_id not in gene_desc:
+      log(f"Missing gene track description for genome {genome_id}")
+    else:
+      desc = gene_desc[genome_id]
+      if desc['source']:
+        if desc['method']:
+          track_data['description'] += f"\nGenes {'annotated by' if desc['method']=='Annotated' else 'imported from'}  {desc['source']}"
+        if desc['url']:
+          track_data['sources'] = [{'name': desc['source'], 'url': desc['url']}]
   submit_track(track_data)
 
 # 4) Submit the track payload to Track API

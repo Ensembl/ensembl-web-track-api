@@ -12,9 +12,6 @@ additional_info: Reverse strand
 colour: GREY
 display_order: 110
 on_by_default: true
-description: Shows all non-coding genes on the reverse strand. <annotation_description>
-sources:
-  - name: <annotation_method>
-    url: <annotation_url>
+description: Shows all non-coding genes on the reverse strand.
 datafiles:
   gene: transcripts.bb
