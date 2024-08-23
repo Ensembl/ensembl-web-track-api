@@ -23,10 +23,10 @@ class Track(models.Model):
     datafiles = models.JSONField(default=dict)
     colour = models.CharField(blank=True, default="", max_length=20)
     on_by_default = models.BooleanField(default=False)
-    display_order = models.IntegerField(null=True)
+    display_order = models.IntegerField(default=2000)
     additional_info = models.CharField(blank=True, default="", max_length=50)
     description = models.TextField(blank=True, default="")
-    settings = models.JSONField(default=dict)
+    settings = models.JSONField(blank=True, default=dict)
 
     class Meta:
         ordering = ["display_order"]
