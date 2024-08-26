@@ -9,6 +9,7 @@ import yaml
 
 args = argparse.Namespace()
 template_dir = os.path.join(os.path.dirname(__file__), "..", "templates")
+template_files = [os.path.basename(f) for f in glob.glob(f"{template_dir}/*.yaml")]
 track_api_url = os.environ.get("TRACK_API_URL", "")
 data_dir = os.environ.get("TRACK_DATA_DIR", "")
 gene_desc = {}
@@ -32,29 +33,30 @@ Examples:
   parser.add_argument("-g", "--genome", nargs="*", metavar="GENOME_ID", help="limit to specific genomes")
   parser.add_argument("-f", "--file", nargs="*", metavar="FILENAME", help="limit to specific track datafiles")
   parser.add_argument("-t", "--template", nargs="*", metavar="TEMPLATE", help="limit to specific track templates")
-  parser.add_argument("-c", "--csv", metavar="CSV", help="CSV file with gene track descriptions")
+  parser.add_argument("-c", "--csv", metavar="CSV", help="CSV file with gene track descriptions (default: use the one in templates dir)")
   parser.add_argument("-q", "--quiet", action="store_true", help="suppress status messages")
   group = parser.add_mutually_exclusive_group()
   group.add_argument("-d", "--dry-run", action="store_true", help="do not submit tracks, just print the payload")
   group.add_argument("-o", "--overwrite", action="store_true", help="overwrite (all) existing tracks")
  
   parser.parse_args(namespace=args)
-  if not track_api_url:
+  if not track_api_url and not args.dry_run:
     print("Error: TRACK_API_URL environment variable not set")
     exit(1)
   if not data_dir and not (args.genome and (args.file or args.template)):
     print("Error: TRACK_DATA_DIR environment variable not set")
     exit(1)
-  # csv needed when gene tracks are submitted
-  if (not args.file or args.file.startswith("transcripts")) and (not args.template or args.template.startswith("transcripts")):
-    if not args.csv or not args.csv.endswith(".csv"):
-      print("Error: CSV file missing for gene tracks")
-      exit(1)
-    parse_csv(args.csv)
+  # check for gene track descriptions input
+  if not args.csv:
+    args.csv = f"{template_dir}/beta2-gene-desc.csv"
+  if not os.path.isfile(args.csv):
+    print(f"Error: gene track CSV file not found: {args.csv}")
+    exit(1)
+  parse_csv(args.csv)
     
 
-def log(msg: str) -> None:
-  if not args.quiet:
+def log(msg: object) -> None:
+  if not args.quiet: 
     print(msg)
 
 
@@ -91,6 +93,7 @@ def process_data_dir() -> None:
       if file.endswith(".bb") or file.endswith(".bw"):
         match_template(subdir, file)
 
+
 # 1b) or use a list of file/template names instead
 def process_track_list() -> None:
   files = args.template or args.file
@@ -101,21 +104,31 @@ def process_track_list() -> None:
       for filename in files:
         match_template(genome_id, filename)
 
+
 # 2) Load the corresponding track payload template(s)
 def match_template(genome_id: str, datafile: str) -> None:
   if args.file and not args.template and datafile not in args.file:
     return
   filename = os.path.splitext(datafile)[0]
-  template_files = [os.path.basename(f) for f in glob.glob(f"{template_dir}/*.yaml")]
   if f"{filename}.yaml" in template_files: # 1-to-1 match
     apply_template(genome_id, filename)
     return
-  for template_file in template_files: # multiple tracks (templates) per datafile
+  # partial match (multiple tracks per datafile or vice versa)
+  match = False
+  for template_file in template_files:
     if template_file.startswith(filename):
       apply_template(genome_id, template_file)
+      match = True
+    elif not match and filename.startswith(os.path.splitext(template_file)[0]):
+      print(f"match to {template_file}")
+      apply_template(genome_id, template_file, datafile)
+      return
+  if not match:
+    print(f"Warning: No track template found for {datafile}")
+
 
 # 3) Fill in the template
-def apply_template(genome_id: str, template_file: str) -> None:
+def apply_template(genome_id: str, template_file: str, datafile: str='') -> None:
   if args.template and template_file not in args.template:
     return
   if(not template_file.endswith(".yaml")):
@@ -123,6 +136,12 @@ def apply_template(genome_id: str, template_file: str) -> None:
   with open(f"{template_dir}/{template_file}", "r") as file:
     track_data: dict = yaml.safe_load(file)
   track_data['genome_id'] = genome_id
+  if datafile: # update datafile (template matches multiple files)
+    filename = os.path.splitext(datafile)[0]
+    for key, value in track_data['datafiles'].items():
+      if value.startswith(filename):
+        track_data['datafiles'][key] = datafile
+        break
   # gene tracks need a species-specific description
   if template_file.startswith("transcripts"):
     if genome_id not in gene_desc:
@@ -136,18 +155,19 @@ def apply_template(genome_id: str, template_file: str) -> None:
           track_data['sources'] = [{'name': desc['source'], 'url': desc['url']}]
   submit_track(track_data)
 
+
 # 4) Submit the track payload to Track API
 def submit_track(track_data: dict, second_try: bool = False) -> None:
   log(f"Submitting track: {track_data['label']}")
   if args.dry_run:
-    print(track_data)
+    log(track_data)
     return
   
   try:
     request = requests.post(f"{track_api_url}/track", json=track_data)
   except requests.exceptions.ConnectTimeout:
     if (second_try):
-      log("No luck, bailing out.")
+      print("Error: No response from Track API.")
       exit(1)
     else:
       log("Connection timed out. Retrying...")
@@ -162,7 +182,8 @@ def submit_track(track_data: dict, second_try: bool = False) -> None:
     print(f"Error submitting track ({request.status_code}): {msg[:100]}")
     print(f"Track payload: {track_data}")
     exit(1)
-  
+
+
 def delete_tracks(genome_id: str) -> None:
   if args.dry_run:
     log(f"Deleting tracks for genome {genome_id}")
@@ -172,9 +193,11 @@ def delete_tracks(genome_id: str) -> None:
     print(f"Error deleting tracks for genome {genome_id}: {request.content.decode()}")
     exit(1)
 
+
 if __name__ == "__main__":
   process_input_parameters()
-  log(f"Submitting tracks to {track_api_url}")
+  if track_api_url:
+    log(f"Submitting tracks to {track_api_url}")
   if data_dir:
     process_data_dir()
   else:

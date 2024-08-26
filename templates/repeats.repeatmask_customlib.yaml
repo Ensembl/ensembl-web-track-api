@@ -1,0 +1,25 @@
+genome_id: <genome_id>
+category:
+  track_category_id: assembly
+  label: Assembly
+  type: Genomic
+trigger:
+  - track
+  - expand
+settings:
+  repeat-details:
+    scales: [1, 8, 2]
+  repeat-summary:
+    scales: [9, 100, 4]
+type: regular
+label: "Repeats: Repeatmasker"
+additional_info: Custom library
+display_order: 982
+on_by_default: true
+description: Repeats identified by RepeatMasker, using a custom library of <em>ab initio</em> repeat profiles for this species
+sources:
+  - name: RepeatMasker
+    url: https://www.repeatmasker.org
+datafiles:
+  repeat-details: repeats.repeatmask_customlib.bb
+  repeat-summary: ""
