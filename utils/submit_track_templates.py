@@ -32,7 +32,8 @@ Examples:
   ''')
   parser.add_argument("-g", "--genome", nargs="*", metavar="GENOME_ID", help="limit to specific genomes")
   parser.add_argument("-f", "--file", nargs="*", metavar="FILENAME", help="limit to specific track datafiles")
-  parser.add_argument("-t", "--template", nargs="*", metavar="TEMPLATE", help="limit to specific track templates")
+  parser.add_argument("-t", "--template", nargs="*", metavar="TEMPLATE", help="limit to specific track templates (types)")
+  parser.add_argument("-e", "--exclude", nargs="*", metavar="EXCLUDE", help="exclude specific track templates (types)")
   parser.add_argument("-c", "--csv", metavar="CSV", help="CSV file with gene track descriptions (default: use the one in templates dir)")
   parser.add_argument("-q", "--quiet", action="store_true", help="suppress status messages")
   group = parser.add_mutually_exclusive_group()
@@ -131,6 +132,10 @@ def match_template(genome_id: str, datafile: str) -> None:
 def apply_template(genome_id: str, template_file: str, datafile: str='') -> None:
   if args.template and template_file not in args.template:
     return
+  if args.exclude:
+    for exclude in args.exclude:
+      if template_file.startswith(exclude):
+        return
   if(not template_file.endswith(".yaml")):
     template_file += ".yaml"
   with open(f"{template_dir}/{template_file}", "r") as file:
@@ -145,7 +150,8 @@ def apply_template(genome_id: str, template_file: str, datafile: str='') -> None
   # gene tracks need a species-specific description
   if template_file.startswith("transcripts"):
     if genome_id not in gene_desc:
-      log(f"Missing gene track description for genome {genome_id}")
+      log(f"Missing gene track description for genome {genome_id}. Skipping track.")
+      return
     else:
       desc = gene_desc[genome_id]
       if desc['source']:
