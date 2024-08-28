@@ -69,7 +69,7 @@ Prod:
     name: production
   variables:
     AGENT: ${PROD_AGENT}
-    NS: ${PROS_NS}
+    NS: ${PROD_NS}
 
 Fallback:
   extends: .deploy-main
