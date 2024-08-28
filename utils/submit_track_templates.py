@@ -125,6 +125,10 @@ def match_template(genome_id: str, datafile: str) -> None:
       apply_template(genome_id, template_file, datafile)
       return
   if not match:
+    if args.exclude:
+      for exclude in args.exclude:
+        if datafile.startswith(exclude):
+          return
     print(f"Warning: No track template found for {datafile}")
 
 
@@ -132,10 +136,6 @@ def match_template(genome_id: str, datafile: str) -> None:
 def apply_template(genome_id: str, template_file: str, datafile: str='') -> None:
   if args.template and template_file not in args.template:
     return
-  if args.exclude:
-    for exclude in args.exclude:
-      if template_file.startswith(exclude):
-        return
   if(not template_file.endswith(".yaml")):
     template_file += ".yaml"
   with open(f"{template_dir}/{template_file}", "r") as file:
