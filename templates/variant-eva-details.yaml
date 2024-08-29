@@ -1,0 +1,27 @@
+genome_id: <genome_id>
+category:
+  track_category_id: short-variants
+  label: Short variants by resource
+  type: Variation
+trigger:
+  - track
+  - expand-variation
+settings:
+  variant-details:
+    switches:
+      - label-snv-id
+      - label-snv-alleles
+      - label-other-id
+      - label-other-alleles
+      - show-extents
+type: variant
+label: Ensembl short variants
+display_order: 1001
+on_by_default: true
+description: All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5
+sources:
+  - name: EVA
+    url: https://www.ebi.ac.uk/eva
+datafiles:
+  variant-details: variant-eva-details.bb
+  variant-summary: variant-eva-summary.bw
