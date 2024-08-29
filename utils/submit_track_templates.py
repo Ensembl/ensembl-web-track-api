@@ -78,17 +78,20 @@ def process_data_dir() -> None:
     print(f"Error: data directory {data_dir} not found")
     exit(1)
   subdirs = os.listdir(data_dir)
-  for i, subdir in enumerate(subdirs):
+  i = 0
+  total = len(args.genome or subdirs)
+  for subdir in subdirs:
     if not os.path.isdir(f"{data_dir}/{subdir}"):
       continue
     try:
       UUID(subdir, version=4)
     except ValueError:
-      log(f"Skipping non-genome directory {subdir} ({i+1}/{len(subdirs)})")
+      log(f"Skipping non-genome directory {subdir}")
       continue
     if args.genome and subdir not in args.genome:
       continue
-    log(f"Processing genome {subdir} ()")
+    i += 1
+    log(f"Processing genome {subdir} ({i}/{total})")
     if args.overwrite: # delete existing tracks first
       delete_tracks(subdir)
     for file in os.listdir(f"{data_dir}/{subdir}"):
