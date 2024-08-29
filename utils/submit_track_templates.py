@@ -182,7 +182,7 @@ def submit_track(track_data: dict, second_try: bool = False) -> None:
   msg = request.content.decode()
   if request.status_code == 201:
     log(msg)  # expected response: {"track_id": "some-uuid"}
-  elif request.status_code == 400 and "exists" in msg:
+  elif request.status_code == 400 and "unique" in msg:
     log("Track already exists, skipping.")
   else:
     print(f"Error submitting track ({request.status_code}): {msg[:100]}")
@@ -196,8 +196,7 @@ def delete_tracks(genome_id: str) -> None:
     return
   request = requests.delete(f"{track_api_url}/track_categories/{genome_id}")
   if request.status_code != 204:
-    print(f"Error deleting tracks for genome {genome_id}: {request.content.decode()}")
-    exit(1)
+    log(f"Could not delete tracks for {genome_id}: {request.content.decode()}")
 
 
 if __name__ == "__main__":
