@@ -35,6 +35,7 @@ Examples:
   parser.add_argument("-f", "--file", nargs="*", metavar="FILENAME", help="limit to specific track datafiles")
   parser.add_argument("-t", "--template", nargs="*", metavar="TEMPLATE", help="limit to specific track templates (types)")
   parser.add_argument("-e", "--exclude", nargs="*", metavar="EXCLUDE", help="exclude specific track templates (types)")
+  parser.add_argument("-r", "--resume", metavar="RESUME", help="resume loading from a specific genome ID")
   parser.add_argument("-c", "--csv", metavar="CSV", help="CSV file with gene track descriptions (default: use the one in templates dir)")
   parser.add_argument("-q", "--quiet", action="store_true", help="suppress status messages")
   group = parser.add_mutually_exclusive_group()
@@ -91,6 +92,12 @@ def process_data_dir() -> None:
     if args.genome and subdir not in args.genome:
       continue
     i += 1
+    if args.resume:
+      if subdir != args.resume:
+        log(f"Skipping genome {subdir} ({i+1}/{total})")
+        continue
+      else:
+        args.resume = None
     log(f"Processing genome {subdir} ({i}/{total})")
     if args.overwrite: # delete existing tracks first
       delete_tracks(subdir)
@@ -99,15 +106,22 @@ def process_data_dir() -> None:
         match_template(subdir, file)
 
 
-# 1b) or use a list of file/template names instead
+# 1b) or use a list of tracks (genomes+template names) instead
 def process_track_list() -> None:
   files = args.template or args.file
+  total = len(args.genome)
   for i, genome_id in enumerate(args.genome):
-      log(f"Processing genome {genome_id} ({i+1}/{len(args.genome)})")
-      if args.overwrite: # delete existing tracks first
-        delete_tracks(genome_id)
-      for filename in files:
-        match_template(genome_id, filename)
+    if args.resume:
+      if genome_id != args.resume:
+        log(f"Skipping genome {genome_id} ({i+1}/{total})")
+        continue
+      else:
+        args.resume = None
+    log(f"Processing genome {genome_id} ({i+1}/{total})")
+    if args.overwrite: # delete existing tracks first
+      delete_tracks(genome_id)
+    for filename in files:
+      match_template(genome_id, filename)
 
 
 # 2) Load the corresponding track payload template(s)
@@ -209,5 +223,8 @@ if __name__ == "__main__":
     log(f"Submitting tracks to {track_api_url}")
   if data_dir:
     process_data_dir()
-  else:
+  elif args.genome and (args.file or args.template):
     process_track_list()
+  else:
+    print("Please provide either a data directory or a list of tracks (genomes+template names) to be loaded.")
+    exit(1)
