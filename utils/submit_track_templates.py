@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import csv
 import glob
 import os.path
 import requests
@@ -64,11 +65,11 @@ def log(msg: object) -> None:
 def parse_csv(path):
   global gene_desc
   with open(path) as f:
-    lines = f.readlines()
-  lines.pop(0)  # remove header
-  for line in lines:
-    fields = line.strip().split(',')
-    gene_desc[fields[1]] = {'method': fields[5], 'source': fields[3], 'url': fields[4]}
+    reader = csv.DictReader(f)
+    for line in reader:
+      gene_desc[line['Genome_UUID']] = {
+        'method': line['Annotated_imported'], 'source': line['Source_name'], 'url': line['Source_URL']
+      }
 
 
 # 1) Loop through all the available bigbed/bigwig datafiles
