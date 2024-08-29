@@ -538,7 +538,7 @@ crambus_lathoniellus_gca949710035v1,20fb804f-cfe8-4a81-bfa2-d52fdbdb2fff,crambus
 craniophora_ligustri_gca905163465v1,899d80ce-d6d9-4b12-8d42-2e238ad55338,craniophora_ligustri_gca905163465v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 craniophora_ligustri_gca905163585v1,06ec79eb-f4c2-4c85-9693-4dd40dac9812,craniophora_ligustri_gca905163585v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 crassostrea_angulata_gca025612915v2rs,08459c48-24b6-4240-878f-42284cd9aed0,crassostrea_angulata_gca025612915v2rs_core_110_1,NCBI,https://www.ncbi.nlm.nih.gov/genome/annotation_euk/Crassostrea_angulata/GCF_025612915.1-RS_2022_12/,Imported
-crassostrea_gigas_gca902806645v1cm,9ef46fdd-32d7-4504-8664-e03ae387c0b7,crassostrea_gigas_gca902806645v1cm_core_110_1,"The Roslin Institute, The University of Edinburgh",https://www.ed.ac.uk/roslin,Imported
+crassostrea_gigas_gca902806645v1cm,9ef46fdd-32d7-4504-8664-e03ae387c0b7,crassostrea_gigas_gca902806645v1cm_core_110_1,"The Roslin Institute",https://www.ed.ac.uk/roslin,Imported
 crassostrea_virginica_gca002022765v4rs,e1d5f9d3-153e-4592-80b2-70740edfb887,crassostrea_virginica_gca002022765v4rs_core_110_1,NCBI,https://www.ncbi.nlm.nih.gov/genome/annotation_euk/Crassostrea_virginica/100/,Imported
 crataerina_pallida_gca949710015v1,680e4441-8832-4516-8314-f829546ce2ef,crataerina_pallida_gca949710015v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
 crepidodera_aurea_gca949319345v1,1aa33772-2566-4c33-978f-0c057c6f176d,crepidodera_aurea_gca949319345v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
@@ -628,7 +628,7 @@ dicentrarchus_labrax,c0abf72a-fc8b-40fb-95f0-994298368e0e,dicentrarchus_labrax_c
 dictyostelium_discoideum,ec4e3e5f-ee80-43de-9677-db956f4ef89b,dictyostelium_discoideum_core_57_110_1,,,Imported
 dicycla_oo_gca948252095v1,b4c21a1f-228b-4c96-bbbf-294c1e411f42,dicycla_oo_gca948252095v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
 digitaria_exilis_gca902859565v1,8ef56bf3-eda9-489d-a48b-712873bb5e9a,digitaria_exilis_gca902859565v1_core_110_1,KAUST,https://www.kaust.edu.sa/en,Imported
-dimorphilus_gyrociliatus_gca904063045v1gb,d7388789-f637-49a3-9b77-c4915d26d3ed,dimorphilus_gyrociliatus_gca904063045v1gb_core_110_1,"Department of Biological Sciences, University of Bergen",https://www.uib.no/en/bio,Imported
+dimorphilus_gyrociliatus_gca904063045v1gb,d7388789-f637-49a3-9b77-c4915d26d3ed,dimorphilus_gyrociliatus_gca904063045v1gb_core_110_1,"Department of Biological Sciences",https://www.uib.no/en/bio,Imported
 dipodomys_ordii,460a9e91-efe4-41a7-b18e-6e8542732ead,dipodomys_ordii_core_110_2,Ensembl,https://beta.ensembl.org/help/articles/vertebrate-genome-annotation,Annotated
 diuraphis_noxia_gca001186385v1rs,0f9508ce-362f-403e-bc65-31267c13a647,diuraphis_noxia_gca001186385v1rs_core_110_1,NCBI,https://www.ncbi.nlm.nih.gov/genome/annotation_euk/Diuraphis_noxia/100/,Imported
 dolichopus_griseipennis_gca963082915v1,48af180b-3982-4568-83a0-ba73311b07fb,dolichopus_griseipennis_gca963082915v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
@@ -763,7 +763,7 @@ eristalis_tenax_gca905231855v2,7b838b21-ebd6-48c2-89dd-fac7cca9b19c,eristalis_te
 erpetoichthys_calabaricus,1a6d362e-c253-46bc-9ef3-0f4c06440969,erpetoichthys_calabaricus_core_110_11,Ensembl,https://beta.ensembl.org/help/articles/vertebrate-genome-annotation,Annotated
 erynnis_tages_gca905147235v1,83d57650-da77-45e6-85b8-d0a639cab405,erynnis_tages_gca905147235v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
 erynnis_tages_gca905147245v1,95ad1a76-cabc-4fc3-83d3-25f2ee43d526,erynnis_tages_gca905147245v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
-erysiphe_necator_gca_000798715,763330b7-4678-4f50-8457-993212eb3b46,fungi_ascomycota2_collection_core_57_110_1,"University of California, Davis",http://www.ebi.ac.uk/ena/browser/view/GCA_000798715,Imported
+erysiphe_necator_gca_000798715,763330b7-4678-4f50-8457-993212eb3b46,fungi_ascomycota2_collection_core_57_110_1,"University of California",http://www.ebi.ac.uk/ena/browser/view/GCA_000798715,Imported
 esox_lucius,7eb5b5f3-93c7-416a-8190-d54144623762,esox_lucius_core_110_4,Ensembl,https://beta.ensembl.org/help/articles/vertebrate-genome-annotation,Annotated
 esox_lucius_gca011004845v1,62b467c2-5fc9-45ba-8b1d-8b1bf972b3b1,esox_lucius_gca011004845v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/vertebrate-genome-annotation,Annotated
 esperia_sulphurella_gca947086405v1,94596613-62b2-4fb4-9baa-21b1064082c7,esperia_sulphurella_gca947086405v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
@@ -889,7 +889,7 @@ gymnosoma_rotundatum_gca916610175v2,9f44a20c-0db4-4297-a250-efb76b40c198,gymnoso
 habropoda_laboriosa_gca001263275v1rs,60997cca-83ca-41d3-8a54-33371d89497c,habropoda_laboriosa_gca001263275v1rs_core_110_1,NCBI,https://www.ncbi.nlm.nih.gov/genome/annotation_euk/Habropoda_laboriosa/100/,Imported
 habrosyne_pyritoides_gca907165225v1,ce50dec6-a98f-4ad6-a5b2-2e62b147866b,habrosyne_pyritoides_gca907165225v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
 habrosyne_pyritoides_gca907165245v1,1e1a8710-9ad7-4804-9362-e2d8b1b2d521,habrosyne_pyritoides_gca907165245v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
-haemaphysalis_longicornis_gca013339765v1ni,67a975e0-7f2d-4650-8ca2-6af4dfe1bcc3,haemaphysalis_longicornis_gca013339765v1ni_core_110_1,"TIGMIC Group, Beijing Institute of Microbiology and Epidemiology",https://bigd.big.ac.cn/gwh/Assembly/8865/show,Imported
+haemaphysalis_longicornis_gca013339765v1ni,67a975e0-7f2d-4650-8ca2-6af4dfe1bcc3,haemaphysalis_longicornis_gca013339765v1ni_core_110_1,"TIGMIC Group",https://bigd.big.ac.cn/gwh/Assembly/8865/show,Imported
 haemonchus_contortus_gca000469685v2wb,5ddfcc87-79b0-462e-b3cd-b64588bf408f,haemonchus_contortus_gca000469685v2wb_core_110_1,Wellcome Sanger Institute,http://www.sanger.ac.uk,Imported
 haemorhous_mexicanus_gca027477595v1,84813622-3143-48a3-b31b-7876f4555b1f,haemorhous_mexicanus_gca027477595v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/vertebrate-genome-annotation,Annotated
 haliaeetus_albicilla_gca947461875v1,546d3fac-b9f0-48b7-9905-33b153de3281,haliaeetus_albicilla_gca947461875v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/vertebrate-genome-annotation,Annotated
@@ -952,7 +952,7 @@ homarus_americanus_gca018991925v1rs,17881ef9-7318-4f64-875a-97bbfd8507a1,homarus
 hoplodrina_ambigua_gca949774945v1,cc473d37-0dd3-4857-b830-a6433f20270c,hoplodrina_ambigua_gca949774945v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
 hoplodrina_blanda_gca949316365v1,57af64f2-fc44-426a-9c3e-3806669e44cb,hoplodrina_blanda_gca949316365v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
 hyalella_azteca_gca000764305v2rs,61e4444d-c5f2-4c37-bf01-66f7d7d7572e,hyalella_azteca_gca000764305v2rs_core_110_1,NCBI,https://www.ncbi.nlm.nih.gov/genome/annotation_euk/Hyalella_azteca/100,Imported
-hyalomma_asiaticum_gca013339685v1ni,e87cb9c6-b0fa-4aff-999a-22fc76a4135a,hyalomma_asiaticum_gca013339685v1ni_core_110_1,"TIGMIC Group, Beijing Institute of Microbiology and Epidemiology",https://ngdc.cncb.ac.cn/gwh/Assembly/8867/show,Imported
+hyalomma_asiaticum_gca013339685v1ni,e87cb9c6-b0fa-4aff-999a-22fc76a4135a,hyalomma_asiaticum_gca013339685v1ni_core_110_1,"TIGMIC Group",https://ngdc.cncb.ac.cn/gwh/Assembly/8867/show,Imported
 hydractinia_echinata_gca030067915v1,298a5b70-aecb-4f7c-a595-f6993e307684,hydractinia_echinata_gca030067915v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 hydractinia_symbiolongicarpus_gca029227915v2rs,c7194372-f45e-4d58-a768-c13078de3f32,hydractinia_symbiolongicarpus_gca029227915v2rs_core_110_1,NCBI,https://www.ncbi.nlm.nih.gov/genome/annotation_euk/Hydractinia_symbiolongicarpus/GCF_029227915.1-RS_2023_06.html,Imported
 hydraecia_micacea_gca914767565v1,7fe624f3-123f-4643-881e-92d639b75e1d,hydraecia_micacea_gca914767565v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
@@ -981,7 +981,7 @@ hypercompe_scribonia_gca949316075v1,e538fd8b-9a56-4901-be82-9be81feb86a6,hyperco
 hypercompe_scribonia_gca949316085v1,06d8e8bb-a19b-4df5-a6ca-4a5830a2bc8f,hypercompe_scribonia_gca949316085v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
 hypomecis_punctinalis_gca949316335v1,e815ad51-6b62-4178-9a7f-9b522212210a,hypomecis_punctinalis_gca949316335v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 hypomecis_punctinalis_gca949316475v1,db8b9cbf-8088-4433-8a99-96a606788162,hypomecis_punctinalis_gca949316475v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
-hypsibius_exemplaris_gca002082055v1gb,4956bf63-bf5a-4708-93a3-56490b79e47c,hypsibius_exemplaris_gca002082055v1gb_core_110_1,"Institute for Advanced Biosciences, Keio University",https://www.iab.keio.ac.jp/en/index.html,Imported
+hypsibius_exemplaris_gca002082055v1gb,4956bf63-bf5a-4708-93a3-56490b79e47c,hypsibius_exemplaris_gca002082055v1gb_core_110_1,"Institute for Advanced Biosciences",https://www.iab.keio.ac.jp/en/index.html,Imported
 hypsopygia_costalis_gca937001555v1,40a5abde-011a-42a1-9aea-170428f622d0,hypsopygia_costalis_gca937001555v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
 hypsopygia_costalis_gca937001555v2,ead1174a-2b5b-40d6-813d-bd6c40e94799,hypsopygia_costalis_gca937001555v2_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
 hypsopygia_costalis_gca937001695v1,39ce49cc-2011-459c-829b-0577ff64fc2c,hypsopygia_costalis_gca937001695v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
@@ -999,7 +999,7 @@ idaea_straminata_gca951213275v1,e74d5388-5104-42bd-bd1a-a9adb01c72a6,idaea_stram
 inachis_io_gca905147045v1,87845ab2-6510-4b34-925d-db6f8f507571,inachis_io_gca905147045v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 inachis_io_gca905147125v1,b8d7d05b-0c61-4808-a08e-1de339e36744,inachis_io_gca905147125v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 iphiclides_podalirius_gca933534255v1,89f95ba0-239a-4808-abf9-0f4671cb9f15,iphiclides_podalirius_gca933534255v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
-ixodes_persulcatus_gca013358835v1ni,bfa569ab-0af8-4b32-801c-bdcb96c6db02,ixodes_persulcatus_gca013358835v1ni_core_110_1,"TIGMIC Group, Beijing Institute of Microbiology and Epidemiology",https://bigd.big.ac.cn/gwh/Assembly/8896/show,Imported
+ixodes_persulcatus_gca013358835v1ni,bfa569ab-0af8-4b32-801c-bdcb96c6db02,ixodes_persulcatus_gca013358835v1ni_core_110_1,"TIGMIC Group",https://bigd.big.ac.cn/gwh/Assembly/8896/show,Imported
 ixodes_scapularis_gca016920785v2rs,bf996f15-1671-49d9-ac6d-b497acc8718f,ixodes_scapularis_gca016920785v2rs_core_110_1,NCBI,https://www.ncbi.nlm.nih.gov/genome/annotation_euk/Ixodes_scapularis/103/,Imported
 jaculus_jaculus,330dacc1-055f-4120-abb0-3a6d8b85e4ee,jaculus_jaculus_core_110_10,Ensembl,https://beta.ensembl.org/help/articles/vertebrate-genome-annotation,Annotated
 jaculus_jaculus_gca020740685v1,0da205cc-18d1-4977-8924-596c652da487,jaculus_jaculus_gca020740685v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/vertebrate-genome-annotation,Annotated
@@ -1400,7 +1400,7 @@ ovis_aries_gca022432845v1,5bde0238-33fe-4594-bca3-ba9fea6ab1ba,ovis_aries_gca022
 ovis_aries_gca022538005v1,efe43926-bec4-45ba-b1d8-5fdec3d4aea6,ovis_aries_gca022538005v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/vertebrate-genome-annotation,Annotated
 ovis_aries_gca024222175v1,07410552-4278-411c-a439-05187f59cdda,ovis_aries_gca024222175v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/vertebrate-genome-annotation,Annotated
 ovis_aries_gca024222265v1,f67d8f03-8925-46fa-a99c-467315e61ec4,ovis_aries_gca024222265v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/vertebrate-genome-annotation,Annotated
-owenia_fusiformis_gca903813345v1gb,c9b7c023-a303-4889-b9cb-0c619c669797,owenia_fusiformis_gca903813345v1gb_core_110_1,"Chema Martin-Duran lab., School of Biological and Chemical Sciences, Queen Mary University Of London",https://www.qmul.ac.uk/sbbs/,Imported
+owenia_fusiformis_gca903813345v1gb,c9b7c023-a303-4889-b9cb-0c619c669797,owenia_fusiformis_gca903813345v1gb_core_110_1,"Chema Martin-Duran lab",https://www.qmul.ac.uk/sbbs/,Imported
 oxyura_jamaicensis_gca011077185v1,697277eb-a5a9-4ed1-9e8f-ea8761691f76,oxyura_jamaicensis_gca011077185v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/vertebrate-genome-annotation,Annotated
 pachyseris_speciosa_gca016490735v1,b5c4eaf8-9bff-4759-800d-b61135ea5b23,pachyseris_speciosa_gca016490735v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 pammene_aurita_gca947086415v1,af49469c-149e-43cc-8341-aefaeeaf6e5c,pammene_aurita_gca947086415v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
@@ -1573,7 +1573,7 @@ polyommatus_icarus_gca937595015v1,914736dc-f934-4cc3-a1d3-dcde787e20a7,polyommat
 polyommatus_icarus_gca937629555v1,ea595a99-14b2-4470-957f-abc830d7c9a2,polyommatus_icarus_gca937629555v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 polyommatus_iphigenia_gca963422495v1,52350595-ea9e-4e56-bf00-53c375528ada,polyommatus_iphigenia_gca963422495v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
 pomacea_canaliculata_gca003073045v1rs,6e7d5e02-3d60-4dbf-8db1-610b58b609d0,pomacea_canaliculata_gca003073045v1rs_core_110_1,NCBI,https://www.ncbi.nlm.nih.gov/genome/annotation_euk/Pomacea_canaliculata/100/,Imported
-pomphorhynchus_laevis_gca012934845v2gb,957ab293-1811-4077-ba08-148a551c81de,pomphorhynchus_laevis_gca012934845v2gb_core_110_1,"Institute of Organismic and Molecular Evolution (iomE), Johannes Gutenberg University Mainz",https://iome.biologie.uni-mainz.de,Imported
+pomphorhynchus_laevis_gca012934845v2gb,957ab293-1811-4077-ba08-148a551c81de,pomphorhynchus_laevis_gca012934845v2gb_core_110_1,"Institute of Organismic and Molecular Evolution",https://iome.biologie.uni-mainz.de,Imported
 pongo_abelii_gca002880775v3,40ba165f-b079-4afe-a95a-41ba4d90df72,pongo_abelii_gca002880775v3_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/vertebrate-genome-annotation,Annotated
 porites_australiensis_gca022179025v1,c8268707-8897-424a-a514-39792386bdd8,porites_australiensis_gca022179025v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 porites_evermanni_gca942486025v1,3d14c494-5394-43b2-ab0c-61203a1892cc,porites_evermanni_gca942486025v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
@@ -1662,7 +1662,7 @@ sarcophaga_subvicina_gca936440885v2,2f3d4847-8b70-44f9-b6c0-ed2fbb8eb9b3,sarcoph
 sarcophaga_subvicina_gca936449025v1,ce1c80b9-a602-4cc5-ac44-f49e7a90b012,sarcophaga_subvicina_gca936449025v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 sarcophaga_variegata_gca932276125v1,bee854cc-8b89-4a49-bb61-fefd5a8077f9,sarcophaga_variegata_gca932276125v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 sarcophilus_harrisii,69de41fe-2ac8-4ea4-9b38-c04c51aca1ae,sarcophilus_harrisii_core_110_111,Ensembl,https://beta.ensembl.org/help/articles/vertebrate-genome-annotation,Annotated
-sarcoptes_scabiei_gca014595675v1gb,73b21f7d-2179-43a0-a635-d2fc6ae94532,sarcoptes_scabiei_gca014595675v1gb_core_110_1,"The University of Melbourne, Faculty of Veterinary and Agricultural Sciences",https://fvas.unimelb.edu.au,Imported
+sarcoptes_scabiei_gca014595675v1gb,73b21f7d-2179-43a0-a635-d2fc6ae94532,sarcoptes_scabiei_gca014595675v1gb_core_110_1,"The University of Melbourne",https://fvas.unimelb.edu.au,Imported
 saturnia_pavonia_gca947532125v1,0452565a-6449-493d-91c0-b1cc22f09a81,saturnia_pavonia_gca947532125v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 scaeva_pyrastri_gca905146935v1,b167d15f-c9d2-4e82-b1ce-db1b83b48333,scaeva_pyrastri_gca905146935v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 scaeva_pyrastri_gca905147095v1,e739457f-7997-4ca8-9b94-2cf71b23a741,scaeva_pyrastri_gca905147095v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
