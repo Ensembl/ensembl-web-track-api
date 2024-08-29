@@ -283,7 +283,7 @@ bellardia_pandia_gca916050155v1,0e4e25bc-1d37-4e9e-9d4a-53c8690f8a38,bellardia_p
 bembecia_ichneumoniformis_gca910589475v1,80cbb067-9fe3-4fe4-81a0-392580e34bc9,bembecia_ichneumoniformis_gca910589475v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 bembecia_ichneumoniformis_gca910589475v2,8c317c9b-a9d4-4bca-825c-310610bacc9e,bembecia_ichneumoniformis_gca910589475v2_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 bembecia_ichneumoniformis_gca910589565v1,963f2859-37b1-447e-bbf7-7b5fd8f53db0,bembecia_ichneumoniformis_gca910589565v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
-bemisia_tabaci_asiaii5,b3e4232f-456f-4247-9c6a-150cc7669003,bemisia_tabaci_asiaii5_core_57_110_1,Ensembl,www.ensembl.org,Imported
+bemisia_tabaci_asiaii5,b3e4232f-456f-4247-9c6a-150cc7669003,bemisia_tabaci_asiaii5_core_57_110_1,Ensembl,https://www.ensembl.org,Imported
 bemisia_tabaci_gca918797505v1cm,a1670bd6-849b-453e-a174-6831dbb13bf7,bemisia_tabaci_gca918797505v1cm_core_110_1,NCBI,https://www.pestgenomics.org/species/bemisia-tabaci/,Imported
 beris_chalybata_gca949128065v1,5c93d6f3-da93-4191-8095-b68734ae6fd0,beris_chalybata_gca949128065v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
 beris_chalybata_gca949128145v1,49f4e292-6e4e-456d-add6-7f5b84239fe8,beris_chalybata_gca949128145v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/braker-2-genome-annotation,Annotated
@@ -583,7 +583,7 @@ daphnia_pulex,985ff01c-f48e-43b6-b384-7407a5c2648b,daphnia_pulex_core_57_110_1,,
 daphnia_pulex_gca021134715v1rs,2e1481d3-66d7-45b5-b8c5-f25c30f122eb,daphnia_pulex_gca021134715v1rs_core_110_1,NCBI,https://www.ncbi.nlm.nih.gov/genome/annotation_euk/Daphnia_pulex/100/,Imported
 daphnia_pulicaria_gca021234035v2rs,ea1a7e52-7381-4d8b-b66d-7b7791727625,daphnia_pulicaria_gca021234035v2rs_core_110_1,NCBI,https://www.ncbi.nlm.nih.gov/genome/annotation_euk/Daphnia_pulicaria/100/,Imported
 dascillus_cervinus_gca949768715v1,07af68c8-e5c3-4ded-8bb0-c74effb25d1e,dascillus_cervinus_gca949768715v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
-dasypus_novemcinctus,5c7c9d78-9568-4a62-b716-bcd782b3f852,dasypus_novemcinctus_core_110_3,Ensembl,www.ensembl.org,Imported
+dasypus_novemcinctus,5c7c9d78-9568-4a62-b716-bcd782b3f852,dasypus_novemcinctus_core_110_3,Ensembl,https://www.ensembl.org,Imported
 dasysyrphus_albostriatus_gca946251815v1,7e3510b1-842d-4d93-a69c-f803394618f0,dasysyrphus_albostriatus_gca946251815v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 dasysyrphus_albostriatus_gca946251825v1,d7184d64-7cda-4f04-bf19-23bcdeabb9ff,dasysyrphus_albostriatus_gca946251825v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 daubentonia_madagascariensis_gca004027145v1,2fdf50a5-4fc5-47d3-bc78-f881b36b446c,daubentonia_madagascariensis_gca004027145v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/vertebrate-genome-annotation,Annotated
