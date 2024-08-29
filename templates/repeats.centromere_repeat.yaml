@@ -18,7 +18,7 @@ on_by_default: true
 description: Centromere genomic locations defined by the Genome Reference Consortium
 sources:
   - name: Genome Reference Consortium
-    url: https:/genomereference.org
+    url: https://genomereference.org
 datafiles:
   repeat-details: repeats.centromere_repeat.bb
   repeat-summary: ""
