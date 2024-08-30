@@ -94,7 +94,7 @@ def process_data_dir() -> None:
     i += 1
     if args.resume:
       if subdir != args.resume:
-        log(f"Skipping genome {subdir} ({i+1}/{total})")
+        log(f"Skipping genome {subdir} ({i}/{total})")
         continue
       else:
         args.resume = None
