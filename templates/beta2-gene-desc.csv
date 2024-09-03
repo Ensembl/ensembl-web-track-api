@@ -1,4 +1,4 @@
-Species,Genome_UUID,DB_name,Source_name,Source_URL,Annotated_imported
+Species,Genome_UUID,DB_name,Source_name,Source_URL,Description
 abrostola_tripartita_gca905340225v1,9814092a-e579-4b07-be3c-b2682d0b07ce,abrostola_tripartita_gca905340225v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 abrostola_tripartita_gca905340255v1,c9b1cf76-db50-4e8e-9b47-abc641a53a50,abrostola_tripartita_gca905340255v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated
 abrostola_triplasia_gca946251915v1,8e41c999-5666-41ef-a3ba-998d80c5da09,abrostola_triplasia_gca946251915v1_core_110_1,Ensembl,https://beta.ensembl.org/help/articles/non-vertebrate-genome-annotation,Annotated

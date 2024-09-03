@@ -15,7 +15,7 @@ settings:
       - label-other-alleles
       - show-extents
 type: variant
-label: Ensembl short variants
+label: EVA short variants
 display_order: 1001
 on_by_default: true
 description: All short variants (SNPs and indel) data from European Variation Archive (EVA) - release 5
