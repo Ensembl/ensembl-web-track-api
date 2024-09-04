@@ -254,27 +254,27 @@ def apply_template(genome_id: str, template_name: str, datafile: str = "") -> No
         "variant-ensembl"
     ):
         track_type = "gene" if template_name.startswith("transcripts") else "variant"
-        if genome_id not in csv_data[track_type]:
-            if track_type == "gene":
-                log("Missing gene track descriptions. Skipping track.")
-                return
-        else:
+        if genome_id in csv_data[track_type]:
             row = csv_data[track_type][genome_id]
             if row["name"]:
                 track_data["label"] = row["name"]
             if row["desc"]:
                 if track_type == "gene":
-                    track_data[
-                        "description"
-                    ] += f"\nGenes {'annotated by' if row['desc']=='Annotated' else 'imported from'}  {row['sources'][0]}."
+                    if len(row["sources"]):
+                      track_data[
+                          "description"
+                      ] += f"\nGenes {'annotated by' if row['desc']=='Annotated' else 'imported from'}  {row['sources'][0]}."
                 else:
                     track_data["description"] = row["desc"]
-            if "sources" not in track_data:
-                track_data["sources"] = []
-            for i, source_name in enumerate(row["sources"]):
-                track_data["sources"].append(
-                    {"name": source_name, "url": row["urls"][i]}
-                )
+            if len(row["sources"]):
+              if "sources" not in track_data:
+                  track_data["sources"] = []
+              for i, source_name in enumerate(row["sources"]):
+                  track_data["sources"].append(
+                      {"name": source_name, "url": row["urls"][i]}
+                  )
+        elif track_type == "gene":
+            log("Warning: Missing gene track descriptions.")
     # submit the track payload
     submit_track(track_data)
 
