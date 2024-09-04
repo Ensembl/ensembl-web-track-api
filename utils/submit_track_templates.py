@@ -174,14 +174,14 @@ def match_template(genome_id: str, datafile: str) -> None:
     return
   # partial name match (multiple tracks per datafile or vice versa)
   multimatch = False
-  for template in templates:
+  for template_name in templates:
     # many templates per datafile (e.g. transcripts.bb)
-    if template.startswith(filename):
-      apply_template(genome_id, template)
+    if template_name.startswith(filename):
+      apply_template(genome_id, template_name)
       multimatch = True
     # one template for many datafiles (e.g. repeats.repeatmask*.bb)
-    if not multimatch and filename.startswith(template):
-      apply_template(genome_id, template, datafile)
+    if not multimatch and filename.startswith(template_name):
+      apply_template(genome_id, template_name, datafile)
       return
   # unexpected datafile name (fine for .bw since same track as .bb)
   if not multimatch and datafile.endswith(".bb"):
@@ -189,8 +189,8 @@ def match_template(genome_id: str, datafile: str) -> None:
 
 
 # 3) Fill in the template
-def apply_template(genome_id: str, template: str, datafile: str='') -> None:
-  with open(f"{template_dir}/{template}{EXT}", "r") as template_file:
+def apply_template(genome_id: str, template_name: str, datafile: str='') -> None:
+  with open(f"{template_dir}/{template_name}{EXT}", "r") as template_file:
     track_data: TrackData = yaml.safe_load(template_file)
   track_data['genome_id'] = genome_id
   # update datafile field (template matches multiple files)
@@ -201,8 +201,8 @@ def apply_template(genome_id: str, template: str, datafile: str='') -> None:
         track_data['datafiles'][key] = datafile
         break
   # fill in species-specific fields (gene & variation tracks)
-  if template.startswith("transcripts") or template.startswith("variant-ensembl"):
-    track_type = "gene" if template.startswith("transcripts") else "variant"
+  if template_name.startswith("transcripts") or template_name.startswith("variant-ensembl"):
+    track_type = "gene" if template_name.startswith("transcripts") else "variant"
     if genome_id not in csv_data[track_type]:
       if track_type == "gene":
         log("Missing gene track descriptions. Skipping track.")
