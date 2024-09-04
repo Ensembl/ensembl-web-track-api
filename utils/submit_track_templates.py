@@ -9,7 +9,7 @@ from typing_extensions import NotRequired, TypedDict
 from uuid import UUID
 import yaml
 
-
+# Datamodels for static typing (runtime checks done by Track API)
 class TrackData(TypedDict):
     category: str
     genome_id: str
@@ -121,12 +121,12 @@ Examples:
     if args.template:
         args.template = [t.replace(EXT, "") for t in args.template]
 
-
+# Print messages in verbose mode
 def log(msg: object) -> None:
     if not args.quiet:
         print(msg)
 
-
+# Limit tracks to those specified in command-line args
 def filter_templates() -> None:
     global templates
     if args.template:
@@ -138,7 +138,7 @@ def filter_templates() -> None:
             t for t in templates if not any(t.startswith(e) for e in args.exclude)
         ]
 
-
+# Read species-specific track template fields from CSV file
 def parse_csv(path: str) -> CSVData:
     data: CSVData = {}
     try:
@@ -160,7 +160,8 @@ def parse_csv(path: str) -> CSVData:
     return data
 
 
-# 1) Loop through all the available bigbed/bigwig datafiles
+# Track loading process:
+# 1) Loop through all track datafiles in the data directory
 def process_data_dir() -> None:
     if not os.path.isdir(data_dir):
         print(f"Error: data directory {data_dir} not found")
@@ -193,7 +194,7 @@ def process_data_dir() -> None:
                 match_template(subdir, file)
 
 
-# 1b) or use a list of tracks (genomes+template names) instead
+# 1b) ...or use a list of tracks specified in command-line args
 def process_track_list() -> None:
     files = args.template or args.file
     total = len(args.genome)
@@ -211,7 +212,7 @@ def process_track_list() -> None:
             match_template(genome_id, filename)
 
 
-# 2) Load the corresponding track payload template(s)
+# 2) Load the track payload template(s) for each datafile
 def match_template(genome_id: str, datafile: str) -> None:
     if args.file and not args.template and datafile not in args.file:
         return
@@ -236,19 +237,19 @@ def match_template(genome_id: str, datafile: str) -> None:
         log(f"Warning: No track template found for {datafile}")
 
 
-# 3) Fill in the template
+# 3) Fill in the template (update variable fields)
 def apply_template(genome_id: str, template_name: str, datafile: str = "") -> None:
     with open(f"{template_dir}/{template_name}{EXT}", "r") as template_file:
         track_data: TrackData = yaml.safe_load(template_file)
-    track_data["genome_id"] = genome_id
-    # update datafile field (template matches multiple files)
+    track_data["genome_id"] = genome_id # always updated
+    # update datafile field (when a template matches multiple datafiles)
     if datafile:
         filename = os.path.splitext(datafile)[0]
         for key, value in track_data["datafiles"].items():
             if value.startswith(filename):
                 track_data["datafiles"][key] = datafile
                 break
-    # fill in species-specific fields (gene & variation tracks)
+    # udpate species-specific fields (gene & variation tracks)
     if template_name.startswith("transcripts") or template_name.startswith(
         "variant-ensembl"
     ):
@@ -305,7 +306,7 @@ def submit_track(track_data: TrackData, second_try: bool = False) -> None:
         print(f"Track payload: {track_data}")
         exit(1)
 
-
+# Cleanup in overwrite mode
 def delete_tracks(genome_id: str) -> None:
     if args.dry_run:
         log(f"Deleting tracks for genome {genome_id}")
@@ -318,7 +319,7 @@ def delete_tracks(genome_id: str) -> None:
 if __name__ == "__main__":
     process_input_parameters()
     filter_templates()
-    for type in ["gene", "variant"]:  # load species-specific track data
+    for type in ["gene", "variant"]:
         csv_data[type] = parse_csv(f"{template_dir}/beta2-{type}-desc.csv")
     if track_api_url:
         log(f"Submitting tracks to {track_api_url}")
