@@ -5,7 +5,7 @@ category:
   type: Variation
 trigger:
   - track
-  - expand-variation
+  - expand
 settings:
   variant-details:
     switches:
