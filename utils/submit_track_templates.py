@@ -311,13 +311,10 @@ def submit_track(track_data: TrackData, second_try: bool = False) -> None:
         exit(1)
 
 
-# Cleanup in overwrite mode
+# Do track cleanup in overwrite mode
 def delete_tracks(genome_id: str) -> None:
-    if args.dry_run:
-        log(f"Deleting tracks for genome {genome_id}")
-        return
     request = requests.delete(f"{track_api_url}/track_categories/{genome_id}")
-    if request.status_code != 204:
+    if request.status_code != 204 and request.status_code != 404:
         log(f"Could not delete tracks for {genome_id}: {request.content.decode()}")
 
 
