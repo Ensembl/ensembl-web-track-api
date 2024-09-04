@@ -9,6 +9,7 @@ from typing_extensions import NotRequired, TypedDict
 from uuid import UUID
 import yaml
 
+
 # Datamodels for static typing (runtime checks done by Track API)
 class TrackData(TypedDict):
     category: str
@@ -121,10 +122,12 @@ Examples:
     if args.template:
         args.template = [t.replace(EXT, "") for t in args.template]
 
+
 # Print messages in verbose mode
 def log(msg: object) -> None:
     if not args.quiet:
         print(msg)
+
 
 # Limit tracks to those specified in command-line args
 def filter_templates() -> None:
@@ -137,6 +140,7 @@ def filter_templates() -> None:
         templates = [
             t for t in templates if not any(t.startswith(e) for e in args.exclude)
         ]
+
 
 # Read species-specific track template fields from CSV file
 def parse_csv(path: str) -> CSVData:
@@ -241,7 +245,7 @@ def match_template(genome_id: str, datafile: str) -> None:
 def apply_template(genome_id: str, template_name: str, datafile: str = "") -> None:
     with open(f"{template_dir}/{template_name}{EXT}", "r") as template_file:
         track_data: TrackData = yaml.safe_load(template_file)
-    track_data["genome_id"] = genome_id # always updated
+    track_data["genome_id"] = genome_id  # always updated
     # update datafile field (when a template matches multiple datafiles)
     if datafile:
         filename = os.path.splitext(datafile)[0]
@@ -261,18 +265,18 @@ def apply_template(genome_id: str, template_name: str, datafile: str = "") -> No
             if row["desc"]:
                 if track_type == "gene":
                     if len(row["sources"]):
-                      track_data[
-                          "description"
-                      ] += f"\nGenes {'annotated by' if row['desc']=='Annotated' else 'imported from'}  {row['sources'][0]}."
+                        track_data[
+                            "description"
+                        ] += f"\nGenes {'annotated by' if row['desc']=='Annotated' else 'imported from'}  {row['sources'][0]}."
                 else:
                     track_data["description"] = row["desc"]
             if len(row["sources"]):
-              if "sources" not in track_data:
-                  track_data["sources"] = []
-              for i, source_name in enumerate(row["sources"]):
-                  track_data["sources"].append(
-                      {"name": source_name, "url": row["urls"][i]}
-                  )
+                if "sources" not in track_data:
+                    track_data["sources"] = []
+                for i, source_name in enumerate(row["sources"]):
+                    track_data["sources"].append(
+                        {"name": source_name, "url": row["urls"][i]}
+                    )
         elif track_type == "gene":
             log("Warning: Missing gene track descriptions.")
     # submit the track payload
@@ -305,6 +309,7 @@ def submit_track(track_data: TrackData, second_try: bool = False) -> None:
         print(f"Error submitting track ({request.status_code}): {msg[:100]}")
         print(f"Track payload: {track_data}")
         exit(1)
+
 
 # Cleanup in overwrite mode
 def delete_tracks(genome_id: str) -> None:
