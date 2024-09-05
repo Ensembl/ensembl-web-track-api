@@ -264,16 +264,19 @@ def apply_template(genome_id: str, template_name: str, datafile: str = "") -> No
                 track_data["label"] = row["name"]
             if row["desc"]:
                 if track_type == "gene":
-                    if len(row["sources"]):
+                    if row["sources"][0]:
                         track_data[
                             "description"
                         ] += f"\nGenes {'annotated by' if row['desc']=='Annotated' else 'imported from'}  {row['sources'][0]}."
                 else:
                     track_data["description"] = row["desc"]
-            if len(row["sources"]):
+            if row["sources"][0]:
                 if "sources" not in track_data:
                     track_data["sources"] = []
                 for i, source_name in enumerate(row["sources"]):
+                    if not source_name or not row["urls"][i]:
+                        log(f"Warning: Missing source name or URL for {track_data['label']}")
+                        continue
                     track_data["sources"].append(
                         {"name": source_name, "url": row["urls"][i]}
                     )
