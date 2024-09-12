@@ -1,0 +1,17 @@
+genome_id: <genome_id>
+category:
+  track_category_id: regulatory-features
+  label: Regulation
+  type: Regulation
+trigger:
+  - track
+  - regulation
+type: regular
+label: Regulatory annotation
+display_order: 890
+on_by_default: true
+description: |-
+  Promoters, enhancers and open chromatin regions are available for all species. 
+  Transcription factor binding and CTCF binding sites are only available for human and mouse.
+datafiles:
+  regulation: regulatory-features.bb

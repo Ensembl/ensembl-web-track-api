@@ -1,0 +1,27 @@
+genome_id: <genome_id>
+category:
+  track_category_id: assembly
+  label: Assembly
+  type: Genomic
+trigger:
+  - track
+  - expand
+settings:
+  repeat-details:
+    scales: [1, 8, 2]
+  repeat-summary:
+    scales: [9, 100, 4]
+type: regular
+label: "Repeats: RepeatMasker"
+additional_info: REdat
+display_order: 983
+on_by_default: true
+description: Shows repeats detected using RepeatMasker with MIPS Repeat Database (REdat) 
+sources:
+  - name: RepeatMasker
+    url: https://www.repeatmasker.org
+  - name: REdat
+    url: https://mips.helmholtz-muenchen.de/plant/recat
+datafiles:
+  repeat-details: repeats.repeatmask_redat.bb
+  repeat-summary: ""

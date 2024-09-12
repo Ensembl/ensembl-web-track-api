@@ -9,7 +9,7 @@ variables:
 .branch-rules-main:
     rules:
         - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
-          when: manual
+          when: on_success
         - when: never
 
 .branch-rules-dev:
@@ -69,7 +69,7 @@ Prod:
     name: production
   variables:
     AGENT: ${PROD_AGENT}
-    NS: ${PROS_NS}
+    NS: ${PROD_NS}
 
 Fallback:
   extends: .deploy-main
@@ -80,7 +80,7 @@ Fallback:
     NS: ${FALLBACK_NS}
 
 Staging:
-  extends: .deploy-main
+  extends: .deploy-dev
   environment:
     name: staging
   variables:
@@ -88,7 +88,7 @@ Staging:
     NS: ${STAGING_NS}
 
 Internal:
-  extends: .deploy-main
+  extends: .deploy-dev
   environment:
     name: internal
   variables:

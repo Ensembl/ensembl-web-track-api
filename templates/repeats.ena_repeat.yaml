@@ -12,13 +12,13 @@ settings:
   repeat-summary:
     scales: [9, 100, 4]
 type: regular
-label: "Repeats: TRF"
-display_order: 983
+label: "Repeats: ENA"
+display_order: 980
 on_by_default: true
-description: Shows repeat regions on the genome, identified by Tandem Repeats Finder
+description: Shows repeat regions annotated in ENA
 sources:
-  - name: Tandem Repeats Finder
-    url: https://tandem.bu.edu/trf/trf.html
+  - name: ENA
+    url: https://www.ebi.ac.uk/ena
 datafiles:
-  repeat-details: repeats.trf.bb
+  repeat-details: repeats.ena_repeat.bb
   repeat-summary: ""

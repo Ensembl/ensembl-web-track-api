@@ -12,13 +12,10 @@ settings:
   repeat-summary:
     scales: [9, 100, 4]
 type: regular
-label: "Repeats: TRF"
-display_order: 983
+label: Repeat elements
+display_order: 985
 on_by_default: true
-description: Shows repeat regions on the genome, identified by Tandem Repeats Finder
-sources:
-  - name: Tandem Repeats Finder
-    url: https://tandem.bu.edu/trf/trf.html
+description: Shows repeat regions on the genome
 datafiles:
-  repeat-details: repeats.trf.bb
+  repeat-details: repeat-elements.bb
   repeat-summary: ""
