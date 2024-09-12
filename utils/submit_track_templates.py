@@ -337,3 +337,4 @@ if __name__ == "__main__":
             "Please provide either a data directory or a list of tracks (genomes+template names) to be loaded."
         )
         exit(1)
+        
