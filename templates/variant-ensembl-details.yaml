@@ -16,7 +16,7 @@ settings:
       - show-extents
 type: variant
 label: Ensembl short variants
-display_order: 1001
+display_order: 1002
 on_by_default: true
 description: All short variants (SNPs and indel) data from Ensembl - e110
 sources:
