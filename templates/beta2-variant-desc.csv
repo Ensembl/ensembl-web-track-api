@@ -1,6 +1,6 @@
 Genome_UUID,Track_name,Source_name,Source_URL,Description
 a733574a-93e7-11ec-a39d-005056b38ce3,SGRP short variants,SGRP,http://www.moseslab.csb.utoronto.ca/sgrp,"Variation features from SGRP, with Ensembl identifiers"
-08c83543-c3d9-4a7a-85d8-52f75d61aab0,CSHL/Cornell short variants,,,All short variants (SNPs and indel) data from CSHL/Cornell
-bc9cb479-b1e3-460b-b4ac-d20b0fe1b350,CNR-ITB short variants,,,All short variants (SNPs and indel) data from CNR-ITB
-35a40586-9cb2-4d89-a7db-d00511691d09,The 150 TGRSP short variants,150 Tomato Genome ReSequencing Project,https://www.tomatogenome.wur.nl,All short variants (SNPs and indel) data from the 150 Tomato Genome ReSequencing Project
-a73357ab-93e7-11ec-a39d-005056b38ce3,IWGSC short variants,IWGSC,https://www.ebi.ac.uk/ena/browser/view/GCA_900519105.1
+08c83543-c3d9-4a7a-85d8-52f75d61aab0,CSHL/Cornell short variants,CSHL/Cornell,,"All short variants (SNPs and indels), data from CSHL/Cornell"
+bc9cb479-b1e3-460b-b4ac-d20b0fe1b350,CNR-ITB short variants,CNR-ITB,,"All short variants (SNPs and indels), data from CNR-ITB"
+35a40586-9cb2-4d89-a7db-d00511691d09,The 150 TGRSP short variants,150 Tomato Genome ReSequencing Project,https://www.tomatogenome.wur.nl,All short variants (SNPs and indels), data from the 150 Tomato Genome ReSequencing Project
+a73357ab-93e7-11ec-a39d-005056b38ce3,CSHL/Cornell short variants,"CerealsDB, EMS-induced mutation, Inter-homoeologous, Nottingham_WRC, Watkins-exome-capture, Exome_Capture_Diversity",,All short variants (SNPs and indels)
