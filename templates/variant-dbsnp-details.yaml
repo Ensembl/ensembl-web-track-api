@@ -18,7 +18,7 @@ type: variant
 label: dbSNP short variants
 display_order: 1000
 on_by_default: true
-description: All short variants (SNPs and indel) data from dbSNP - build 156
+description: All short variants (SNPs and indels) data from dbSNP - build 156
 sources:
   - name: dbSNP
     url: https://www.ncbi.nlm.nih.gov/snp
