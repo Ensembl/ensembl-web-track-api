@@ -99,13 +99,13 @@ Examples:
         "-e",
         "--exclude",
         nargs="*",
-        metavar="EXCLUDE",
+        metavar="TEMPLATE",
         help="exclude specific track templates (types)",
     )
     parser.add_argument(
         "-r",
         "--resume",
-        metavar="RESUME",
+        metavar="GENOME_ID",
         help="resume loading from a specific genome ID",
     )
     parser.add_argument(
@@ -124,7 +124,7 @@ Examples:
     group.add_argument(
         "-l",
         "--logfile",
-        metavar="LOGFILE",
+        metavar="FILENAME",
         default="track_submission.log",
         help="log progress to a file (use '' for no logfile, default: %(default)s)",
     )
