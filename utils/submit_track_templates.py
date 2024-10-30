@@ -126,7 +126,7 @@ Examples:
         "--logfile",
         metavar="LOGFILE",
         default="track_submission.log",
-        help="log progress to a file",
+        help="log progress to a file (default: %(default)s)",
     )
 
     parser.parse_args(namespace=args)
