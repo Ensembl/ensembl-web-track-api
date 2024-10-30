@@ -44,6 +44,7 @@ templates = [
 track_api_url = os.environ.get("TRACK_API_URL", "")
 data_dir = os.environ.get("TRACK_DATA_DIR", "")
 csv_data: CSVCollection = {}
+logfile = type("", (), {"write": lambda x,y: None})()  # stub
 
 
 def process_input_parameters():
@@ -127,6 +128,7 @@ Examples:
 def log(msg: object) -> None:
     if not args.quiet:
         print(msg)
+        logfile.write(msg)
 
 
 # Limit tracks to those specified in command-line args
@@ -152,8 +154,8 @@ def parse_csv(path: str) -> CSVData:
                 data[line["Genome_UUID"]] = {
                     "desc": line["Description"],
                     "name": line["Track_name"] if "Track_name" in line else "",
-                    "sources": line["Source_name"].split(";"),
-                    "urls": line["Source_URL"].split(";"),
+                    "sources": line["Source_name"].split(","),
+                    "urls": line["Source_URL"].split(","),
                 }
     except FileNotFoundError:
         print(f"Error: track description CSV file not found in {path}")
@@ -236,8 +238,8 @@ def match_template(genome_id: str, datafile: str) -> None:
         if not multimatch and filename.startswith(template_name):
             apply_template(genome_id, template_name, datafile)
             return
-    # unexpected datafile name (fine for .bw since same track as .bb)
-    if not multimatch and datafile.endswith(".bb"):
+    # unexpected datafile (ignoring redundant .bw and focus variant track files)
+    if not multimatch and datafile.endswith(".bb") and datafile != "variant-details.bb":
         log(f"Warning: No track template found for {datafile}")
 
 
@@ -322,10 +324,16 @@ def delete_tracks(genome_id: str) -> None:
 
 
 if __name__ == "__main__":
+    # setup
     process_input_parameters()
     filter_templates()
     for type in ["gene", "variant"]:
         csv_data[type] = parse_csv(f"{template_dir}/beta2-{type}-desc.csv")
+    try:
+        logfile = open("last_track_submission.log", "w")
+    except IOError as e:
+        log(f"Warning: cannot open logfile: {e}")
+    # run
     if track_api_url:
         log(f"Submitting tracks to {track_api_url}")
     if data_dir:
@@ -337,4 +345,3 @@ if __name__ == "__main__":
             "Please provide either a data directory or a list of tracks (genomes+template names) to be loaded."
         )
         exit(1)
-        
