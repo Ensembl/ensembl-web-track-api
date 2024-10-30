@@ -341,7 +341,7 @@ if __name__ == "__main__":
     process_input_parameters()
     filter_templates()
     for type in ["gene", "variant"]:
-        csv_data[type] = parse_csv(f"{template_dir}/beta2-{type}-desc.csv")
+        csv_data[type] = parse_csv(f"{template_dir}/{type}-track-desc.csv")
     if args.logfile:
         try:
             logfile = open(args.logfile, "w")
