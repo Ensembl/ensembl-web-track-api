@@ -70,8 +70,8 @@ Required environment variables:
 
 Examples:
   - Submit all tracks in TRACK_DATA_DIR (skipping existing tracks): submit_tracks.py
-  - Replace existing (pig) genome tracks with a GC% track: submit_tracks.py -g a7335667-93e7-11ec-a39d-005056b38ce3 -t gc -o
-  - Submit gene tracks for all genomes in TRACK_DATA_DIR: submit_tracks.py -f transcripts.bb
+  - Resubmit all tracks for dog and pig: submit_tracks.py -o -g 2284d28a-2cf7-41f0-bed6-0982601f7888 a7335667-93e7-11ec-a39d-005056b38ce3
+  - Submit gene tracks for dog (TRACK_DATA_DIR not needed): submit_tracks.py -t transcripts -g 2284d28a-2cf7-41f0-bed6-0982601f7888
   """,
     )
     parser.add_argument(
