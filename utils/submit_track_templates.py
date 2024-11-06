@@ -235,6 +235,9 @@ def match_template(genome_id: str, datafile: str) -> None:
     if args.file and not args.template and datafile not in args.file:
         return
     filename = os.path.splitext(datafile)[0]
+    # skip variant focus tracks and redundant bigwig files
+    if datafile == "variant-details.bb" or datafile.endswith("summary.bw"):
+        return
     # exact datafile=>template name match
     if filename in templates:
         apply_template(genome_id, filename)
@@ -242,16 +245,16 @@ def match_template(genome_id: str, datafile: str) -> None:
     # partial name match (multiple tracks per datafile or vice versa)
     multimatch = False
     for template_name in templates:
-        # many templates per datafile (e.g. transcripts.bb)
+        # multiple templates (tracks) per datafile (e.g. transcripts.bb)
         if template_name.startswith(filename):
             apply_template(genome_id, template_name)
             multimatch = True
-        # one template for many datafiles (e.g. repeats.repeatmask*.bb)
+        # single template matches many datafiles (e.g. repeats.repeatmask*.bb)
         if not multimatch and filename.startswith(template_name):
             apply_template(genome_id, template_name, datafile)
             return
-    # unexpected datafile (ignoring redundant .bw and focus variant track files)
-    if not multimatch and datafile.endswith(".bb") and datafile != "variant-details.bb":
+    # unexpected datafile
+    if not multimatch:
         log(f"Warning: No track template found for {datafile}")
 
 
