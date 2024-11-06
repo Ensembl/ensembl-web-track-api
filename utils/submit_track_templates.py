@@ -236,7 +236,7 @@ def match_template(genome_id: str, datafile: str) -> None:
         return
     filename = os.path.splitext(datafile)[0]
     # skip variant focus tracks and redundant bigwig files
-    if datafile == "variant-details.bb" or datafile.endswith("summary.bw"):
+    if filename == "variant-details.bb" or filename.endswith("summary.bw"):
         return
     # exact datafile=>template name match
     if filename in templates:
@@ -255,7 +255,7 @@ def match_template(genome_id: str, datafile: str) -> None:
             return
     # unexpected datafile
     if not multimatch:
-        log(f"Warning: No track template found for {datafile}")
+        log(f"Warning: No track template found for {filename}")
 
 
 # 3) Fill in the template (update variable fields)
