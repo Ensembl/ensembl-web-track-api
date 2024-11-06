@@ -44,6 +44,16 @@ templates = [
 track_api_url = os.environ.get("TRACK_API_URL", "")
 data_dir = os.environ.get("TRACK_DATA_DIR", "")
 csv_data: CSVCollection = {}
+logfile = None
+
+
+def fail(msg):
+    if msg:
+        print(msg)
+    if logfile:
+        print(msg, file=logfile)
+        logfile.close()
+    exit(1)
 
 
 def process_input_parameters():
@@ -60,8 +70,8 @@ Required environment variables:
 
 Examples:
   - Submit all tracks in TRACK_DATA_DIR (skipping existing tracks): submit_tracks.py
-  - Replace existing (pig) genome tracks with a GC% track: submit_tracks.py -g a7335667-93e7-11ec-a39d-005056b38ce3 -t gc -o
-  - Submit gene tracks for all genomes in TRACK_DATA_DIR: submit_tracks.py -f transcripts.bb
+  - Resubmit all tracks for dog and pig: submit_tracks.py -o -g 2284d28a-2cf7-41f0-bed6-0982601f7888 a7335667-93e7-11ec-a39d-005056b38ce3
+  - Submit gene tracks for dog (TRACK_DATA_DIR not needed): submit_tracks.py -t transcripts -g 2284d28a-2cf7-41f0-bed6-0982601f7888
   """,
     )
     parser.add_argument(
@@ -89,13 +99,13 @@ Examples:
         "-e",
         "--exclude",
         nargs="*",
-        metavar="EXCLUDE",
+        metavar="TEMPLATE",
         help="exclude specific track templates (types)",
     )
     parser.add_argument(
         "-r",
         "--resume",
-        metavar="RESUME",
+        metavar="GENOME_ID",
         help="resume loading from a specific genome ID",
     )
     parser.add_argument(
@@ -111,14 +121,19 @@ Examples:
     group.add_argument(
         "-o", "--overwrite", action="store_true", help="overwrite (all) existing tracks"
     )
+    group.add_argument(
+        "-l",
+        "--logfile",
+        metavar="FILENAME",
+        default="track_submission.log",
+        help="log progress to a file (use '' for no logfile, default: %(default)s)",
+    )
 
     parser.parse_args(namespace=args)
     if not track_api_url and not args.dry_run:
-        print("Error: TRACK_API_URL environment variable not set")
-        exit(1)
+        fail("Error: TRACK_API_URL environment variable not set")
     if not data_dir and not (args.genome and (args.file or args.template)):
-        print("Error: TRACK_DATA_DIR environment variable not set")
-        exit(1)
+        fail("Error: TRACK_DATA_DIR environment variable not set")
     if args.template:
         args.template = [t.replace(EXT, "") for t in args.template]
 
@@ -127,6 +142,8 @@ Examples:
 def log(msg: object) -> None:
     if not args.quiet:
         print(msg)
+    if logfile:
+        print(msg, file=logfile)
 
 
 # Limit tracks to those specified in command-line args
@@ -152,15 +169,13 @@ def parse_csv(path: str) -> CSVData:
                 data[line["Genome_UUID"]] = {
                     "desc": line["Description"],
                     "name": line["Track_name"] if "Track_name" in line else "",
-                    "sources": line["Source_name"].split(";"),
-                    "urls": line["Source_URL"].split(";"),
+                    "sources": line["Source_name"].split(","),
+                    "urls": line["Source_URL"].split(","),
                 }
     except FileNotFoundError:
-        print(f"Error: track description CSV file not found in {path}")
-        exit(1)
+        fail(f"Error: track description CSV file not found in {path}")
     except KeyError as e:
-        print(f"Error: unexpected CSV format in {path} ({e})")
-        exit(1)
+        fail(f"Error: unexpected CSV format in {path} ({e})")
     return data
 
 
@@ -168,8 +183,7 @@ def parse_csv(path: str) -> CSVData:
 # 1) Loop through all track datafiles in the data directory
 def process_data_dir() -> None:
     if not os.path.isdir(data_dir):
-        print(f"Error: data directory {data_dir} not found")
-        exit(1)
+        fail(f"Error: data directory {data_dir} not found")
     subdirs = os.listdir(data_dir)
     i = 0
     total = len(args.genome or subdirs)
@@ -221,6 +235,9 @@ def match_template(genome_id: str, datafile: str) -> None:
     if args.file and not args.template and datafile not in args.file:
         return
     filename = os.path.splitext(datafile)[0]
+    # skip variant focus tracks and redundant bigwig files
+    if filename == "variant-details" or filename.endswith("-summary"):
+        return
     # exact datafile=>template name match
     if filename in templates:
         apply_template(genome_id, filename)
@@ -228,16 +245,16 @@ def match_template(genome_id: str, datafile: str) -> None:
     # partial name match (multiple tracks per datafile or vice versa)
     multimatch = False
     for template_name in templates:
-        # many templates per datafile (e.g. transcripts.bb)
+        # multiple templates (tracks) per datafile (e.g. transcripts.bb)
         if template_name.startswith(filename):
             apply_template(genome_id, template_name)
             multimatch = True
-        # one template for many datafiles (e.g. repeats.repeatmask*.bb)
+        # single template matches many datafiles (e.g. repeats.repeatmask*.bb)
         if not multimatch and filename.startswith(template_name):
             apply_template(genome_id, template_name, datafile)
             return
-    # unexpected datafile name (fine for .bw since same track as .bb)
-    if not multimatch and datafile.endswith(".bb"):
+    # unexpected datafile
+    if not multimatch:
         log(f"Warning: No track template found for {datafile}")
 
 
@@ -248,15 +265,15 @@ def apply_template(genome_id: str, template_name: str, datafile: str = "") -> No
     track_data["genome_id"] = genome_id  # always updated
     # update datafile field (when a template matches multiple datafiles)
     if datafile:
-        filename = os.path.splitext(datafile)[0]
         for key, value in track_data["datafiles"].items():
-            if value.startswith(filename):
+            # derive bw filename for bb/bw datafile pairs
+            if key.endswith("summary") and value:
+                nameroot = datafile[: datafile.rfind("-")]
+                track_data["datafiles"][key] = f"{nameroot}-summary.bw"
+            else:
                 track_data["datafiles"][key] = datafile
-                break
     # udpate species-specific fields (gene & variation tracks)
-    if template_name.startswith("transcripts") or template_name.startswith(
-        "variant-ensembl"
-    ):
+    if template_name.startswith("transcripts") or template_name.startswith("variant"):
         track_type = "gene" if template_name.startswith("transcripts") else "variant"
         if genome_id in csv_data[track_type]:
             row = csv_data[track_type][genome_id]
@@ -270,12 +287,11 @@ def apply_template(genome_id: str, template_name: str, datafile: str = "") -> No
                         ] += f"\nGenes {'annotated by' if row['desc']=='Annotated' else 'imported from'}  {row['sources'][0]}."
                 else:
                     track_data["description"] = row["desc"]
-            if row["sources"][0]:
+            if row["sources"][0] and len(row["sources"]) == len(row["urls"]):
                 if "sources" not in track_data:
                     track_data["sources"] = []
                 for i, source_name in enumerate(row["sources"]):
                     if not source_name or not row["urls"][i]:
-                        log(f"Warning: Missing source name or URL for {track_data['label']}")
                         continue
                     track_data["sources"].append(
                         {"name": source_name, "url": row["urls"][i]}
@@ -297,8 +313,7 @@ def submit_track(track_data: TrackData, second_try: bool = False) -> None:
         request = requests.post(f"{track_api_url}/track", json=track_data)
     except requests.exceptions.ConnectTimeout:
         if second_try:
-            print("Error: No response from Track API.")
-            exit(1)
+            fail("Error: No response from Track API.")
         else:
             log("Connection timed out. Retrying...")
             submit_track(track_data, True)
@@ -309,9 +324,9 @@ def submit_track(track_data: TrackData, second_try: bool = False) -> None:
     elif request.status_code == 400 and "unique" in msg:
         log("Track already exists, skipping.")
     else:
-        print(f"Error submitting track ({request.status_code}): {msg[:100]}")
-        print(f"Track payload: {track_data}")
-        exit(1)
+        fail(
+            f"Error submitting track ({request.status_code}): {msg[:100]}\nTrack payload: {track_data}"
+        )
 
 
 # Do track cleanup in overwrite mode
@@ -322,10 +337,17 @@ def delete_tracks(genome_id: str) -> None:
 
 
 if __name__ == "__main__":
+    # setup
     process_input_parameters()
     filter_templates()
     for type in ["gene", "variant"]:
-        csv_data[type] = parse_csv(f"{template_dir}/beta2-{type}-desc.csv")
+        csv_data[type] = parse_csv(f"{template_dir}/{type}-track-desc.csv")
+    if args.logfile:
+        try:
+            logfile = open(args.logfile, "w")
+        except IOError as e:
+            log(f"Warning: cannot open logfile {args.logfile}: {e}")
+    # run
     if track_api_url:
         log(f"Submitting tracks to {track_api_url}")
     if data_dir:
@@ -333,8 +355,8 @@ if __name__ == "__main__":
     elif args.genome and (args.file or args.template):
         process_track_list()
     else:
-        print(
+        fail(
             "Please provide either a data directory or a list of tracks (genomes+template names) to be loaded."
         )
-        exit(1)
-        
+    if logfile:
+        logfile.close()

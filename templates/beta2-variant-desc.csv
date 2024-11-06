@@ -1,5 +1,0 @@
-Genome_UUID,Track_name,Source_name,Source_URL,Description
-a733574a-93e7-11ec-a39d-005056b38ce3,SGRP short variants,SGRP,http://www.moseslab.csb.utoronto.ca/sgrp,"Variation features from SGRP, with Ensembl identifiers"
-08c83543-c3d9-4a7a-85d8-52f75d61aab0,CSHL/Cornell short variants,Cold Spring Harbor Laboratory,https://www.cshl.edu,CSHL/Cornell short variants,"Cold Spring Harbor Laboratory / Cornell University [remapped to PN40024.v4]"
-bc9cb479-b1e3-460b-b4ac-d20b0fe1b350,CNR-ITB short variants,"CerealsDB;Rimbert, H. et al.","http://www.cerealsdb.uk.net;https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5749704/#!po=58.6957","Markers from Axiom 820K, 35K and iSelect 90K SNP Infinium are provided by CerealsDB. Markers from TaBW280K Affymetrix arrary refer to Rimbert, H. et al. (2018)"
-35a40586-9cb2-4d89-a7db-d00511691d09,The 150 TGRSP Short variants,150 Tomato Genome ReSequencing Project,https://www.tomatogenome.wur.nl,"The 150 Tomato Genome ReSequencing Project (150 TGRSP) is revealing the genetic variation available in tomato, one of the most important vegetable crops, for breeding in the face of climate change, sustainability, and demand for more and better food"
