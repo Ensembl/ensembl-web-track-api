@@ -268,14 +268,12 @@ def apply_template(genome_id: str, template_name: str, datafile: str = "") -> No
         for key, value in track_data["datafiles"].items():
             # derive bw filename for bb/bw datafile pairs
             if key.endswith("summary") and value:
-                nameroot = datafile[:datafile.rfind("-")]
+                nameroot = datafile[: datafile.rfind("-")]
                 track_data["datafiles"][key] = f"{nameroot}-summary.bw"
             else:
                 track_data["datafiles"][key] = datafile
     # udpate species-specific fields (gene & variation tracks)
-    if template_name.startswith("transcripts") or template_name.startswith(
-        "variant-ensembl"
-    ):
+    if template_name.startswith("transcripts") or template_name.startswith("variant"):
         track_type = "gene" if template_name.startswith("transcripts") else "variant"
         if genome_id in csv_data[track_type]:
             row = csv_data[track_type][genome_id]
@@ -289,14 +287,11 @@ def apply_template(genome_id: str, template_name: str, datafile: str = "") -> No
                         ] += f"\nGenes {'annotated by' if row['desc']=='Annotated' else 'imported from'}  {row['sources'][0]}."
                 else:
                     track_data["description"] = row["desc"]
-            if row["sources"][0]:
+            if row["sources"][0] and len(row["sources"]) == len(row["urls"]):
                 if "sources" not in track_data:
                     track_data["sources"] = []
                 for i, source_name in enumerate(row["sources"]):
                     if not source_name or not row["urls"][i]:
-                        log(
-                            f"Warning: Missing source name or URL for {track_data['label']}"
-                        )
                         continue
                     track_data["sources"].append(
                         {"name": source_name, "url": row["urls"][i]}
