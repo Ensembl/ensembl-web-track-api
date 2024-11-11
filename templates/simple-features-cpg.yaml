@@ -9,7 +9,7 @@ trigger:
 type: regular
 label: CpG islands
 display_order: 971
-on_by_default: true
+on_by_default: false
 description: |-
   Displays CpG islands - regions of nucleic acid sequence containing a high number of adjacent cytosine-guanine pairs (along one strand). 
   Usually unmethylated, they are associated with promoters and regulatory regions. 
