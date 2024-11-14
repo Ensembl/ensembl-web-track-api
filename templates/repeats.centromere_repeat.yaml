@@ -14,7 +14,7 @@ settings:
 type: regular
 label: "Repeats: Centromere"
 display_order: 985
-on_by_default: true
+on_by_default: false
 description: Centromere genomic locations defined by the Genome Reference Consortium
 sources:
   - name: Genome Reference Consortium

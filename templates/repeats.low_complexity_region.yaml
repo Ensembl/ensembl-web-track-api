@@ -14,7 +14,7 @@ settings:
 type: regular
 label: "Low complexity: Pombase"
 display_order: 986
-on_by_default: true
+on_by_default: false
 description: Low complexity region simple features annotated by PomBase and imported into Ensembl
 sources:
   - name: PomBase

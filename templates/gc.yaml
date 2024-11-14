@@ -9,7 +9,7 @@ trigger:
 type: regular
 label: "%GC"
 display_order: 900
-on_by_default: true
+on_by_default: false
 description: Shows the percentage of Gs and Cs in a region
 datafiles:
   gc: gc.bb
