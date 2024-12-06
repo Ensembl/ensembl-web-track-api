@@ -1,32 +1,19 @@
 stages:
     - build
-    - deploy
+    - deploy-preview
+    - deploy-prod
 
 variables:
-    CONTAINER_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
+    DOCKER_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
     DOCKER_TLS_CERTDIR: ""
 
 .branch-rules-main:
     rules:
         - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
           when: on_success
-        - when: never
-
-.branch-rules-dev:
-    rules:
-        - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "dev"'
-          when: on_success
-        - when: never
-
-.build-rules:
-    rules:
-        - if: '$CI_DEPLOY_FREEZE == null'
-          when: on_success
-        - when: never
 
 #Base templates
 .deploy:
-    stage: deploy
     image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
     before_script:
         - kubectl config use-context ${AGENT}
@@ -34,7 +21,7 @@ variables:
     script:
         - git clone --depth 1 --branch k8s123-migration https://gitlab.ebi.ac.uk/ensembl-web/ensembl-k8s-manifests.git
         - cd ensembl-k8s-manifests/ensembl-web-track-api
-        - kustomize edit set image DOCKER_IMAGE=${CONTAINER_IMAGE}
+        - kustomize edit set image DOCKER_IMAGE=${DOCKER_IMAGE}
         - kubectl apply -k .
 
 .deploy-main:
@@ -42,14 +29,8 @@ variables:
         - .deploy
         - .branch-rules-main
 
-.deploy-dev:
-    extends:
-        - .deploy
-        - .branch-rules-dev
-
 #Build docker image 
 Docker:
-    extends: .build-rules
     stage: build
     image: docker
     services:
@@ -57,29 +38,34 @@ Docker:
     before_script:
         - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     script:
-        - docker build -t ${CONTAINER_IMAGE} --no-cache -f Dockerfile .
-        - docker push ${CONTAINER_IMAGE}
-        - docker rmi ${CONTAINER_IMAGE}
+        - docker build -t ${DOCKER_IMAGE} --no-cache -f Dockerfile .
+        - docker push ${DOCKER_IMAGE}
+        - docker rmi ${DOCKER_IMAGE}
         - docker logout $CI_REGISTRY
 
 #Deploy to k8s
 Prod:
+  stage: deploy-prod
   extends: .deploy-main
   environment:
     name: production
+  when: manual
   variables:
     AGENT: ${PROD_AGENT}
     NS: ${PROD_NS}
 
 Fallback:
+  stage: deploy-prod
   extends: .deploy-main
   environment:
     name: fallback
+  when: manual
   variables:
     AGENT: ${FALLBACK_AGENT}
     NS: ${FALLBACK_NS}
 
 Staging:
+  stage: deploy-preview
   extends: .deploy-dev
   environment:
     name: staging
@@ -88,6 +74,7 @@ Staging:
     NS: ${STAGING_NS}
 
 Internal:
+  stage: deploy-preview
   extends: .deploy-dev
   environment:
     name: internal
@@ -96,6 +83,7 @@ Internal:
     NS: ${INTERNAL_NS}
 
 Dev:
+  stage: deploy-preview
   extends: .deploy-dev
   environment:
     name: development
