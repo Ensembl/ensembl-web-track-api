@@ -14,7 +14,7 @@ settings:
 type: regular
 label: Repeat elements
 display_order: 985
-on_by_default: true
+on_by_default: false
 description: Shows repeat regions on the genome
 datafiles:
   repeat-details: repeat-elements.bb

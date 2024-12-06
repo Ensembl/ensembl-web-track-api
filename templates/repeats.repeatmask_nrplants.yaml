@@ -15,7 +15,7 @@ type: regular
 label: "Repeats: RepeatMasker"
 additional_info: nrplants
 display_order: 982
-on_by_default: true
+on_by_default: false
 description: Shows repeats detected using RepeatMasker to scan non-redundant elements from several plant libraries, including REdat, TREP and RepetDB among others
 sources:
   - name: RepeatMasker

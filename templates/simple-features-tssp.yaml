@@ -9,7 +9,7 @@ trigger:
 type: regular
 label: Transcription start sites
 display_order: 970
-on_by_default: true
+on_by_default: false
 description: Displays transcription start sites predicted by Eponine-TSS
 sources:
   - name: Eponine-TSS

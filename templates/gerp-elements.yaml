@@ -9,7 +9,7 @@ trigger:
 type: regular
 label: Constrained elements
 display_order: 960
-on_by_default: true
+on_by_default: false
 description: |-
   Displays constrained elements, which are stretches of genomic sequences that are highly conserved according to the conservation score. 
   Data calculated using GERP.
