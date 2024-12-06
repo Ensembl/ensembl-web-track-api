@@ -14,7 +14,7 @@ settings:
 type: regular
 label: "Repeats: RED"
 additional_info: Annotated
-display_order: 981
+display_order: 671
 on_by_default: false
 description: Shows repeat regions on the genome, identified by RED (REpeatDetector) and annotated by alignment to a repeat library
 sources:

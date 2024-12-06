@@ -8,7 +8,7 @@ trigger:
   - expand
 type: regular
 label: CpG islands
-display_order: 971
+display_order: 501
 on_by_default: false
 description: |-
   Displays CpG islands - regions of nucleic acid sequence containing a high number of adjacent cytosine-guanine pairs (along one strand). 

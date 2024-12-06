@@ -13,7 +13,7 @@ settings:
     scales: [9, 100, 4]
 type: regular
 label: Repeat elements
-display_order: 985
+display_order: 600
 on_by_default: false
 description: Shows repeat regions on the genome
 datafiles:

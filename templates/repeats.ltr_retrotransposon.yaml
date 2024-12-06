@@ -13,7 +13,7 @@ settings:
     scales: [9, 100, 4]
 type: regular
 label: "Repeats: Pombase LTR retrotransposon"
-display_order: 987
+display_order: 631
 on_by_default: false
 description: LTR retrotransponson simple features annotated by PomBase and imported into Ensembl
 sources:

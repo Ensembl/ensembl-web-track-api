@@ -14,7 +14,7 @@ settings:
 type: regular
 label: "Repeats: RepeatMasker"
 additional_info: REdat
-display_order: 983
+display_order: 616
 on_by_default: false
 description: Shows repeats detected using RepeatMasker with MIPS Repeat Database (REdat) 
 sources:
