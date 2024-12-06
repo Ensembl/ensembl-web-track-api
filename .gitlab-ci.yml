@@ -9,8 +9,14 @@ variables:
 
 .branch-rules-main:
     rules:
-        - if: '$CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
+        - if: $CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"'
           when: on_success
+
+.branch-rules-review:
+    extends: .branch-rules-main
+    rules:
+        - if: $CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH != "main"'
+          when: manual
 
 #Base templates
 .deploy:
@@ -28,6 +34,11 @@ variables:
     extends:
         - .deploy
         - .branch-rules-main
+
+.deploy-all:
+    extends:
+        - .deploy
+        - .branch-rules-review
 
 #Build docker image 
 Docker:
@@ -66,7 +77,7 @@ Fallback:
 
 Staging:
   stage: deploy-preview
-  extends: .deploy-dev
+  extends: .deploy-main
   environment:
     name: staging
   variables:
@@ -75,7 +86,7 @@ Staging:
 
 Internal:
   stage: deploy-preview
-  extends: .deploy-dev
+  extends: .deploy-all
   environment:
     name: internal
   variables:
@@ -84,7 +95,7 @@ Internal:
 
 Dev:
   stage: deploy-preview
-  extends: .deploy-dev
+  extends: .deploy-all
   environment:
     name: development
   variables:
