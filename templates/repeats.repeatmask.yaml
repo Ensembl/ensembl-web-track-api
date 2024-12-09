@@ -13,7 +13,7 @@ settings:
     scales: [9, 100, 4]
 type: regular
 label: "Repeats: Repeatmasker"
-display_order: 980
+display_order: 610
 on_by_default: false
 description: Shows repeat regions on the genome, identified by RepeatMasker using a RepBase, or custom generated repeat library
 sources:

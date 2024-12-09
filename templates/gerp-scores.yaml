@@ -8,7 +8,7 @@ trigger:
   - expand
 type: regular
 label: Conservation scores
-display_order: 950
+display_order: 400
 on_by_default: false
 description: |-
   Displays per-basepair conservation scores, indicating how many species in a given multiple alignment match at each locus. 

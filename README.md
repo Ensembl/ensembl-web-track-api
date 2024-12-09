@@ -1,14 +1,16 @@
 # Track API endpoint
 
-Backend service for serving track data to Beta Ensembl.
+REST service providing genome browser track data for [Ensembl Beta](https://beta.ensembl.org).
 
 ## REST API endpoints
 
--   `track_categories/:genome_id`: returns all tracks for a genome
--   `track/:track_id`: returns single track payload
-    See the OpenAPI spec in `ensembl-track-api-openapi.yaml` for more details.
+REST API supports viewing/adding/removing tracks and track categories.
 
-## Quick Start
+Example query (get the list of available tracks for human): https://beta.ensembl.org/api/tracks/track_categories/a7335667-93e7-11ec-a39d-005056b38ce3
+
+See the [OpenAPI specification](https://editor.swagger.io/?url=https://raw.githubusercontent.com/Ensembl/ensembl-web-track-api/refs/heads/dev/ensembl-track-api.openapi.yaml) (source file [here](https://github.com/Ensembl/ensembl-web-track-api/blob/dev/ensembl-track-api.openapi.yaml)) for more examples and details.
+
+## Quickstart on local machine
 
 1. Clone the repo:
 
@@ -19,7 +21,9 @@ Backend service for serving track data to Beta Ensembl.
 
     - `$ docker-compose run web python manage.py makemigrations`
     - `$ docker-compose run web python manage.py migrate`
-    - `$ docker-compose run web python ./utils/import_data.py`
+    - `$ ./utils/submit_track_templates.py -t transcripts -g [genome_id]`
+
+    See below for more information.
 
 3. Start the service:
 
@@ -27,35 +31,14 @@ Backend service for serving track data to Beta Ensembl.
 
 4. Usage:
 
-    - `http://localhost:8000/track_categories/:genome_id` # e.g. track_categories/a7335667-93e7-11ec-a39d-005056b38ce3
-    - `https://beta.ensembl.org/api/tracks/track_categories/:genome_id` #when deployed to production
+    - `http://localhost:8000/track_categories/:genome_id`
 
-5. Stop the endpoint:
+5. Stop the service:
     - `$ docker-compose down` #or Crtl+C if running in foreground
-
-## CI/CD and Kubernetes deployment
-
-### Configuration
-
-The GitLab CI/CD configuration file and the Kubernetes manifests in `k8s` dir define the deployment accross 2 clusters and 4 namespaces.
-For each of the 8 environments, 5 manifest files are applied to deploy the app:
-
--   Applied manually: `configmap.yaml`, `service.yaml`, `db_service.yaml`, `ingress.yaml`
--   Applied by CI/CD jobs: `deployment.yaml`; for review apps, also: `review/service.yaml`, `review/ingress.yaml`
-
-### Deployment stages
-
-1. Push updates to a feature branch or `update` branch => review app is deployed. Open PR to `dev` branch.
-    - Use feature branch for changes in code (uses external prod database) and `update` branch for changes in both code and track data (uses internal dev database).
-2. Review app PR approved => merge to `dev` branch => deployed to staging
-3. Merge `dev` branch to `main` => deployed to internal
-4. Click run button for `Live` CI/CD job in GitLab => deployed to live
 
 ### Data updates
 
--   Track data is served from an external postgres database in both datacenters (defined in `db_service.yaml`).
-    Since the database user for k8s cluster is read-only, the database build and data import commands are run from a local computer with a read/write database user (specified in `settings.py`), followed by granting data access for the r/o user (`utils/grant_access.sh`).
--   Review apps from `update` branch use local database in k8s. Run `python utils/import_data.py` in the review app pod to update the data (data source: `data/track_categories.yaml`)
--   Update relevant environment variables (see `settings.py`) before running data update scripts (e.g from a file: `export $(cat .env | xargs)`)
--   Use `./manage.py sqlflush` and `./manage.py dbshell` to debug any database-related Django errors.
-    -   Flush database: run the database command from `sqlflush` (with system tables removed) in `dbshell` terminal
+The `track/:track_id` REST endpoint supports `DELETE`/`POST` requests for adding/removing track entries. 
+For bulk/automated updates, use `./utils/submit_track_templates.py` script. See the accompanied readme for more details.
+
+

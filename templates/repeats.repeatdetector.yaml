@@ -13,7 +13,7 @@ settings:
     scales: [9, 100, 4]
 type: regular
 label: "Repeats: RED"
-display_order: 980
+display_order: 670
 on_by_default: false
 description: Shows repeat regions on the genome, identified by RED (REpeatDetector)
 sources:

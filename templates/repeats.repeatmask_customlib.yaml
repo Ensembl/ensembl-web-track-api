@@ -14,7 +14,7 @@ settings:
 type: regular
 label: "Repeats: Repeatmasker"
 additional_info: Custom library
-display_order: 982
+display_order: 614
 on_by_default: false
 description: Repeats identified by RepeatMasker, using a custom library of <em>ab initio</em> repeat profiles for this species
 sources:
