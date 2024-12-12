@@ -1,6 +1,6 @@
 stages:
     - build
-    - deploy-preview
+    - deploy-test
     - deploy-prod
 
 variables:
@@ -35,7 +35,7 @@ variables:
         - .deploy
         - .branch-rules-main
 
-.deploy-all:
+.deploy-review:
     extends:
         - .deploy
         - .branch-rules-review
@@ -76,7 +76,7 @@ Fallback:
     NS: ${FALLBACK_NS}
 
 Staging:
-  stage: deploy-preview
+  stage: deploy-test
   extends: .deploy-main
   environment:
     name: staging
@@ -84,18 +84,9 @@ Staging:
     AGENT: ${STAGING_AGENT}
     NS: ${STAGING_NS}
 
-Internal:
-  stage: deploy-preview
-  extends: .deploy-all
-  environment:
-    name: internal
-  variables:
-    AGENT: ${INTERNAL_AGENT}
-    NS: ${INTERNAL_NS}
-
 Dev:
-  stage: deploy-preview
-  extends: .deploy-all
+  stage: deploy-test
+  extends: .deploy-review
   environment:
     name: development
   variables:
