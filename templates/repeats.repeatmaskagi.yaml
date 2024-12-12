@@ -14,7 +14,7 @@ settings:
 type: regular
 label: "Repeats: Repeatmasker"
 additional_info: AGI library
-display_order: 981
+display_order: 617
 on_by_default: false
 description: Shows repeat regions on the genome, identified by RepeatMasker using the AGI library
 sources:

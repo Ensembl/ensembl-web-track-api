@@ -13,7 +13,7 @@ settings:
     scales: [9, 100, 4]
 type: regular
 label: "Repeats: TRF"
-display_order: 983
+display_order: 660
 on_by_default: false
 description: Shows repeat regions on the genome, identified by Tandem Repeats Finder
 sources:
