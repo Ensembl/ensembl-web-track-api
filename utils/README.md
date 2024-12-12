@@ -17,7 +17,7 @@ export TRACK_DATA_DIR=/Users/Alice/datafiles # track datafiles
 For more detailed instructions for production, refer to [ENSWEBSOPS-171](https://www.ebi.ac.uk/panda/jira/browse/ENSWEBSOPS-171).
 
 
-#### Notes
+#### Data sources
 Data submission script combines input from multiple sources:
 | Source | Where | Why |
 |-------|-------|------|
@@ -25,10 +25,11 @@ Data submission script combines input from multiple sources:
 | Overrides | `/tempaltes/*.csv` | Species-specific values |
 | Datafiles | Input data dir | Specify species/tracks to submit |
 
-The datafiles source can be replaced/modified with command-line params (`-g`,`-t`).
+- The datafiles source can be replaced/modified with command-line params (`-g`,`-t`)
+- Gene track overrides (`gene-track-desc.csv`) was generated/updated from Metadata API with `utils/get_analysis_descs.py` script. `variation-track-desc.csv` was converted from input JSON (handed over from Variation team).
 
 ### Legacy scripts
-Scripts kept for historical record, safe to be be removed.
+Kept for historical record, safe to delete.
 - import_data.py: legacy data importer script; useful as an example of updating tracks database through Django datamodels 
 - grant_access.sh: useful when read/write database users don't have a shared db schema
 - submit_tracks_241: initial track submission script
