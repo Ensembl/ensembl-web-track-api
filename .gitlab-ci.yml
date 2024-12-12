@@ -16,7 +16,7 @@ variables:
     extends: .branch-rules-main
     rules:
         - if: $CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH != "main"
-          when: manual
+          when: on_success
 
 #Base templates
 .deploy:
