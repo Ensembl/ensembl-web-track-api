@@ -21,12 +21,12 @@ from mysql.connector import connection
 META_HOST = "mysql-ens-production-1"
 META_PORT = 4721
 META_DB = "ensembl_genome_metadata"
-RELEASE_ID = 3  # this is a magic number known by Production
+RELEASE_ID = 4  # this is a magic number known by Production
 
 HOST = "mysql-ens-sta-6.ebi.ac.uk"
 PORT = 4695
 CSV_DELIMITER = ","
-OUTFILENAME = "protodesc_beta2.txt"
+OUTFILENAME = "gene-track-desc-mvp.csv"
 
 
 @dataclass
