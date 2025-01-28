@@ -340,8 +340,11 @@ if __name__ == "__main__":
     # setup
     process_input_parameters()
     filter_templates()
-    for type in ["gene", "variant"]:
-        csv_data[type] = parse_csv(f"{template_dir}/{type}-track-desc.csv")
+    # read gene track descriptions CSV file
+    csv_data["gene"] = parse_csv(f"{template_dir}/gene-track-desc-mvp.csv")
+    # only add tracks for the genomes in the CSV file
+    args.genome = list(csv_data["gene"].keys())
+
     if args.logfile:
         try:
             logfile = open(args.logfile, "w")
