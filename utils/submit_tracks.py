@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+"""
+Script for submitting track records to Track API. In a nutshell, the script:
+1) Fills in track templates (loaded from yaml files) from CLI params, CSV files and filenames in TRACK_DATA_DIR
+2) Submits the result as JSON payloads to TRACK_API_URL
+See the params below for more granulated track loading (specific release, genomes, tracks etc.)
+"""
+
 import argparse
 import csv
 import glob
@@ -9,6 +16,7 @@ from typing_extensions import NotRequired, TypedDict
 from uuid import UUID
 import yaml
 
+from . import create_gene_csv
 
 # Datamodels for static typing (runtime checks done by Track API)
 class TrackData(TypedDict):
@@ -37,6 +45,8 @@ CSVCollection = dict[str, CSVData]
 
 args = argparse.Namespace()
 template_dir = os.path.join(os.path.dirname(__file__), "..", "templates")
+GENE_CSV_FILE = f"{template_dir}/gene-track-desc.csv"
+VARIANT_CSV_FILE = f"{template_dir}/variant-track-desc.csv"
 EXT = ".yaml"
 templates = [
     os.path.basename(f).replace(EXT, "") for f in glob.glob(f"{template_dir}/*{EXT}")
@@ -69,17 +79,11 @@ Required environment variables:
     Can be omitted if a track list is specified with -g and -f or -t
 
 Examples:
-  - Submit all tracks in TRACK_DATA_DIR (skipping existing tracks): submit_tracks.py
+  - Submit tracks for all datafiles in TRACK_DATA_DIR (skipping existing tracks): submit_tracks.py
+  - Same as above, but limit to genomes in release 5: submit_tracks.py --release 5
   - Resubmit all tracks for dog and pig: submit_tracks.py -o -g 2284d28a-2cf7-41f0-bed6-0982601f7888 a7335667-93e7-11ec-a39d-005056b38ce3
   - Submit gene tracks for dog (TRACK_DATA_DIR not needed): submit_tracks.py -t transcripts -g 2284d28a-2cf7-41f0-bed6-0982601f7888
   """,
-    )
-    parser.add_argument(
-        "-g",
-        "--genome",
-        nargs="*",
-        metavar="GENOME_ID",
-        help="limit to specific genomes",
     )
     parser.add_argument(
         "-f",
@@ -103,13 +107,25 @@ Examples:
         help="exclude specific track templates (types)",
     )
     parser.add_argument(
-        "-r",
-        "--resume",
+        "-c",
+        "--continue",
         metavar="GENOME_ID",
-        help="resume loading from a specific genome ID",
+        help="continue (resume) track loading from a specific genome ID)",
     )
-    parser.add_argument(
-        "-q", "--quiet", action="store_true", help="suppress status messages"
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
+        "-g",
+        "--genome",
+        nargs="*",
+        metavar="GENOME_ID",
+        help="limit to specific genomes",
+    )
+    group.add_argument(
+        "-r",
+        "--release",
+        metavar="RELEASE",
+        type=int,
+        help="load tracks for a specific release number",
     )
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
@@ -127,6 +143,9 @@ Examples:
         metavar="FILENAME",
         default="track_submission.log",
         help="log progress to a file (use '' for no logfile, default: %(default)s)",
+    )
+    parser.add_argument(
+        "-q", "--quiet", action="store_true", help="suppress status messages"
     )
 
     parser.parse_args(namespace=args)
@@ -340,17 +359,27 @@ if __name__ == "__main__":
     # setup
     process_input_parameters()
     filter_templates()
-    # read gene track descriptions CSV file
-    csv_data["gene"] = parse_csv(f"{template_dir}/gene-track-desc-mvp.csv")
-    # only add tracks for the genomes in the CSV file
-    args.genome = list(csv_data["gene"].keys())
+
+    # dump gene track metadata to CSV
+    if args.release:
+        create_gene_csv.OUTFILENAME = GENE_CSV_FILE
+        create_gene_csv.RELEASE_ID = args.release
+        create_gene_csv.main()
+
+    # read species-specific track info from CSV
+    csv_data["gene"] = parse_csv(GENE_CSV_FILE)
+    csv_data["variant"] = parse_csv(VARIANT_CSV_FILE)
+    # limit to genomes in specified release
+    if args.release:
+        args.genome = csv_data["gene"].keys()
 
     if args.logfile:
         try:
             logfile = open(args.logfile, "w")
         except IOError as e:
             log(f"Warning: cannot open logfile {args.logfile}: {e}")
-    # run
+
+    # run track loading
     if track_api_url:
         log(f"Submitting tracks to {track_api_url}")
     if data_dir:
