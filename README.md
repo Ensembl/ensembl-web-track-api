@@ -39,6 +39,6 @@ See the [OpenAPI specification](https://editor.swagger.io/?url=https://raw.githu
 ### Data updates
 
 The `track/:track_id` REST endpoint supports `DELETE`/`POST` requests for adding/removing track entries. 
-For bulk/automated updates, use `./utils/submit_track_templates.py` script. See the accompanied readme for more details.
+For bulk/automated updates, use `./utils/submit_tracks.py` script. See the accompanied readme for more details.
 
 

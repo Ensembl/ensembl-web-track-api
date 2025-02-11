@@ -26,7 +26,7 @@ RELEASE_ID = 4  # this is a magic number known by Production
 HOST = "mysql-ens-sta-6.ebi.ac.uk"
 PORT = 4695
 CSV_DELIMITER = ","
-OUTFILENAME = "gene-track-desc-mvp.csv"
+OUTFILENAME = "gene-track-desc.csv"
 
 
 @dataclass
