@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 import argparse
-import csv
 import glob
 import os.path
 import requests
 from typing_extensions import NotRequired, TypedDict
 from uuid import UUID
 import yaml
+from get_analysis_descs_mvp import main
 
 
 # Datamodels for static typing (runtime checks done by Track API)
@@ -25,15 +25,15 @@ class TrackData(TypedDict):
     type: str
 
 
-class CSVRow(TypedDict):
+class Gene(TypedDict):
     desc: str
     name: str
     sources: list[str]
     urls: list[str]
 
 
-CSVData = dict[str, CSVRow]
-CSVCollection = dict[str, CSVData]
+GeneData = dict[str, Gene]
+GeneCollection = dict[str, GeneData]
 
 args = argparse.Namespace()
 template_dir = os.path.join(os.path.dirname(__file__), "..", "templates")
@@ -43,7 +43,7 @@ templates = [
 ]
 track_api_url = os.environ.get("TRACK_API_URL", "")
 data_dir = os.environ.get("TRACK_DATA_DIR", "")
-csv_data: CSVCollection = {}
+gene_data: GeneCollection = {}
 logfile = None
 
 
@@ -160,23 +160,23 @@ def filter_templates() -> None:
 
 
 # Read species-specific track template fields from CSV file
-def parse_csv(path: str) -> CSVData:
-    data: CSVData = {}
-    try:
-        with open(path) as f:
-            reader = csv.DictReader(f)
-            for line in reader:
-                data[line["Genome_UUID"]] = {
-                    "desc": line["Description"],
-                    "name": line["Track_name"] if "Track_name" in line else "",
-                    "sources": line["Source_name"].split(","),
-                    "urls": line["Source_URL"].split(","),
-                }
-    except FileNotFoundError:
-        fail(f"Error: track description CSV file not found in {path}")
-    except KeyError as e:
-        fail(f"Error: unexpected CSV format in {path} ({e})")
-    return data
+# def parse_csv(path: str) -> CSVData:
+#     data: CSVData = {}
+#     try:
+#         with open(path) as f:
+#             reader = csv.DictReader(f)
+#             for line in reader:
+#                 data[line["Genome_UUID"]] = {
+#                     "desc": line["Description"],
+#                     "name": line["Track_name"] if "Track_name" in line else "",
+#                     "sources": line["Source_name"].split(","),
+#                     "urls": line["Source_URL"].split(","),
+#                 }
+#     except FileNotFoundError:
+#         fail(f"Error: track description CSV file not found in {path}")
+#     except KeyError as e:
+#         fail(f"Error: unexpected CSV format in {path} ({e})")
+#     return data
 
 
 # Track loading process:
@@ -275,8 +275,8 @@ def apply_template(genome_id: str, template_name: str, datafile: str = "") -> No
     # udpate species-specific fields (gene & variation tracks)
     if template_name.startswith("transcripts") or template_name.startswith("variant"):
         track_type = "gene" if template_name.startswith("transcripts") else "variant"
-        if genome_id in csv_data[track_type]:
-            row = csv_data[track_type][genome_id]
+        if genome_id in gene_data[track_type]:
+            row = gene_data[track_type][genome_id]
             if row["name"]:
                 track_data["label"] = row["name"]
             if row["desc"]:
@@ -308,8 +308,8 @@ def submit_track(track_data: TrackData, second_try: bool = False) -> None:
     if args.dry_run:
         log(track_data)
         return
-
     try:
+
         request = requests.post(f"{track_api_url}/track", json=track_data)
     except requests.exceptions.ConnectTimeout:
         if second_try:
@@ -341,9 +341,8 @@ if __name__ == "__main__":
     process_input_parameters()
     filter_templates()
     # read gene track descriptions CSV file
-    csv_data["gene"] = parse_csv(f"{template_dir}/gene-track-desc-mvp.csv")
-    # only add tracks for the genomes in the CSV file
-    args.genome = list(csv_data["gene"].keys())
+    gene_data["gene"] = main(genome_uuid_list=args.genome)
+
 
     if args.logfile:
         try:
