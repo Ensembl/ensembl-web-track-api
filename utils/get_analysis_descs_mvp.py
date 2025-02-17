@@ -14,7 +14,6 @@ Author: Stefano Giorgetti
 
 from dataclasses import dataclass
 from string import Template
-import csv
 from mysql.connector import connection
 
 # CHECK cfg below with Production!!!
@@ -62,7 +61,8 @@ def get_ensro_connection(dbname=None):
     return get_connection(username="ensro", password="", dbname=dbname)
 
 
-def get_dbs(conx):
+def get_dbs(conx,genome_uuid_list):
+    genome_uuid_str = (', '.join(f'"{user_id}"' for user_id in genome_uuid_list))
     cursor = conx.cursor()
     t = Template(
         """select g.production_name,g.genome_uuid,dss.name from genome g
@@ -73,9 +73,10 @@ def get_dbs(conx):
         where gr.release_id = $release_id
         and gd.release_id = $release_id
         and ds.dataset_type_id = 2
+        and g.genome_uuid in ($genome_uuids)
         """
     )
-    cursor.execute(t.substitute(release_id=RELEASE_ID))
+    cursor.execute(t.substitute(release_id=RELEASE_ID, genome_uuids=genome_uuid_str))
     dbs = cursor.fetchall()
     return dbs
 
@@ -99,58 +100,28 @@ def get_analysis_src_info(conx, dbname) -> SrcInfo:
     is_ensembl_anno = str(r[1]).lower() == "ensembl"
     return SrcInfo(source_name=r[2], source_url=r[3], is_ensembl_anno=is_ensembl_anno)
 
-
-def dump_data(data: list[dict[str, str]], filename: str = OUTFILENAME) -> None:
-    with open(filename, "w", newline="", encoding="utf-8") as csvfile:
-        fieldnames = [
-            "Species",
-            "Genome_UUID",
-            "DB_name",
-            "Source_name",
-            "Source_URL",
-            "Description",
-        ]
-        writer = csv.DictWriter(
-            csvfile,
-            fieldnames=fieldnames,
-            delimiter=CSV_DELIMITER,
-            quoting=csv.QUOTE_MINIMAL,
-            dialect="unix",
-        )
-        writer.writeheader()
-        for item in data:
-            writer.writerow(item)
-
-
-def main():
+def main(genome_uuid_list:list[str]):
     conx = get_metadb_connection()
-    dbs = get_dbs(conx)
+    dbs = get_dbs(conx,genome_uuid_list=genome_uuid_list)
     conx.close()
 
     conx = get_ensro_connection()
 
-    descriptions = []
+    descriptions = {}
 
     for db in dbs:
         dbname = db[2]
         print(f"Working on: {dbname}")
         src_info = get_analysis_src_info(conx, dbname)
         ensembl_imported = "Annotated" if src_info.is_ensembl_anno else "Imported"
-        descriptions.append(
-            {
-                "Species": db[0],
-                "Genome_UUID": db[1],
-                "DB_name": dbname,
-                "Source_name": src_info.source_name,
-                "Source_URL": src_info.source_url,
-                "Description": ensembl_imported,
+        descriptions[db[1]] = {
+                "species": db[0],
+                "name": dbname,
+                "sources": src_info.source_name,
+                "urls": src_info.source_url,
+                "desc": ensembl_imported,
             }
-        )
 
     conx.close()
+    return descriptions
 
-    dump_data(descriptions)
-
-
-if __name__ == "__main__":
-    main()
