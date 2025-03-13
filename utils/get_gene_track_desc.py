@@ -112,14 +112,13 @@ def main(release:int, genomes:list[str]|None=None) -> dict[str, dict]:
     conx = get_ensro_connection()
     descriptions = {}
 
-    print(f"Found {len(dbs)} species for release {release}.")
+    print(f"Found {len(dbs)} genomes{f' (out of {len(genomes)} requested)' if genomes else ''} for release {release}.")
     for db in dbs:
         dbname = db[2]
         #print(f"Working on: {dbname}")
         src_info = get_analysis_src_info(conx, dbname)
         ensembl_imported = "Annotated" if src_info.is_ensembl_anno else "Imported"
         descriptions[db[1]] = {
-            "species": db[0],
             "source_names": [src_info.source_name],
             "source_urls": [src_info.source_url],
             "description": ensembl_imported,

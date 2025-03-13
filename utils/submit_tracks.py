@@ -37,7 +37,6 @@ class DescData(TypedDict):
     description: str
     source_names: list[str]
     source_urls: list[str]
-    species: NotRequired[str]
     track_name: NotRequired[str]
 
 Descriptions = dict[str, DescData]
@@ -126,7 +125,7 @@ Examples:
     )
     parser.add_argument(
         "-f",
-        "--file",
+        "--files",
         nargs="*",
         action="extend",
         metavar="FILENAMES",
@@ -150,8 +149,9 @@ Examples:
     parser.add_argument(
         "-c",
         "--continue",
+        dest="resume",
         metavar="GENOME_ID",
-        help="resume track loading from a specific genome ID",
+        help="resume track loading process from a specific genome ID",
     )
     parser.add_argument(
         "-d",
@@ -318,7 +318,7 @@ def apply_template(genome_id: str, template_name: str, datafile: str = "") -> No
         track_type = "gene" if template_name.startswith("transcripts") else "variant"
         if genome_id in metadata[track_type]:
             row = metadata[track_type][genome_id]
-            if row["track_name"]:
+            if "track_name" in row and row["track_name"]:
                 track_data["label"] = row["track_name"]
             if row["description"]:
                 if track_type == "gene":
@@ -385,7 +385,8 @@ if __name__ == "__main__":
     metadata["gene"] = get_gene_desc(release=args.release, genomes=args.genomes)
     metadata["variant"] = parse_csv(VARIANT_CSV_FILE)
     if not metadata["gene"]:
-        fail(f"Error: No genomes found in release {args.release}.")
+        genome_list = f" matching {', '.join(args.genomes)}" if args.genomes else ""
+        fail(f"Error: No genomes found in release {args.release}{genome_list}.")
     # limit to genomes in the release
     if not args.genomes:
         args.genomes = list(metadata["gene"].keys())
@@ -403,10 +404,10 @@ if __name__ == "__main__":
     # run track loading
     if track_api_url:
         log(f"Submitting tracks to {track_api_url}")
-    if data_dir:
-        process_data_dir()
-    elif args.genomes and (args.files or args.templates):
+    if args.genomes and (args.files or args.templates):
         process_track_list()
+    elif data_dir:
+        process_data_dir()
     else:
         fail(
             "Please provide either a data directory or a list of tracks (genomes+template names) to be loaded."
