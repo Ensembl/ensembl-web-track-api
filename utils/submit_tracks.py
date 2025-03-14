@@ -43,19 +43,19 @@ Descriptions = dict[str, DescData]
 DescCollection = dict[str, Descriptions]
 
 # Global variables / constants
-suf = "/nfs/public/ro/enswbsites_codon/newsite"
-pref = "genome_browser/8"
+dir_root = "/nfs/public/ro/enswbsites_codon/newsite"
+dir_tail = "genome_browser/8"
 ENV = {
     "dev": {
-        "data_dir": f"{suf}/dev/{pref}",
+        "data_dir": f"{dir_root}/dev/{dir_tail}",
         "track_api_url": "https://dev-2020.ensembl.org"
     },
     "staging": {
-        "data_dir": f"{suf}/staging/{pref}",
+        "data_dir": f"{dir_root}/staging/{dir_tail}",
         "track_api_url": "https://staging-2020.ensembl.org"
     },
     "prod": {
-        "data_dir": f"{suf}/live/{pref}",
+        "data_dir": f"{dir_root}/live/{dir_tail}",
         "track_api_url": "https://beta.ensembl.org"
     },
 }

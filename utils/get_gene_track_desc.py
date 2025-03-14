@@ -24,9 +24,6 @@ META_DB = "ensembl_genome_metadata"
 
 HOST = "mysql-ens-sta-6.ebi.ac.uk"
 PORT = 4695
-CSV_DELIMITER = ","
-OUTFILENAME = "gene-track-desc.csv"
-
 
 @dataclass
 class SrcInfo:
