@@ -214,6 +214,12 @@ def parse_csv(path: str) -> Descriptions:
 # Track loading process:
 # 1) Option A: loop through the track datafiles in the data directory
 def process_data_dir() -> None:
+    """
+    Processes the track datafiles direcotry to compose a list of tracks to be submitted for each genome.
+    Datadir is expected to have subdirectories named after genome UUIDs, containing track datafiles.
+    Forwards the list of genomes and datafiles to the `match_template` function for further processing.
+    """
+
     if not os.path.isdir(data_dir):
         fail(f"Error: data directory {data_dir} not found")
     subdirs = os.listdir(data_dir)
@@ -242,6 +248,7 @@ def process_data_dir() -> None:
                 args.resume = None
         log(f"Processing genome {subdir} ({i}/{total})")
         if args.overwrite:  # delete existing tracks first
+            # Note: removes all tracks linked to the genome
             delete_tracks(subdir)
         for file in os.listdir(f"{data_dir}/{subdir}"):
             if file.endswith(".bb") or file.endswith(".bw"):
@@ -250,6 +257,11 @@ def process_data_dir() -> None:
 
 # 1) Option B: use the list of tracks from command-line args
 def process_track_list() -> None:
+    """
+    Processes a list of genomes, track tempaltes and/or datafiles to generate track payloads.
+    Forwards the list of genomes and track templates to the `match_template` function for further processing.
+    """
+
     global templates
     if args.templates:
         templates = [
@@ -273,10 +285,30 @@ def process_track_list() -> None:
 
 # 2) Load the payload template(s) for each track type (datafile name)
 def match_template(genome_id: str, datafile: str) -> None:
+    """
+    Matches a datafile to corresponding track template(s) and forwards it together with 
+        the input genome ID (and the datafile name when needed) to `apply_template` function.
+    Args:
+        genome_id (str): UUID of the genome currently being processed.
+        datafile (str): The name of the datafile currently being processed.
+    Behavior:
+        - Skips datafiles that are not in the input args (if provided),
+            do not have a dedicated track entry ("variant-details", "*-summary"),
+            or do not have a matching template (prints a warning).
+        - Handles these matching scenarios in the following order:
+            - Exact match between the datafile name and a template name:
+              single track is submitted per datafile.
+            - Partial match for templates starting with the datafile name:
+              single datafile results in multiple tracks.
+            - Partial match for datafiles starting with the template name:
+              single datafile => single track, template matches different datafiles (fallback).
+    """
+
     if args.files and not args.templates and datafile not in args.files:
         return
     filename = os.path.splitext(datafile)[0]
-    # skip variant focus tracks and redundant bigwig files
+    # skip datafiles without dedicated track record in Track API: 
+    # variant focus tracks, zoom-out view (only zoom-in view datafile is processed)
     if filename == "variant-details" or filename.endswith("-summary"):
         return
     # exact datafile=>template name match
@@ -290,7 +322,7 @@ def match_template(genome_id: str, datafile: str) -> None:
         if template_name.startswith(filename):
             apply_template(genome_id, template_name)
             multimatch = True
-        # single template matches many datafiles (e.g. repeats.repeatmask*.bb)
+        # template matches a datafile with different suffix (e.g. repeats.repeatmask*.bb)
         if not multimatch and filename.startswith(template_name):
             apply_template(genome_id, template_name, datafile)
             return
@@ -301,19 +333,35 @@ def match_template(genome_id: str, datafile: str) -> None:
 
 # 3) Fill in the template (update variable fields/placeholders)
 def apply_template(genome_id: str, template_name: str, datafile: str = "") -> None:
+    """
+    Updates a track template to generate track payload for a given genome/track.
+
+    Args:
+        genome_id (str): Genome UUID being processed.
+        template_name (str): The name of the template file (without extension) being used.
+        datafile (str, optional): Name of a datafile to override the one in the template (if given). 
+
+    Notes:
+        - Uses the `genome_id` field in the track template.
+        - Updates the `datafile` field(s) in the track template when needed.
+        - Updates species-specific fields for gene and variation tracks.
+        - Submits the generated track data payload using the `submit_track` function.
+    """
     with open(f"{template_dir}/{template_name}{EXT}", "r") as template_file:
         track_data: TrackData = yaml.safe_load(template_file)
     track_data["genome_id"] = genome_id  # always updated
-    # update datafile field (when a template matches multiple datafiles)
+    # update datafile field (when template matches multiple datafiles)
     if datafile:
         for key, value in track_data["datafiles"].items():
-            # derive bw filename for bb/bw datafile pairs
-            if key.endswith("summary") and value:
+            # when the template defines a datafile pair for zoom-in/out views...
+            if key.endswith("summary") and value: # empty value needs to stay empty
+                # ...derive the zoom-out filename from the input (zoom-in) filename
+                # e.g. variant-something-details.bb => variant-something-summary.bw
                 nameroot = datafile[: datafile.rfind("-")]
                 track_data["datafiles"][key] = f"{nameroot}-summary.bw"
-            else:
+            else: # use input datafile name as-is (single datafile or zoom-in view)
                 track_data["datafiles"][key] = datafile
-    # update species-specific template fields (for gene & variation tracks)
+    # update species-specific template fields from metadata (for gene & variation tracks)
     if template_name.startswith("transcripts") or template_name.startswith("variant"):
         track_type = "gene" if template_name.startswith("transcripts") else "variant"
         if genome_id in metadata[track_type]:
@@ -337,6 +385,7 @@ def apply_template(genome_id: str, template_name: str, datafile: str = "") -> No
                     track_data["sources"].append(
                         {"name": source_name, "url": row["source_urls"][i]}
                     )
+        # every species is expected to have descriptions for its gene tracks in metadata
         elif track_type == "gene":
             log("Warning: Missing gene track descriptions.")
     # submit the track payload
@@ -345,6 +394,17 @@ def apply_template(genome_id: str, template_name: str, datafile: str = "") -> No
 
 # 4) Submit the track payload to Track API
 def submit_track(track_data: TrackData, second_try: bool = False) -> None:
+    """
+    Submits a complete track payload to the Track API.
+    Args:
+        track_data (TrackData): The track payload to be submitted.
+        second_try (bool, optional): Indicates whether this is a retry attempt after a timeout.
+    Notes:
+        - If `--dryrun` flag is set in cli args, it logs the payload without submission.
+        - Skips submission if the track already exists.
+        - Logs the error and exits the script if submission fails for other reasons (e.g. server-side payload check).
+    """
+
     log(f"Submitting track: {track_data['label']}")
     if args.dry_run:
         log(track_data)
@@ -381,13 +441,14 @@ if __name__ == "__main__":
     # setup
     process_input_parameters()
 
-    # get gene/variant tracks metadata (track descriptions)
+    # get gene/variant tracks metadata (species-specific track descriptions)
+    # gene track metadata loaded from database, variant track data from CSV
     metadata["gene"] = get_gene_desc(release=args.release, genomes=args.genomes)
     metadata["variant"] = parse_csv(VARIANT_CSV_FILE)
     if not metadata["gene"]:
         genome_list = f" matching {', '.join(args.genomes)}" if args.genomes else ""
         fail(f"Error: No genomes found in release {args.release}{genome_list}.")
-    # limit to genomes in the release
+    # only consider genomes that are part of the specified release
     if not args.genomes:
         args.genomes = list(metadata["gene"].keys())
     else:
@@ -401,7 +462,7 @@ if __name__ == "__main__":
         except IOError as e:
             log(f"Warning: cannot open logfile {args.logfile}: {e}")
 
-    # run track loading
+    # run the track loading process
     if track_api_url:
         log(f"Submitting tracks to {track_api_url}")
     if args.genomes and (args.files or args.templates):
@@ -409,8 +470,6 @@ if __name__ == "__main__":
     elif data_dir:
         process_data_dir()
     else:
-        fail(
-            "Please provide either a data directory or a list of tracks (genomes+template names) to be loaded."
-        )
+        fail("Please provide either a data directory or a list of tracks (genomes+template names) to be loaded.")
     if logfile:
         logfile.close()
