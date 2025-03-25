@@ -3,8 +3,9 @@ A simple script to fetch the analysis descriptions for genes
 out of core DBs to feed into the new genome browser (MVP/Beta).
 
 Species scope is determined by appropriate choice of the 'metadata DB'
-and the RELEASE ID. This latter one must be given by Production.
-E.g. RELEASE_ID = 3 represents 'beta-3'
+and the 'release ID'. This latter one must be given by Automation.
+E.g. release_id = 3 represents 'beta-3'
+The species list can optionally be narrowed down with genome IDs.
 
 WARNING: it contains hardcoded data. Barely tested.
 USE AT YOUR OWN RISK!
@@ -14,20 +15,15 @@ Author: Stefano Giorgetti
 
 from dataclasses import dataclass
 from string import Template
-import csv
-from mysql.connector import connection
+from mysql.connector.connection import MySQLConnection
 
-# CHECK cfg below with Production!!!
+# CHECK cfg below with Automation!!!
 META_HOST = "mysql-ens-production-1"
 META_PORT = 4721
 META_DB = "ensembl_genome_metadata"
-RELEASE_ID = 4  # this is a magic number known by Production
 
 HOST = "mysql-ens-sta-6.ebi.ac.uk"
 PORT = 4695
-CSV_DELIMITER = ","
-OUTFILENAME = "gene-track-desc-mvp.csv"
-
 
 @dataclass
 class SrcInfo:
@@ -38,8 +34,8 @@ class SrcInfo:
     is_ensembl_anno: bool
 
 
-def get_metadb_connection(username="ensro", password=""):
-    return connection.MySQLConnection(
+def get_metadb_connection(username="ensro", password="") -> MySQLConnection:
+    return MySQLConnection(
         user=username,
         password=password,
         host=META_HOST,
@@ -48,22 +44,27 @@ def get_metadb_connection(username="ensro", password=""):
     )
 
 
-def get_connection(username, password, dbname=None):
+def get_connection(username:str, password:str, dbname:str|None=None) -> MySQLConnection:
     if dbname is None:
-        return connection.MySQLConnection(
+        return MySQLConnection(
             user=username, password=password, host=HOST, port=PORT
         )
-    return connection.MySQLConnection(
+    return MySQLConnection(
         user=username, password=password, host=HOST, port=PORT, database=dbname
     )
 
 
-def get_ensro_connection(dbname=None):
+def get_ensro_connection(dbname:str|None=None):
     return get_connection(username="ensro", password="", dbname=dbname)
 
 
-def get_dbs(conx):
+def get_dbs(conx, release=int, genomes: list[str]|None=None) -> list:
     cursor = conx.cursor()
+    if genomes is None:
+        genomes_str = ""
+    else:
+        genomes_str = ",".join([f"'{uuid}'" for uuid in genomes])
+        genomes_str = f"and g.genome_uuid in ({genomes_str})"
     t = Template(
         """select g.production_name,g.genome_uuid,dss.name from genome g
         join genome_release gr using(genome_id)
@@ -73,14 +74,15 @@ def get_dbs(conx):
         where gr.release_id = $release_id
         and gd.release_id = $release_id
         and ds.dataset_type_id = 2
+        $genomes_str
         """
     )
-    cursor.execute(t.substitute(release_id=RELEASE_ID))
+    cursor.execute(t.substitute(release_id=release, genomes_str=genomes_str))
     dbs = cursor.fetchall()
     return dbs
 
 
-def get_analysis_src_info(conx, dbname) -> SrcInfo:
+def get_analysis_src_info(conx:MySQLConnection, dbname:str) -> SrcInfo:
     cursor = conx.cursor()
 
     t = Template(
@@ -100,57 +102,25 @@ def get_analysis_src_info(conx, dbname) -> SrcInfo:
     return SrcInfo(source_name=r[2], source_url=r[3], is_ensembl_anno=is_ensembl_anno)
 
 
-def dump_data(data: list[dict[str, str]], filename: str = OUTFILENAME) -> None:
-    with open(filename, "w", newline="", encoding="utf-8") as csvfile:
-        fieldnames = [
-            "Species",
-            "Genome_UUID",
-            "DB_name",
-            "Source_name",
-            "Source_URL",
-            "Description",
-        ]
-        writer = csv.DictWriter(
-            csvfile,
-            fieldnames=fieldnames,
-            delimiter=CSV_DELIMITER,
-            quoting=csv.QUOTE_MINIMAL,
-            dialect="unix",
-        )
-        writer.writeheader()
-        for item in data:
-            writer.writerow(item)
-
-
-def main():
+def main(release:int, genomes:list[str]|None=None) -> dict[str, dict]:
     conx = get_metadb_connection()
-    dbs = get_dbs(conx)
+    dbs = get_dbs(conx, release=release, genomes=genomes)
     conx.close()
-
     conx = get_ensro_connection()
+    descriptions = {}
 
-    descriptions = []
-
+    print(f"Found {len(dbs)} genomes{f' (out of {len(genomes)} requested)' if genomes else ''} for release {release}.")
     for db in dbs:
         dbname = db[2]
-        print(f"Working on: {dbname}")
+        #print(f"Working on: {dbname}")
         src_info = get_analysis_src_info(conx, dbname)
         ensembl_imported = "Annotated" if src_info.is_ensembl_anno else "Imported"
-        descriptions.append(
-            {
-                "Species": db[0],
-                "Genome_UUID": db[1],
-                "DB_name": dbname,
-                "Source_name": src_info.source_name,
-                "Source_URL": src_info.source_url,
-                "Description": ensembl_imported,
-            }
-        )
+        descriptions[db[1]] = {
+            "source_names": [src_info.source_name],
+            "source_urls": [src_info.source_url],
+            "description": ensembl_imported,
+        }
 
     conx.close()
 
-    dump_data(descriptions)
-
-
-if __name__ == "__main__":
-    main()
+    return descriptions

@@ -10,7 +10,6 @@ dist/
 
 # Installer logs
 pip-log.txt
-pip-delete-this-directory.txt
 
 # Django stuff
 staticfiles/
@@ -34,4 +33,6 @@ env/
 k8s/configmap_*.yaml
 prod.env
 
+# Temporary files
 tmp/
+*.log
