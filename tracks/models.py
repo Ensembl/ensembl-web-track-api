@@ -15,6 +15,7 @@ class Category(models.Model):
 class Track(models.Model):
     track_id = models.UUIDField(unique=True, editable=False, default=uuid.uuid4) #auto-generate track IDs
     genome_id = models.UUIDField()
+    dataset_id = models.UUIDField()
     category = models.ForeignKey(Category, related_name="tracks", on_delete=models.CASCADE)
     label = models.CharField(max_length=50)
     trigger = ArrayField(models.CharField(max_length=50))
@@ -30,7 +31,7 @@ class Track(models.Model):
 
     class Meta:
         ordering = ["display_order"]
-        constraints = [models.UniqueConstraint(fields=["genome_id", "label", "additional_info", "datafiles"], name="unique_track")]
+        constraints = [models.UniqueConstraint(fields=["genome_id", "dataset_id", "label", "additional_info", "datafiles"], name="unique_track")]
 
 class Source(models.Model):
     track = models.ManyToManyField(Track, related_name="sources")
