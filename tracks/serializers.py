@@ -45,13 +45,21 @@ class WriteTrackSerializer(BaseTrackSerializer):
         extra_kwargs = {
             "genome_id": {"write_only": True}
         }
+        validators = [] # ignore uniqueness constraint
     
     def create(self, validated_data):
         category_data = validated_data.pop('category')
         category_id = category_data.pop('track_category_id')
         category_obj, created = Category.objects.get_or_create(track_category_id=category_id, defaults=category_data)
         sources = validated_data.pop('sources') if 'sources' in validated_data else []
-        track_obj = Track.objects.create(category=category_obj, **validated_data)
+        track_obj, created = Track.objects.update_or_create(
+            category=category_obj,
+            genome_id=validated_data["genome_id"],
+            label=validated_data["label"],
+            additional_info=validated_data.get("additional_info",""),
+            datafiles=validated_data["datafiles"],
+            defaults=validated_data
+        )
         if(track_obj.trigger[1].startswith("expand")): #hack for expansion tracks
             track_obj.trigger.append(track_obj.track_id)
             track_obj.save()
