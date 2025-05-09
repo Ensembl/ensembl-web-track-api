@@ -56,7 +56,7 @@ class WriteTrackSerializer(BaseTrackSerializer):
             category=category_obj,
             genome_id=validated_data["genome_id"],
             label=validated_data["label"],
-            additional_info=validated_data["additional_info"],
+            additional_info=validated_data.get("additional_info",""),
             datafiles=validated_data["datafiles"],
             defaults=validated_data
         )
