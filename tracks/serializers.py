@@ -45,6 +45,7 @@ class WriteTrackSerializer(BaseTrackSerializer):
         extra_kwargs = {
             "genome_id": {"write_only": True}
         }
+        validators = [] # ignore uniqueness constraint
     
     def create(self, validated_data):
         category_data = validated_data.pop('category')
