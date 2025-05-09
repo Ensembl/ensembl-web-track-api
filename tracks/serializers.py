@@ -51,7 +51,7 @@ class WriteTrackSerializer(BaseTrackSerializer):
         category_id = category_data.pop('track_category_id')
         category_obj, created = Category.objects.get_or_create(track_category_id=category_id, defaults=category_data)
         sources = validated_data.pop('sources') if 'sources' in validated_data else []
-        track_obj = Track.objects.get_or_create(
+        track_obj, created = Track.objects.update_or_create(
             category=category_obj,
             genome_id=validated_data["genome_id"],
             label=validated_data["label"],
