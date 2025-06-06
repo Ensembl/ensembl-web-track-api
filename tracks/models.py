@@ -15,7 +15,9 @@ class Category(models.Model):
 class Track(models.Model):
     track_id = models.UUIDField(unique=True, editable=False, default=uuid.uuid4) #auto-generate track IDs
     genome_id = models.UUIDField()
-    dataset_id = models.UUIDField()
+    dataset_id = models.UUIDField(blank=True, null=True)
+    is_current = models.BooleanField(default=False)
+    release = models.CharField(max_length=10, default="YYYY-MM")
     category = models.ForeignKey(Category, related_name="tracks", on_delete=models.CASCADE)
     label = models.CharField(max_length=50)
     trigger = ArrayField(models.CharField(max_length=50))
