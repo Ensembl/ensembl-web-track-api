@@ -175,6 +175,9 @@ components:
           format: uuid
           writeOnly: true
           example: a7335667-93e7-11ec-a39d-005056b38ce3
+        dataset_id:
+          type: string
+          format: uuid
         category:
           allOf:
             - writeOnly: true

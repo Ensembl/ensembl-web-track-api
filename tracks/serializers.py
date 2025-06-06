@@ -16,7 +16,7 @@ class BaseTrackSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Track
-        fields = ["track_id", "label", "colour", "trigger", "type", "display_order", "on_by_default", "sources"]
+        fields = ["track_id", "label", "colour", "trigger", "type", "display_order", "on_by_default", "sources", "dataset_id"]
 
 # track payload in "track_categories" endpoint (consumed by client)
 class CategoryTrackSerializer(BaseTrackSerializer):
