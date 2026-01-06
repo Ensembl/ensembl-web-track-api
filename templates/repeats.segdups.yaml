@@ -21,4 +21,4 @@ sources:
     url: https://humanpangenome.org/
 datafiles:
   repeat-details: repeats.segdups.bb
-  repeat-summary: ""
+  repeat-summary: repeats.segdups.bw
