@@ -15,7 +15,7 @@ type: regular
 label: "Repeats: Segmental Duplication"
 display_order: 680
 on_by_default: false
-description: Shows segmental duplication regions, defined as large low-copy repeats with a high degree of sequence similarity that can be either intra- or inter-chromosomal. 
+description: Shows regions of segmental duplication. Segmental duplications are long (>1kb) stretches of DNA which are present at more than one location in the genome, sharing a high degree of similarity (>90%).
 sources:
   - name: Human Pangenome Reference Consortium
     url: https://humanpangenome.org/
