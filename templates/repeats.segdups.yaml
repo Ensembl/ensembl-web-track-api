@@ -12,7 +12,7 @@ settings:
   repeat-summary:
     scales: [19, 100, 4]
 type: regular
-label: "Segmental Duplication"
+label: "Segmental duplications"
 display_order: 680
 on_by_default: false
 description: Shows regions of segmental duplication. Segmental duplications are long (>1kb) stretches of DNA which are present at more than one location in the genome, sharing a high degree of similarity (>90%).
