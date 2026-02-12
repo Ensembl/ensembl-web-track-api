@@ -16,12 +16,12 @@ class BaseTrackSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Track
-        fields = ["track_id", "label", "colour", "trigger", "type", "display_order", "on_by_default", "sources"]
+        fields = ["track_id", "label", "colour", "trigger", "type", "display_order", "on_by_default", "additional_info", "sources"]
 
 # track payload in "track_categories" endpoint (consumed by client)
 class CategoryTrackSerializer(BaseTrackSerializer):
     class Meta(BaseTrackSerializer.Meta):
-        fields = BaseTrackSerializer.Meta.fields + ["additional_info", "description"]
+        fields = BaseTrackSerializer.Meta.fields + ["description"]
 
 # track payload in "track" endpoint (consumed by genome browser)
 class ReadTrackSerializer(BaseTrackSerializer):
