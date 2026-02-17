@@ -86,20 +86,14 @@ REST_FRAMEWORK = {
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 # Read database settings from environment
-DATABASE_NAME = os.getenv("DATABASE_NAME", "postgres")
-DATABASE_HOST = os.getenv("DATABASE_HOST", "db")
-DATABASE_PORT = os.getenv("DATABASE_PORT", 5432)
-DATABASE_USER = os.getenv("DATABASE_USER", "postgres")
-DATABASE_PASS = os.getenv("DATABASE_PASS", "postgres")
+DATABASE_NAME = os.getenv("DATABASE_NAME", "db.sqlite3")
+
+DATABASE_PATH = os.getenv("DATABASE_PATH", str(BASE_DIR / "db.sqlite3"))
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": DATABASE_NAME,
-        "USER": DATABASE_USER,
-        "PASSWORD": DATABASE_PASS,
-        "HOST": DATABASE_HOST,
-        "PORT": DATABASE_PORT,
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": DATABASE_PATH,
     }
 }
 
