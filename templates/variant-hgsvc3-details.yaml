@@ -23,5 +23,5 @@ sources:
   - name: HGSVC3
     url: https://www.internationalgenome.org/data-portal/data-collection/hgsvc3
 datafiles:
-  variant-details: variant-hgsv3-details.bb
-  variant-summary: variant-hgsv3-summary.bw
+  variant-details: structural_variant-hgsvc3-details.bb
+  variant-summary: structural_variant-hgsvc3-summary.bw
