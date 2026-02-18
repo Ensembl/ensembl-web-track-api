@@ -86,7 +86,7 @@ Staging:
 
 Dev:
   stage: deploy-test
-  extends: .deploy-review
+  extends: .deploy-main
   environment:
     name: development
   variables:
