@@ -35,6 +35,7 @@ variables:
         - .deploy
         - .branch-rules-main
 
+# Not currently in use. Needs to be reconsidered along with the review branch system
 .deploy-review:
     extends:
         - .deploy
