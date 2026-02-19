@@ -1,5 +1,19 @@
-import uuid
+#
+#  See the NOTICE file distributed with this work for additional information
+#  regarding copyright ownership.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
 
+import uuid
 from django.db import models
 
 """
@@ -43,9 +57,22 @@ class Track(models.Model):
 
 
 class Source(models.Model):
-    track = models.ManyToManyField(Track, related_name="sources")  # TODO: Do we want this track or track type? See with
+    track = models.ManyToManyField(Track, related_name="sources")
     name = models.CharField(max_length=100)
     url = models.URLField()
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=["name", "url"], name="unique_source")]
+
+class DatasetRelease(models.Model):
+    dataset_id = models.UUIDField()
+    genome_id = models.UUIDField()
+    release_label = models.CharField(max_length=50)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["dataset_id", "genome_id", "release_label"],
+                name="unique_dataset_genome_release"
+            )
+        ]

@@ -1,0 +1,46 @@
+[build-system]
+requires = [
+  "setuptools>=61.0.0",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ensembl-web-track-py"
+description = "Backend for Ensembl track visualization"
+version = "2.0.0"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Ensembl", email = "dev@ensembl.org" },
+]
+license = { file = "LICENSE" }
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+	"Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "License :: OSI Approved :: Apache Software License",
+]
+dependencies = [
+    "django>=5.2,<6",
+    "djangorestframework>=3.14",
+    "PyYAML>=5.3",
+    "gunicorn>=20.0.1",
+]
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-django",
+    "ensembl-metadata-api @ git+https://github.com/Ensembl/ensembl-metadata-api.git",   #for metadata interaction
+    "ensembl-utils >= 0.8.0",                                                           #mysql adaptors
+]
+
+[project.urls]
+Repository = "https://github.com/Ensembl/ensembl-web-track-py"

@@ -16,6 +16,7 @@ See the [OpenAPI specification](https://editor.swagger.io/?url=https://raw.githu
 
     - `$ git clone https://gitlab.ebi.ac.uk/ensembl-web/ensembl-track-api.git`
     - `$ cd ensembl-track-api`
+    - `pip install -e ".[dev]"`
 
 2. Build the database:
 

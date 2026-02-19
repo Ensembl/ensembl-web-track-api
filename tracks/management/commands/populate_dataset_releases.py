@@ -12,21 +12,16 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-"""
-URL Configuration for the Tracks Django app in Ensembl Track API endpoint
-"""
-from django.urls import path
-from . import views
 
-app_name = "tracks"
+from django.core.management.base import BaseCommand
+from src.ensembl.production.tracks.load_release_info import populate_dataset_releases
 
-urlpatterns = [
-    # Existing egress endpoints (keeping as-is)
-    path("track_categories/<uuid:genome_id>", views.GenomeTrackList.as_view(), name="genome_tracks_url"),
-    path("track/<uuid:track_id>", views.TrackObject.as_view(), name="track_url"),
-    path("track", views.TrackObject.as_view(), name="track_url"),
+class Command(BaseCommand):
+    help = "Repopulates DatasetRelease table from metadata DB"
 
-    # New ingress endpoints
-    path("tracks/create", views.CreateTrack.as_view(), name="create_track"),
-    path("tracks/link_type", views.LinkTypeToTrack.as_view(), name="link_type"),
-]
+    def add_arguments(self, parser):
+        parser.add_argument("--metadata_uri", type=str, required=True)
+
+    def handle(self, *args, **options):
+        count = populate_dataset_releases( options["metadata_uri"] )
+        self.stdout.write(self.style.SUCCESS(f"Inserted {count} rows"))

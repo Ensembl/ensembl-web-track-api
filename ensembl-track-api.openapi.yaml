@@ -14,13 +14,14 @@
 #  limitations under the License.
 #
 
+
 openapi: 3.0.3
 info:
   title: Ensembl Track API
   description: REST interface for managing track metadata in Ensembl Beta.
   contact:
     email: ensembl-webteam@ebi.ac.uk
-  version: 0.1.0
+  version: 0.2.0  # Bumped version for new endpoints
 servers:
   - url: http://beta.ensembl.org/api/tracks
     description: Production server
@@ -59,12 +60,15 @@ paths:
           example: a7335667-93e7-11ec-a39d-005056b38ce3
       responses:
         '204':
-          description: Tracks successfuly removed.
+          description: Tracks successfully removed.
         '404':
           description: Specified genome ID was not found.
+
   /track:
     post:
-      summary: Creates a new track.
+      summary: (DEPRECATED) Creates a new track using legacy format.
+      deprecated: true
+      description: This endpoint is deprecated. Use /tracks/create instead.
       requestBody:
         description: Data for the new track.
         required: true
@@ -96,11 +100,10 @@ paths:
                 type: object
                 properties:
                   error:
-                    description: >
-                      Error message (for example, if a track with the same 
-                      genome ID, label and datafiles already exists).
+                    description: Error message
                     type: string
                     example: Track already exists.
+
   /track/{track_id}:
     get:
       summary: Returns data about a single track (tailored for genome browser).
@@ -124,6 +127,106 @@ paths:
                   - $ref: '#/components/schemas/TrackDatafiles'
         '404':
           description: Specified track ID was not found.
+    delete:
+      summary: Deletes a single track.
+      parameters:
+        - name: track_id
+          in: path
+          required: true
+          description: Track ID
+          schema:
+            type: string
+            format: uuid
+          example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
+      responses:
+        '204':
+          description: Track successfully deleted.
+        '404':
+          description: Specified track ID was not found.
+
+  /tracks/create:
+    post:
+      summary: Creates a new track with associated track types.
+      description: >
+        Creates a track by providing dataset/genome UUIDs, datafiles, and track types.
+        All specified track types must have matching file lists.
+      requestBody:
+        description: Data for the new track.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTrackRequest'
+      responses:
+        '201':
+          description: Track was successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  track_id:
+                    description: UUID of the created track.
+                    type: string
+                    format: uuid
+                    example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Validation failed
+                  details:
+                    type: object
+                    example:
+                      track_types: ["Type(s) not found: invalid-type"]
+
+  /tracks/link_type:
+    post:
+      summary: Links an additional track type to an existing track.
+      description: >
+        Associates an additional track type with an existing track.
+        The new type's file list must match the track's existing types.
+      requestBody:
+        description: Track and type to link.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkTypeRequest'
+      responses:
+        '200':
+          description: Type successfully linked to track.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  track_id:
+                    type: string
+                    format: uuid
+                    example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
+                  message:
+                    type: string
+                    example: Type linked successfully
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Validation failed
+                  details:
+                    type: object
+                    example:
+                      type_name: ["Type files do not match track's existing types"]
 
 components:
   schemas:
@@ -134,6 +237,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TrackCategoryWithTracks'
+
     TrackCategory:
       type: object
       properties:
@@ -148,7 +252,8 @@ components:
           enum:
             - Genomic
             - Variation
-            - Expression
+            - Regulation
+
     TrackList:
       type: object
       properties:
@@ -158,10 +263,12 @@ components:
             allOf:
               - $ref: '#/components/schemas/Track'
               - $ref: '#/components/schemas/TrackDescription'
+
     TrackCategoryWithTracks:
       allOf:
         - $ref: '#/components/schemas/TrackCategory'
         - $ref: '#/components/schemas/TrackList'
+
     Track:
       type: object
       properties:
@@ -205,6 +312,7 @@ components:
         on_by_default:
           type: boolean
           example: true
+
     TrackDatafiles:
       type: object
       properties:
@@ -215,6 +323,7 @@ components:
           example:
             details: variant-dbsnp-details.bb
             summary: variant-dbsnp-summary.bw
+
     TrackDescription:
       type: object
       properties:
@@ -234,3 +343,57 @@ components:
               url:
                 type: string
                 example: https://gencodegenes.org
+
+    CreateTrackRequest:
+      type: object
+      required:
+        - dataset_id
+        - genome_id
+        - datafiles
+        - track_types
+      properties:
+        dataset_id:
+          type: string
+          format: uuid
+          description: UUID of the dataset this track belongs to
+          example: 550e8400-e29b-41d4-a716-446655440000
+        genome_id:
+          type: string
+          format: uuid
+          description: UUID of the genome this track is associated with
+          example: a7335667-93e7-11ec-a39d-005056b38ce3
+        datafiles:
+          type: array
+          minItems: 1
+          maxItems: 2
+          items:
+            type: string
+          description: >
+            List of 1-2 file paths. If only one file provided, the second
+            datafile slot will be filled with an empty string.
+          example: ["repeats.repeatdetector.bb"]
+        track_types:
+          type: array
+          minItems: 1
+          items:
+            type: string
+          description: >
+            List of Type names to associate with this track.
+            All types must have the same file list.
+          example: ["repeat-genomebrowser", "repeat-structuralvariant"]
+
+    LinkTypeRequest:
+      type: object
+      required:
+        - track_id
+        - type_name
+      properties:
+        track_id:
+          type: string
+          format: uuid
+          description: UUID of the track to link the type to
+          example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
+        type_name:
+          type: string
+          description: Name of the Type to link (must have matching file list)
+          example: repeat-structuralvariant
