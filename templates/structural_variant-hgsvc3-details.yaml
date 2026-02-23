@@ -6,12 +6,6 @@ category:
 trigger:
   - track
   - expand
-settings:
-  variant-details:
-    switches:
-      - label-other-id
-      - label-other-alleles
-      - show-extents
 type: variant
 label: HGSVC3 variants
 display_order: 1100
