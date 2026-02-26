@@ -1,0 +1,21 @@
+genome_id: <genome_id>
+category:
+  track_category_id: structural-variants
+  label: Structural variants by resource
+  type: Variation
+trigger:
+  - track
+  - expand
+type: variant
+label: HGSVC3 variants
+display_order: 1100
+on_by_default: true
+description: |-
+  Shows variants from Human Genome Structural Variation Consortium, phase 3 (HGSV3C). The HGSVC utilises 
+  the latest sequencing technologies to create high-quality maps of human structural variation.
+sources:
+  - name: HGSVC3
+    url: https://www.internationalgenome.org/data-portal/data-collection/hgsvc3
+datafiles:
+  variant-details: structural_variant-hgsvc3-details.bb
+  variant-summary: structural_variant-hgsvc3-summary.bw
