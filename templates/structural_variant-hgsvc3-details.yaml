@@ -6,7 +6,12 @@ category:
 trigger:
   - track
   - expand
-type: variant
+settings:
+  sv-details:
+    scales: [3, 8, 1]
+  sv-summary:
+    scales: [9, 100, 4]
+type: regular
 label: HGSVC3 variants
 display_order: 1100
 on_by_default: true
