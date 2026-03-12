@@ -13,7 +13,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from .models import Category, Track, Source, Type
+from .models import Category, Track, Source, Specifications
 from rest_framework import serializers
 
 
@@ -43,7 +43,7 @@ class CreateTrackSerializer(serializers.Serializer):
         2. All types have the same files list
         """
         # Check all types exist
-        types = Type.objects.filter(name__in=value)
+        types = Specifications.objects.filter(name__in=value)
         if types.count() != len(value):
             found = set(types.values_list('name', flat=True))
             missing = set(value) - found
@@ -104,7 +104,7 @@ class CreateTrackSerializer(serializers.Serializer):
             datafiles=datafiles
         )
         for type_obj in types:
-            track.type.add(type_obj)
+            track.specifications.add(type_obj)
 
         return track
 
@@ -127,24 +127,24 @@ class LinkTypeToTrackSerializer(serializers.Serializer):
         """
         # Check track exists
         try:
-            track = Track.objects.prefetch_related('type').get(track_id=data['track_id'])
+            track = Track.objects.prefetch_related('specifications').get(track_id=data['track_id'])
         except Track.DoesNotExist:
             raise serializers.ValidationError({"track_id": "Track not found"})
 
         # Check type exists
         try:
-            new_type = Type.objects.get(name=data['type_name'])
-        except Type.DoesNotExist:
+            new_type = Specifications.objects.get(name=data['type_name'])
+        except Specifications.DoesNotExist:
             raise serializers.ValidationError({"type_name": "Type not found"})
 
         # Check if type already linked
-        if track.type.filter(id=new_type.id).exists():
+        if track.specifications.filter(id=new_type.id).exists():
             raise serializers.ValidationError(
                 {"type_name": "Type already linked to this track"}
             )
 
         # Check if files match existing types
-        existing_types = track.type.all()
+        existing_types = track.specifications.all()
         if existing_types.exists():
             existing_files = existing_types.first().files
             if new_type.files != existing_files:
@@ -161,17 +161,8 @@ class LinkTypeToTrackSerializer(serializers.Serializer):
         """Link the type to the track."""
         track = validated_data['track']
         new_type = validated_data['type']
-        track.type.add(new_type)
+        track.specifications.add(new_type)
         return track
-
-
-
-
-
-
-"""
-Serializers for Track API datamodels
-"""
 
 class SourceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -179,22 +170,6 @@ class SourceSerializer(serializers.ModelSerializer):
         fields = ["name", "url"]
         validators = []
 
-class BaseTrackSerializer(serializers.ModelSerializer):
-    sources = SourceSerializer(many=True, required=False)
-
-    class Meta:
-        model = Track
-        fields = ["track_id", "label", "colour", "trigger", "type", "display_order", "on_by_default", "sources"]
-
-# track payload in "track_categories" endpoint (consumed by client)
-class CategoryTrackSerializer(BaseTrackSerializer):
-    class Meta(BaseTrackSerializer.Meta):
-        fields = BaseTrackSerializer.Meta.fields + ["additional_info", "description"]
-
-# track payload in "track" endpoint (consumed by genome browser)
-class ReadTrackSerializer(BaseTrackSerializer):
-    class Meta(BaseTrackSerializer.Meta):
-        fields = BaseTrackSerializer.Meta.fields + ["datafiles", "settings"]
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -204,34 +179,26 @@ class CategorySerializer(serializers.ModelSerializer):
             "track_category_id": {"validators": []}
         }
 
-# track submission payload
-class WriteTrackSerializer(BaseTrackSerializer):
-    category = CategorySerializer(write_only=True)
 
-    class Meta(BaseTrackSerializer.Meta):
-        fields = BaseTrackSerializer.Meta.fields + ["genome_id", "category", "datafiles", "additional_info", "description", "settings"]
-        extra_kwargs = {
-            "genome_id": {"write_only": True}
-        }
-        validators = [] # ignore uniqueness constraint
-    
-    def create(self, validated_data):
-        category_data = validated_data.pop('category')
-        category_id = category_data.pop('track_category_id')
-        category_obj, created = Category.objects.get_or_create(track_category_id=category_id, defaults=category_data)
-        sources = validated_data.pop('sources') if 'sources' in validated_data else []
-        track_obj, created = Track.objects.update_or_create(
-            category=category_obj,
-            genome_id=validated_data["genome_id"],
-            label=validated_data["label"],
-            additional_info=validated_data.get("additional_info",""),
-            datafiles=validated_data["datafiles"],
-            defaults=validated_data
-        )
-        if(track_obj.trigger[1].startswith("expand")): #hack for expansion tracks
-            track_obj.trigger.append(track_obj.track_id)
-            track_obj.save()
-        for source in sources:
-            source_obj, created = Source.objects.get_or_create(**source)
-            track_obj.sources.add(source_obj)
-        return track_obj
+# Changed from ModelSerializer to Serializer
+class BaseTrackSerializer(serializers.Serializer):
+    """Output format for track data (combines Track + Specification)."""
+    track_id = serializers.UUIDField()
+    label = serializers.CharField()
+    trigger = serializers.ListField()
+    type = serializers.CharField()
+    display_order = serializers.IntegerField()
+    on_by_default = serializers.BooleanField()
+    sources = SourceSerializer(many=True)
+
+
+class CategoryTrackSerializer(BaseTrackSerializer):
+    """For /track_categories endpoint - adds description fields."""
+    additional_info = serializers.CharField()
+    description = serializers.CharField()
+
+
+class ReadTrackSerializer(BaseTrackSerializer):
+    """For /track/{id} endpoint - adds datafiles and settings."""
+    datafiles = serializers.DictField()
+    settings = serializers.DictField()

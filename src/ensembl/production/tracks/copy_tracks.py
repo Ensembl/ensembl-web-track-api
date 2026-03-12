@@ -9,7 +9,6 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-
 """
 Track file deployment module.
 
@@ -25,6 +24,7 @@ Directory structure:
 Example:
     BASE_PATH/ab/abcd-1234-5678-90ef/dataset-5678-90ab_my_track.bb
 """
+
 import argparse
 import hashlib
 import json

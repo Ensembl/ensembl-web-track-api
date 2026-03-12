@@ -44,3 +44,8 @@ dev = [
 
 [project.urls]
 Repository = "https://github.com/Ensembl/ensembl-web-track-py"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "ensembl_track_api.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+testpaths = ["tests"]

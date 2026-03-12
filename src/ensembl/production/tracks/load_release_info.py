@@ -1,5 +1,20 @@
+# See the NOTICE file distributed with this work for additional information
+#   regarding copyright ownership.
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#       http://www.apache.org/licenses/LICENSE-2.0
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+
 import argparse
 import os
+import sys
+from pathlib import Path
+
 import django
 
 from ensembl.production.metadata.api.models import (
@@ -10,11 +25,10 @@ from ensembl.utils.database import DBConnection
 
 def populate_dataset_releases(metadata_uri: str) -> int:
     """
-    Clears and repopulates DatasetRelease table.
+    Clears and repopulates DatasetRelease table from ensembl_genome_metadata database.
     Returns the number of rows inserted.
     """
-    # Django imports here so django.setup() has already been called
-    # whether we're running via manage.py or standalone
+    #Don't move this to the top. Django settings has to be imported first to use its models.
     from tracks.models import DatasetRelease, Track
 
     track_dataset_uuids = list(
@@ -26,7 +40,6 @@ def populate_dataset_releases(metadata_uri: str) -> int:
         print("No datasets found in Track table, aborting.")
         return 0
 
-    # Convert to strings for SQLAlchemy comparison
     track_dataset_uuids_str = [str(u) for u in track_dataset_uuids]
 
     DatasetRelease.objects.all().delete()
@@ -75,13 +88,24 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--django-settings",
-        default="trackapi.settings",
+        default="ensembl_track_api.settings",
         help="Django settings module (default: ensembl_track_api.settings)",
     )
     args = parser.parse_args()
+    # Setup Django
+    # Assume script is run from project root, or use DJANGO_PROJECT_ROOT env var
+    project_root = os.getenv('DJANGO_PROJECT_ROOT', os.getcwd())
+    sys.path.insert(0, project_root)
 
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", args.django_settings)
-    django.setup()  # Must happen before any tracks.models imports
+    # Load .env file if it exists
+    env_file = Path(project_root) / '.env'
+    if env_file.exists():
+        from dotenv import load_dotenv
+
+        load_dotenv(env_file)
+
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', args.django_settings)
+    django.setup()
 
     count = populate_dataset_releases(args.metadata_uri)
     print(f"Successfully inserted {count} rows")

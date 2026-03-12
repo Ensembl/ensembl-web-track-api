@@ -21,14 +21,18 @@ info:
   description: REST interface for managing track metadata in Ensembl Beta.
   contact:
     email: ensembl-webteam@ebi.ac.uk
-  version: 0.2.0  # Bumped version for new endpoints
+  version: 0.2.0
 servers:
   - url: http://beta.ensembl.org/api/tracks
     description: Production server
 paths:
   /track_categories/{genome_id}:
     get:
-      summary: Returns all track categories (and tracks) for a given genome.
+      summary: Returns all track categories (and tracks) for a given genome at a specific release.
+      description: >
+        Returns tracks filtered by release date and browser type. 
+        Automatically deduplicates tracks with overlapping specifications, 
+        keeping only the most recent version of each track type.
       parameters:
         - name: genome_id
           in: path
@@ -38,6 +42,27 @@ paths:
             type: string
             format: uuid
           example: a7335667-93e7-11ec-a39d-005056b38ce3
+        - name: browser
+          in: query
+          required: false
+          description: Browser type to filter tracks
+          schema:
+            type: string
+            enum:
+              - GenomeBrowser
+              - StructuralVariant
+            default: GenomeBrowser
+          example: GenomeBrowser
+        - name: release
+          in: query
+          required: false
+          description: >
+            Release label (YYYY-MM-DD format) to retrieve tracks up to this date.
+            If not provided, returns tracks from the most recent release.
+          schema:
+            type: string
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+          example: "2024-03-15"
       responses:
         '200':
           description: Successful request.
@@ -45,8 +70,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TrackCategories'
+        '400':
+          description: Invalid browser parameter.
         '404':
-          description: Specified genome ID was not found.
+          description: No tracks or releases found for this genome.
     delete:
       summary: Deletes all tracks/track categories for a given genome.
       parameters:
@@ -64,49 +91,12 @@ paths:
         '404':
           description: Specified genome ID was not found.
 
-  /track:
-    post:
-      summary: (DEPRECATED) Creates a new track using legacy format.
-      deprecated: true
-      description: This endpoint is deprecated. Use /tracks/create instead.
-      requestBody:
-        description: Data for the new track.
-        required: true
-        content:
-          application/json:
-            schema:
-              allOf:
-                - $ref: '#/components/schemas/Track'
-                - $ref: '#/components/schemas/TrackDatafiles'
-                - $ref: '#/components/schemas/TrackDescription'
-      responses:
-        '201':
-          description: Track was successfully created.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  track_id:
-                    description: UUID of the created track.
-                    type: string
-                    format: uuid
-                    example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
-        '400':
-          description: Invalid request.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    description: Error message
-                    type: string
-                    example: Track already exists.
-
   /track/{track_id}:
     get:
       summary: Returns data about a single track (tailored for genome browser).
+      description: >
+        Returns track data for a specific browser type. The track must have
+        a configuration for the requested browser.
       parameters:
         - name: track_id
           in: path
@@ -116,6 +106,24 @@ paths:
             type: string
             format: uuid
           example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
+        - name: spec
+          in: path
+          required: true
+          description: Specification ID
+          schema:
+            type: string
+          example: transcripts-gene-pc-fwd
+        - name: browser
+          in: query
+          required: false
+          description: Browser type to retrieve track configuration for
+          schema:
+            type: string
+            enum:
+              - GenomeBrowser
+              - StructuralVariant
+            default: GenomeBrowser
+          example: GenomeBrowser
       responses:
         '200':
           description: Successful request.
@@ -125,8 +133,10 @@ paths:
                 allOf:
                   - $ref: '#/components/schemas/Track'
                   - $ref: '#/components/schemas/TrackDatafiles'
+        '400':
+          description: Invalid browser parameter.
         '404':
-          description: Specified track ID was not found.
+          description: Track not found or has no configuration for requested browser.
     delete:
       summary: Deletes a single track.
       parameters:
@@ -277,15 +287,6 @@ components:
           format: uuid
           readOnly: true
           example: d0df738a-0ecb-4b1e-8576-a5621a4b15d2
-        genome_id:
-          type: string
-          format: uuid
-          writeOnly: true
-          example: a7335667-93e7-11ec-a39d-005056b38ce3
-        category:
-          allOf:
-            - writeOnly: true
-            - $ref: '#/components/schemas/TrackCategory'
         trigger:
           type: array
           items:
@@ -300,9 +301,6 @@ components:
         label:
           type: string
           example: Protein coding genes
-        color:
-          type: string
-          example: GREY
         additional_info:
           type: string
           example: Forward strand
@@ -323,6 +321,14 @@ components:
           example:
             details: variant-dbsnp-details.bb
             summary: variant-dbsnp-summary.bw
+        settings:
+          type: object
+          description: Browser-specific display settings
+          example:
+            variant-details:
+              switches:
+                - label-snv-id
+                - show-extents
 
     TrackDescription:
       type: object
