@@ -194,9 +194,11 @@ def combine_track_and_specification(
     Returns:
         Dict matching old Track API format
     """
-    #Hack the trigger on there
-    trigger = list(spec.trigger)
-    trigger.append(str(track.track_id))
+    #Hack the trigger to have the track id
+    trigger = [
+        str(track.track_id) if item == "{TRACK_ID}" else item
+        for item in spec.trigger
+    ]
 
 
     data = {

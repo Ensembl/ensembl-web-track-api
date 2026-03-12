@@ -41,6 +41,7 @@ class CreateTrackSerializer(serializers.Serializer):
         Validate that:
         1. All type names exist
         2. All types have the same files list
+        3. All types are for DIFFERENT browsers (can't have multiple specs for same browser on one track)
         """
         # Check all types exist
         types = Specifications.objects.filter(name__in=value)
@@ -61,7 +62,14 @@ class CreateTrackSerializer(serializers.Serializer):
                 f"Found different files configurations across types."
             )
 
-        # Store types for later use in create()
+        # Check all are for DIFFERENT browsers
+        browsers = list(types.values_list('browser', flat=True))
+        if len(browsers) != len(set(browsers)):
+            raise serializers.ValidationError(
+                "Cannot link multiple specifications for the same browser to one track. "
+                "Each track can only have one specification per browser type."
+            )
+
         self.context['validated_types'] = types
         return value
 
