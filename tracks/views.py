@@ -90,7 +90,6 @@ def get_specifications_for_datasets(
     Returns:
         Dict mapping dataset_id to set of specification names
     """
-    # Get all tracks for these datasets
     tracks = Track.objects.filter(
         dataset_id__in=dataset_ids
     ).prefetch_related('specifications')
@@ -98,7 +97,6 @@ def get_specifications_for_datasets(
     dataset_specs = defaultdict(set)
 
     for track in tracks:
-        # Get specifications matching browser
         specs = track.specifications.filter(browser=browser)
         for spec in specs:
             dataset_specs[str(track.dataset_id)].add(spec.name)
@@ -171,7 +169,6 @@ def select_latest_dataset_from_bins(bins: List[List[Dict]]) -> List[str]:
     """
     selected = []
     for bin_datasets in bins:
-        # Get dataset with max release_label
         latest = max(bin_datasets, key=lambda d: d['release_label'])
         selected.append(str(latest['dataset_id']))
 
@@ -194,11 +191,14 @@ def combine_track_and_specification(
     Returns:
         Dict matching old Track API format
     """
-    #Hack the trigger to have the track id
-    trigger = [
-        str(track.track_id) if item == "{TRACK_ID}" else item
-        for item in spec.trigger
-    ]
+    ################# HACK WARNING ##############
+    # Copy trigger from spec
+    trigger = list(spec.trigger)
+
+    # Hack for expansion tracks - append track_id if trigger[1] is "expand"
+    if len(trigger) > 1 and trigger[1] == "expand":
+        trigger.append(str(track.track_id))
+    ################# HACK END ##################
 
 
     data = {
@@ -233,7 +233,6 @@ class GenomeTrackList(APIView):
     http_method_names = ['get', 'delete']
 
     def get(self, request, genome_id):
-        # Get parameters
         browser = request.query_params.get('browser', 'GenomeBrowser')
         release_param = request.query_params.get('release')
 
@@ -283,17 +282,15 @@ class GenomeTrackList(APIView):
             categories = {}
 
             for track in tracks:
-                # Get ALL specifications matching browser (not just first)
-                specs = track.specifications.filter(browser=browser)
+                # Get the first specification matching the browser
+                spec = track.specifications.filter(browser=browser).first()
 
-                # Loop through each specification
-                for spec in specs:
-                    category_id = spec.category.id
+                category_id = spec.category.id
 
-                    # Create category entry if not exists
-                    if category_id not in categories:
-                        categories[category_id] = CategorySerializer(spec.category).data
-                        categories[category_id]["track_list"] = []
+                # Create category entry if not exists
+                if category_id not in categories:
+                    categories[category_id] = CategorySerializer(spec.category).data
+                    categories[category_id]["track_list"] = []
 
                     # Combine track + spec data
                     track_data = combine_track_and_specification(track, spec)
@@ -343,14 +340,6 @@ class TrackObject(APIView):
 
     def get(self, request, track_id):
         browser = request.query_params.get('browser', 'GenomeBrowser')
-        spec_name = request.query_params.get('spec')
-
-        # Validate spec is required
-        if not spec_name:
-            return Response(
-                {"error": "spec parameter is required"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
 
         # Validate browser
         if browser not in ['GenomeBrowser', 'StructuralVariant']:
@@ -370,16 +359,21 @@ class TrackObject(APIView):
             )
 
         # Filter by browser and spec name
-        spec = track.specifications.filter(browser=browser, name=spec_name).first()
+        spec = track.specifications.filter(browser=browser).first()
 
         if not spec:
             return Response(
-                {"error": f"Track has no configuration for browser '{browser}' and specification '{spec_name}'."},
+                {"error": f"Track has no configuration for browser '{browser}'."},
                 status=status.HTTP_404_NOT_FOUND
             )
 
         # Combine track + spec data
         track_data = combine_track_and_specification(track, spec, include_datafiles=True)
+
+        # Remove description and additional_info from single track view
+        track_data.pop('description', None)
+        track_data.pop('additional_info', None)
+
         return Response(track_data)
 
     def delete(self, request, track_id):

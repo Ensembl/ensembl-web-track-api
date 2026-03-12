@@ -62,7 +62,7 @@ class CreateTrackSerializer(serializers.Serializer):
                 f"Found different files configurations across types."
             )
 
-        # Check all are for DIFFERENT browsers
+        # Check all are for different browsers
         browsers = list(types.values_list('browser', flat=True))
         if len(browsers) != len(set(browsers)):
             raise serializers.ValidationError(

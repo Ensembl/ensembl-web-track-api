@@ -56,6 +56,7 @@ def populate_dataset_releases(metadata_uri: str) -> int:
             .join(Dataset, Dataset.dataset_id == GenomeDataset.dataset_id)
             .join(EnsemblRelease, EnsemblRelease.release_id == GenomeDataset.release_id)
             .filter(Dataset.status == DatasetStatus.RELEASED)
+            .filter(EnsemblRelease.release_type == "partial") #TODO: Make sure it works with integrated!!!
             .filter(Dataset.dataset_uuid.in_(track_dataset_uuids_str))
             .all()
         )
