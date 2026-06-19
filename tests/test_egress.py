@@ -22,7 +22,7 @@ import pytest
 import uuid
 from rest_framework.test import APIClient
 from rest_framework import status
-from tracks.models import Track, Specifications, Category, DatasetRelease
+from tracks.models import Track, Specifications, Category, DatasetRelease, Source
 
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
@@ -120,6 +120,16 @@ def spec_genebuild_genomebrowser(category_genomic):
     )
 
 
+@pytest.fixture
+def source_gencode():
+    """Create a sample source."""
+    return Source.objects.create(
+        name="GENCODE",
+        url="https://gencodegenes.org",
+        details="Comprehensive annotation"
+    )
+
+
 # ── GenomeTrackList Tests ─────────────────────────────────────────────────────
 
 @pytest.mark.django_db
@@ -127,7 +137,7 @@ class TestGenomeTrackList:
     """Tests for GET /track_categories/{genome_id} endpoint."""
 
     def test_get_tracks_default_browser_latest_release(
-            self, api_client, genome_id, spec_gc_genomebrowser
+            self, api_client, genome_id, spec_gc_genomebrowser, source_gencode
     ):
         """Test getting tracks with default browser (GenomeBrowser) and latest release."""
         # Create dataset and release
@@ -145,6 +155,7 @@ class TestGenomeTrackList:
             datafiles={"gc-content": "gc.bw"}
         )
         track.specifications.add(spec_gc_genomebrowser)
+        track.sources.add(source_gencode)
 
         response = api_client.get(f'/track_categories/{genome_id}')
 
@@ -154,6 +165,9 @@ class TestGenomeTrackList:
         assert response.data["track_categories"][0]["track_category_id"] == "genomic"
         assert len(response.data["track_categories"][0]["track_list"]) == 1
         assert response.data["track_categories"][0]["track_list"][0]["label"] == "GC Content"
+        assert response.data["track_categories"][0]["track_list"][0]["sources"] == [
+            {"name": "GENCODE", "url": "https://gencodegenes.org"}
+        ]
 
     def test_get_tracks_with_specific_browser(
             self, api_client, genome_id, spec_gc_genomebrowser, spec_gc_structuralvariant
@@ -431,7 +445,7 @@ class TestTrackObject:
     """Tests for GET /track/{track_id} endpoint."""
 
     def test_get_track_default_browser(
-            self, api_client, genome_id, spec_gc_genomebrowser
+            self, api_client, genome_id, spec_gc_genomebrowser, source_gencode
     ):
         """Test getting track with default browser (GenomeBrowser)."""
         track = Track.objects.create(
@@ -440,6 +454,7 @@ class TestTrackObject:
             datafiles={"gc-content": "gc.bw"}
         )
         track.specifications.add(spec_gc_genomebrowser)
+        track.sources.add(source_gencode)
 
         response = api_client.get(f'/track/{track.track_id}')
 
@@ -447,6 +462,41 @@ class TestTrackObject:
         assert response.data["track_id"] == str(track.track_id)
         assert response.data["label"] == "GC Content"
         assert response.data["datafiles"] == {"gc-content": "gc.bw"}
+        assert response.data["sources"] == [{"name": "GENCODE", "url": "https://gencodegenes.org"}]
+
+    def test_sources_are_track_specific(
+            self, api_client, genome_id, spec_gc_genomebrowser, source_gencode
+    ):
+        """Tracks sharing a specification can still expose different sources."""
+        other_source = Source.objects.create(
+            name="Ensembl",
+            url="https://www.ensembl.org",
+            details="Gene build"
+        )
+
+        track1 = Track.objects.create(
+            dataset_id=uuid.uuid4(),
+            genome_id=genome_id,
+            datafiles={"gc-content": "gc1.bw"}
+        )
+        track1.specifications.add(spec_gc_genomebrowser)
+        track1.sources.add(source_gencode)
+
+        track2 = Track.objects.create(
+            dataset_id=uuid.uuid4(),
+            genome_id=genome_id,
+            datafiles={"gc-content": "gc2.bw"}
+        )
+        track2.specifications.add(spec_gc_genomebrowser)
+        track2.sources.add(other_source)
+
+        response1 = api_client.get(f'/track/{track1.track_id}')
+        response2 = api_client.get(f'/track/{track2.track_id}')
+
+        assert response1.status_code == status.HTTP_200_OK
+        assert response2.status_code == status.HTTP_200_OK
+        assert response1.data["sources"] == [{"name": "GENCODE", "url": "https://gencodegenes.org"}]
+        assert response2.data["sources"] == [{"name": "Ensembl", "url": "https://www.ensembl.org"}]
 
     def test_get_track_with_specific_browser(
             self, api_client, genome_id, spec_gc_genomebrowser, spec_gc_structuralvariant

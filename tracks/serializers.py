@@ -17,6 +17,12 @@ from .models import Category, Track, Source, Specifications
 from rest_framework import serializers
 
 
+class CreateSourceSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=100)
+    url = serializers.URLField()
+    details = serializers.CharField(max_length=100)
+
+
 class CreateTrackSerializer(serializers.Serializer):
     """
     Serializer for creating new tracks.
@@ -35,6 +41,7 @@ class CreateTrackSerializer(serializers.Serializer):
         min_length=1,
         help_text="List of Type names to associate with this track"
     )
+    sources = CreateSourceSerializer(many=True, required=False, default=list)
 
     def validate_track_types(self, value):
         """
@@ -89,7 +96,7 @@ class CreateTrackSerializer(serializers.Serializer):
         dataset_id = validated_data['dataset_id']
         genome_id = validated_data['genome_id']
         datafiles_list = validated_data['datafiles']
-        track_types = validated_data['track_types']
+        sources_data = validated_data.get('sources', [])
 
         # Get the files keys from the first type
         types = self.context['validated_types']
@@ -113,6 +120,10 @@ class CreateTrackSerializer(serializers.Serializer):
         )
         for type_obj in types:
             track.specifications.add(type_obj)
+
+        for source_data in sources_data:
+            source, _ = Source.objects.get_or_create(**source_data)
+            track.sources.add(source)
 
         return track
 

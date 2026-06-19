@@ -49,6 +49,7 @@ class Specifications(models.Model):
 
 class Track(models.Model):
     specifications = models.ManyToManyField(Specifications, related_name="tracks")
+    sources = models.ManyToManyField("Source", related_name="tracks")
     track_id = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     dataset_id = models.UUIDField()
     genome_id = models.UUIDField()
@@ -56,12 +57,12 @@ class Track(models.Model):
 
 
 class Source(models.Model):
-    specification = models.ManyToManyField(Specifications, related_name="sources")
     name = models.CharField(max_length=100)
     url = models.URLField()
+    details = models.CharField(max_length=100)
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["name", "url"], name="unique_source")]
+        constraints = [models.UniqueConstraint(fields=["name", "url", "details"], name="unique_source")]
 
 class DatasetRelease(models.Model):
     dataset_id = models.UUIDField()

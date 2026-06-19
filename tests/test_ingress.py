@@ -22,7 +22,7 @@ import pytest
 import uuid
 from rest_framework.test import APIClient
 from rest_framework import status
-from tracks.models import Track, Specifications, Category
+from tracks.models import Track, Specifications, Category, Source
 
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
@@ -172,6 +172,89 @@ class TestCreateTrack:
         assert track.specifications.count() == 2
         type_names = set(track.specifications.values_list('name', flat=True))
         assert type_names == {"test-spec-two-files", "test-spec-matching"}
+
+    def test_create_track_with_multiple_sources(self, api_client, specification_two_files):
+        """Test creating a track with multiple sources."""
+        data = {
+            "dataset_id": str(uuid.uuid4()),
+            "genome_id": str(uuid.uuid4()),
+            "datafiles": ["file1.bb", "file2.bw"],
+            "track_types": ["test-spec-two-files"],
+            "sources": [
+                {
+                    "name": "GENCODE",
+                    "url": "https://gencodegenes.org",
+                    "details": "Comprehensive annotation"
+                },
+                {
+                    "name": "Ensembl",
+                    "url": "https://www.ensembl.org",
+                    "details": "Gene build"
+                }
+            ]
+        }
+
+        response = api_client.post('/tracks/create', data, format='json')
+
+        assert response.status_code == status.HTTP_201_CREATED
+
+        track = Track.objects.get(track_id=response.data["track_id"])
+        assert track.sources.count() == 2
+        source_keys = set(track.sources.values_list('name', 'url', 'details'))
+        assert source_keys == {
+            ("GENCODE", "https://gencodegenes.org", "Comprehensive annotation"),
+            ("Ensembl", "https://www.ensembl.org", "Gene build"),
+        }
+
+    def test_create_track_reuses_existing_source(self, api_client, specification_two_files):
+        """Test creating a track attaches an existing source instead of duplicating it."""
+        existing_source = Source.objects.create(
+            name="GENCODE",
+            url="https://gencodegenes.org",
+            details="Comprehensive annotation"
+        )
+        data = {
+            "dataset_id": str(uuid.uuid4()),
+            "genome_id": str(uuid.uuid4()),
+            "datafiles": ["file1.bb", "file2.bw"],
+            "track_types": ["test-spec-two-files"],
+            "sources": [
+                {
+                    "name": "GENCODE",
+                    "url": "https://gencodegenes.org",
+                    "details": "Comprehensive annotation"
+                }
+            ]
+        }
+
+        response = api_client.post('/tracks/create', data, format='json')
+
+        assert response.status_code == status.HTTP_201_CREATED
+
+        track = Track.objects.get(track_id=response.data["track_id"])
+        assert track.sources.count() == 1
+        assert track.sources.first().id == existing_source.id
+        assert Source.objects.count() == 1
+
+    def test_create_track_rejects_invalid_source_shape(self, api_client, specification_two_files):
+        """Test that sources must include name, url, and details."""
+        data = {
+            "dataset_id": str(uuid.uuid4()),
+            "genome_id": str(uuid.uuid4()),
+            "datafiles": ["file1.bb", "file2.bw"],
+            "track_types": ["test-spec-two-files"],
+            "sources": [
+                {
+                    "name": "GENCODE",
+                    "url": "https://gencodegenes.org"
+                }
+            ]
+        }
+
+        response = api_client.post('/tracks/create', data, format='json')
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "sources" in response.data["details"]
 
     def test_create_track_invalid_uuid_dataset(self, api_client):
         """Test that invalid dataset_id UUID is rejected."""

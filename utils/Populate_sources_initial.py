@@ -15,7 +15,7 @@
 #  limitations under the License.
 
 """
-Populate Source table and link to Specifications.
+Populate Source table and link to Tracks.
 Run from project root: python src/ensembl/production/tracks/populate_sources.py
 """
 
@@ -39,65 +39,65 @@ django.setup()
 
 from tracks.models import Source, Specifications
 
-# Source data: (name, url, [specification_names])
+# Source data: (name, url, details, [specification_names])
 SOURCES_DATA = [
-    ("GERP", "http://mendel.stanford.edu/SidowLab/downloads/gerp/",
+    ("GERP", "http://mendel.stanford.edu/SidowLab/downloads/gerp/", "",
      ["gerp-elements", "gerp-scores"]),
 
-    ("Ensembl Regulation", "https://regulation.ensembl.org",
+    ("Ensembl Regulation", "https://regulation.ensembl.org", "",
      ["regulatory-features"]),
 
-    ("Genome Reference Consortium", "https://genomereference.org",
+    ("Genome Reference Consortium", "https://genomereference.org", "",
      ["repeats.centromere_repeat"]),
 
-    ("Dust", "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0654-5",
+    ("Dust", "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0654-5", "",
      ["repeats.dust"]),
 
-    ("ENA", "https://www.ebi.ac.uk/ena",
+    ("ENA", "https://www.ebi.ac.uk/ena", "",
      ["repeats.ena_repeat"]),
 
-    ("PomBase", "https://www.pombase.org",
+    ("PomBase", "https://www.pombase.org", "",
      ["repeats.long_terminal_repeat", "repeats.low_complexity_region",
       "repeats.ltr_retrotransposon", "repeats.regional_centromere_inner_repeat_region"]),
 
-    ("RED", "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0654-5",
+    ("RED", "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0654-5", "",
      ["repeats.repeatdetector", "repeats.repeatdetector_annotated"]),
 
-    ("RepeatMasker", "https://www.repeatmasker.org",
+    ("RepeatMasker", "https://www.repeatmasker.org", "",
      ["repeats.repeatmask", "repeats.repeatmask_customlib", "repeats.repeatmask_nrplants",
       "repeats.repeatmask_redat", "repeats.repeatmask_repbase", "repeats.repeatmask_repbase_human",
       "repeats.repeatmask_repbase_human_low", "repeats.repeatmaskagi"]),
 
-    ("REdat", "https://mips.helmholtz-muenchen.de/plant/recat",
+    ("REdat", "https://mips.helmholtz-muenchen.de/plant/recat", "",
      ["repeats.repeatmask_nrplants", "repeats.repeatmask_redat"]),
 
-    ("TREP", "https://trep-db.uzh.ch",
+    ("TREP", "https://trep-db.uzh.ch", "",
      ["repeats.repeatmask_nrplants"]),
 
-    ("RepetDB", "https://urgi.versailles.inra.fr/repetdb/begin.do",
+    ("RepetDB", "https://urgi.versailles.inra.fr/repetdb/begin.do", "",
      ["repeats.repeatmask_nrplants"]),
 
-    ("Human Pangenome Reference Consortium", "https://humanpangenome.org/",
+    ("Human Pangenome Reference Consortium", "https://humanpangenome.org/", "",
      ["repeats.segdups"]),
 
-    ("Tandem Repeats Finder", "https://tandem.bu.edu/trf/trf.html",
+    ("Tandem Repeats Finder", "https://tandem.bu.edu/trf/trf.html", "",
      ["repeats.trf"]),
 
-    ("newcpgreport", "https://emboss.sourceforge.net/apps/cvs/emboss/apps/newcpgreport.html",
+    ("newcpgreport", "https://emboss.sourceforge.net/apps/cvs/emboss/apps/newcpgreport.html", "",
      ["simple-features-cpg"]),
 
-    ("Eponine-TSS", "https://www.sanger.ac.uk/tool/eponine",
+    ("Eponine-TSS", "https://www.sanger.ac.uk/tool/eponine", "",
      ["simple-features-tssp"]),
 
-    ("dbSNP", "https://www.ncbi.nlm.nih.gov/snp",
+    ("dbSNP", "https://www.ncbi.nlm.nih.gov/snp", "",
      ["variant-dbsnp"]),
 
-    ("Ensembl", "https://www.ensembl.org/index.html",
+    ("Ensembl", "https://www.ensembl.org/index.html", "",
      ["variant-ensembl"]),
 
-    ("EVA", "https://www.ebi.ac.uk/eva",
+    ("EVA", "https://www.ebi.ac.uk/eva", "",
      ["variant-eva"]),
-    ("Ensembl", "https://rapid.ensembl.org/info/genome/genebuild/full_genebuild.html",
+    ("Ensembl", "https://rapid.ensembl.org/info/genome/genebuild/full_genebuild.html", "",
     ["transcripts-gene-pc-fwd", "transcripts-gene-pc-rev",
     "transcripts-gene-other-fwd", "transcripts-gene-other-rev"]),
 ]
@@ -110,11 +110,12 @@ def populate_sources():
     linked_count = 0
     missing_specs = set()
 
-    for name, url, spec_names in SOURCES_DATA:
+    for name, url, details, spec_names in SOURCES_DATA:
         # Get or create Source
         source, created = Source.objects.get_or_create(
             name=name,
-            url=url
+            url=url,
+            details=details
         )
 
         if created:
@@ -123,13 +124,20 @@ def populate_sources():
         else:
             print(f"Source already exists: {name}")
 
-        # Link to specifications
+        # Link to all tracks using each specification
         for spec_name in spec_names:
             try:
                 spec = Specifications.objects.get(name=spec_name)
-                source.specification.add(spec)
-                linked_count += 1
-                print(f"  Linked to specification: {spec_name}")
+                tracks = spec.tracks.all()
+
+                if not tracks.exists():
+                    print(f"  No tracks found for specification: {spec_name}")
+                    continue
+
+                for track in tracks:
+                    source.tracks.add(track)
+                    linked_count += 1
+                    print(f"  Linked to track {track.track_id} via specification: {spec_name}")
             except Specifications.DoesNotExist:
                 missing_specs.add(spec_name)
                 print(f"  WARNING: Specification not found: {spec_name}")
@@ -141,8 +149,8 @@ def populate_sources():
 
     if missing_specs:
         print(f"\nMissing specifications ({len(missing_specs)}):")
-        for spec in sorted(missing_specs):
-            print(f"  - {spec}")
+        for spec_name in sorted(missing_specs):
+            print(f"  - {spec_name}")
     else:
         print("\nAll specifications found!")
 

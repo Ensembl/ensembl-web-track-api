@@ -350,6 +350,26 @@ components:
                 type: string
                 example: https://gencodegenes.org
 
+    CreateSourceRequest:
+      type: object
+      required:
+        - name
+        - url
+        - details
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          example: GENCODE
+        url:
+          type: string
+          format: uri
+          example: https://gencodegenes.org
+        details:
+          type: string
+          maxLength: 100
+          example: Comprehensive annotation
+
     CreateTrackRequest:
       type: object
       required:
@@ -378,6 +398,11 @@ components:
             List of 1-2 file paths. If only one file provided, the second
             datafile slot will be filled with an empty string.
           example: ["repeats.repeatdetector.bb"]
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateSourceRequest'
+          description: Optional list of sources to attach to this track
         track_types:
           type: array
           minItems: 1

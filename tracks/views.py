@@ -210,7 +210,7 @@ def combine_track_and_specification(
         'on_by_default': spec.on_by_default,
         'additional_info': spec.additional_info,
         'description': spec.description,
-        'sources': [{'name': s.name, 'url': s.url} for s in spec.sources.all()]  # Changed from track.sources
+        'sources': [{'name': s.name, 'url': s.url} for s in track.sources.all()]
     }
 
     if include_datafiles:
@@ -270,7 +270,7 @@ class GenomeTrackList(APIView):
             tracks = Track.objects.filter(
                 genome_id=genome_id,
                 dataset_id__in=selected_dataset_ids
-            ).prefetch_related('specifications', 'specifications__category', 'specifications__sources')
+            ).prefetch_related('specifications', 'specifications__category', 'sources')
 
             if not tracks.exists():
                 return Response(
@@ -285,6 +285,9 @@ class GenomeTrackList(APIView):
                 # Get the first specification matching the browser
                 spec = track.specifications.filter(browser=browser).first()
 
+                if not spec:
+                    continue
+
                 category_id = spec.category.id
 
                 # Create category entry if not exists
@@ -292,9 +295,9 @@ class GenomeTrackList(APIView):
                     categories[category_id] = CategorySerializer(spec.category).data
                     categories[category_id]["track_list"] = []
 
-                    # Combine track + spec data
-                    track_data = combine_track_and_specification(track, spec)
-                    categories[category_id]["track_list"].append(track_data)
+                # Combine track + spec data
+                track_data = combine_track_and_specification(track, spec)
+                categories[category_id]["track_list"].append(track_data)
 
             if not categories:
                 return Response(
@@ -349,7 +352,7 @@ class TrackObject(APIView):
             )
 
         try:
-            track = Track.objects.prefetch_related('specifications', 'specifications__sources').get(
+            track = Track.objects.prefetch_related('specifications', 'sources').get(
                 track_id=track_id
             )
         except Track.DoesNotExist:
@@ -399,7 +402,10 @@ class CreateTrack(APIView):
         "dataset_id": "uuid",
         "genome_id": "uuid",
         "datafiles": ["file1.bb"] or ["file1.bb", "file2.bw"],
-        "track_types": ["type_name1", "type_name2"]
+        "track_types": ["type_name1", "type_name2"],
+        "sources": [
+            {"name": "Source name", "url": "https://example.org", "details": "reference text"}
+        ]
     }
     """
     http_method_names = ['post']

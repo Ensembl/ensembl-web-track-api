@@ -27,7 +27,14 @@ Input JSON format:
             "dataset_id": "550e8400-e29b-41d4-a716-446655440000",
             "genome_id": "a7335667-93e7-11ec-a39d-005056b38ce3",
             "datafiles": ["file1.bb", "file2.bw"],
-            "track_types": ["type-name1", "type-name2"]
+            "track_types": ["type-name1", "type-name2"],
+            "sources": [
+                {
+                    "name": "GENCODE",
+                    "url": "https://gencodegenes.org",
+                    "details": "Comprehensive gene annotation"
+                }
+            ]
         }
     ]
 
