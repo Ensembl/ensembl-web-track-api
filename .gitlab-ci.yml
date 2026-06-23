@@ -1,4 +1,5 @@
 stages:
+    - setup
     - build
     - deploy-test
     - deploy-prod
