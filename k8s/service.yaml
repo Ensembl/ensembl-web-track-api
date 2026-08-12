@@ -10,6 +10,7 @@ spec:
     app: ensembl-track-api
   type: ClusterIP
   ports:
-    - port: 8012
+    - name: track-api
+      port: 8012
       protocol: TCP
       targetPort: 8012

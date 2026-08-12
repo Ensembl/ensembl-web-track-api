@@ -56,7 +56,7 @@ ENV = {
     },
     "prod": {
         "data_dir": f"{dir_root}/live/{dir_tail}",
-        "track_api_url": "https://beta.ensembl.org"
+        "track_api_url": "https://www.ensembl.org"
     },
 }
 
