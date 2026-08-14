@@ -18,12 +18,12 @@
 openapi: 3.0.3
 info:
   title: Ensembl Track API
-  description: REST interface for managing track metadata in Ensembl Beta.
+  description: REST interface for managing track metadata in Ensembl.
   contact:
     email: ensembl-webteam@ebi.ac.uk
   version: 0.2.0
 servers:
-  - url: http://beta.ensembl.org/api/tracks
+  - url: http://www.ensembl.org/api/tracks
     description: Production server
 paths:
   /track_categories/{genome_id}:

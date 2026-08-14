@@ -1,45 +1,45 @@
 stages:
-    - setup
-    - build
-    - deploy-test
-    - deploy-prod
+  - setup
+  - build
+  - deploy-test
+  - deploy-prod
 
 variables:
-    DOCKER_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
-    DOCKER_TLS_CERTDIR: ""
+  DOCKER_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
+  DOCKER_TLS_CERTDIR: ""
 
 .branch-rules-main:
-    rules:
-        - if: $CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"
-          when: on_success
+  rules:
+    - if: $CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"
+      when: on_success
 
 .branch-rules-review:
-    extends: .branch-rules-main
-    rules:
-        - if: $CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH != "dev" && $CI_COMMIT_BRANCH != "main"
-          when: on_success
+  extends: .branch-rules-main
+  rules:
+    - if: $CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH != "dev" && $CI_COMMIT_BRANCH != "main"
+      when: on_success
 
 #Base templates
 .deploy:
-    image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
-    before_script:
-        - kubectl config use-context ${AGENT}
-        - kubectl config set-context --current --namespace=${NS}
-    script:
-        - git clone --depth 1 --branch k8s123-migration https://gitlab.ebi.ac.uk/ensembl-web/ensembl-k8s-manifests.git
-        - cd ensembl-k8s-manifests/ensembl-web-track-api
-        - kustomize edit set image DOCKER_IMAGE=${DOCKER_IMAGE}
-        - kubectl apply -k .
+  image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
+  before_script:
+    - kubectl config use-context ${AGENT}
+    - kubectl config set-context --current --namespace=${NS}
+  script:
+    - git clone --depth 1 --branch k8s123-migration https://gitlab.ebi.ac.uk/ensembl-web/ensembl-k8s-manifests.git
+    - cd ensembl-k8s-manifests/ensembl-web-track-api
+    - kustomize edit set image DOCKER_IMAGE=${DOCKER_IMAGE}
+    - kubectl apply -k .
 
 .deploy-main:
-    extends:
-        - .deploy
-        - .branch-rules-main
+  extends:
+    - .deploy
+    - .branch-rules-main
 
 .deploy-review:
-    extends:
-        - .deploy
-        - .branch-rules-review
+  extends:
+    - .deploy
+    - .branch-rules-review
 
 # Setup Review app in its own namespace named by branch name (CI_COMMIT_REF_SLUG)
 Setup:Review:
@@ -56,24 +56,24 @@ Setup:Review:
   script:
     - kubectl create configmap metadata-api-configmap --from-env-file=.env.sample --dry-run=client -o yaml | kubectl apply -f -
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && 
-          $CI_COMMIT_BEFORE_SHA == "0000000000000000000000000000000000000000" && 
-          $CI_COMMIT_REF_NAME !~  "/^nodeploy\/.*$/"
+    - if: $CI_PIPELINE_SOURCE == "push" &&
+        $CI_COMMIT_BEFORE_SHA == "0000000000000000000000000000000000000000" &&
+        $CI_COMMIT_REF_NAME !~  "/^nodeploy\/.*$/"
       when: always
 
-#Build docker image 
+#Build docker image
 Docker:
-    stage: build
-    image: docker
-    services:
-        - docker:dind
-    before_script:
-        - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    script:
-        - docker build -t ${DOCKER_IMAGE} --no-cache -f Dockerfile .
-        - docker push ${DOCKER_IMAGE}
-        - docker rmi ${DOCKER_IMAGE}
-        - docker logout $CI_REGISTRY
+  stage: build
+  image: docker
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t ${DOCKER_IMAGE} --no-cache -f Dockerfile .
+    - docker push ${DOCKER_IMAGE}
+    - docker rmi ${DOCKER_IMAGE}
+    - docker logout $CI_REGISTRY
 
 #Deploy to k8s
 Prod:

@@ -1,12 +1,12 @@
 # Track API endpoint
 
-REST service providing genome browser track data for [Ensembl Beta](https://beta.ensembl.org).
+REST service providing genome browser track data for [Ensembl Beta](https://www.ensembl.org).
 
 ## REST API endpoints
 
 REST API supports viewing/adding/removing tracks and track categories.
 
-Example query (get the list of available tracks for human): https://beta.ensembl.org/api/tracks/track_categories/a7335667-93e7-11ec-a39d-005056b38ce3
+Example query (get the list of available tracks for human): https://www.ensembl.org/api/tracks/track_categories/a7335667-93e7-11ec-a39d-005056b38ce3
 
 See the [OpenAPI specification](https://editor.swagger.io/?url=https://raw.githubusercontent.com/Ensembl/ensembl-web-track-api/refs/heads/dev/ensembl-track-api.openapi.yaml) (source file [here](https://github.com/Ensembl/ensembl-web-track-api/blob/dev/ensembl-track-api.openapi.yaml)) for more examples and details.
 
