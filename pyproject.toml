@@ -33,6 +33,10 @@ dependencies = [
     "djangorestframework>=3.14",
     "PyYAML>=5.3",
     "gunicorn>=20.0.1",
+    "django-prometheus",
+    "python-dotenv",     # loads .env files for load_tracks.py / load_release_info.py / Populate_sources_initial.py
+    "psycopg2-binary",   # Postgres driver for utils/postgres_to_sqlite.py
+    "duckdb",            # used by utils/build_sqlite_from_track_files.py
 ]
 [project.optional-dependencies]
 dev = [
