@@ -7,6 +7,8 @@ stages:
 variables:
   DOCKER_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
   DOCKER_TLS_CERTDIR: ""
+  NFS_SERVER: ${HL_NFS_SERVER_CODON}
+  NFS_PATH: ${HL_NFS_PATH_CODON}
 
 .branch-rules-main:
   rules:
@@ -95,6 +97,8 @@ Fallback:
   variables:
     AGENT: ${FALLBACK_AGENT}
     NS: ${FALLBACK_NS}
+    NFS_SERVER: ${HX_NFS_SERVER_CODON}
+    NFS_PATH: ${HX_NFS_PATH_CODON}
 
 Staging:
   stage: deploy-test
