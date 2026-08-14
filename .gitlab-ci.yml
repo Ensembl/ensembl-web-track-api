@@ -1,4 +1,5 @@
 stages:
+    - setup
     - build
     - deploy-test
     - deploy-prod
@@ -15,7 +16,7 @@ variables:
 .branch-rules-review:
     extends: .branch-rules-main
     rules:
-        - if: $CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH != "main"
+        - if: $CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH != "dev" && $CI_COMMIT_BRANCH != "main"
           when: on_success
 
 #Base templates
@@ -35,11 +36,30 @@ variables:
         - .deploy
         - .branch-rules-main
 
-# Not currently in use. Needs to be reconsidered along with the review branch system
 .deploy-review:
     extends:
         - .deploy
         - .branch-rules-review
+
+# Setup Review app in its own namespace named by branch name (CI_COMMIT_REF_SLUG)
+Setup:Review:
+  stage: setup
+  image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
+  environment:
+    name: development
+  before_script:
+    - kubectl config use-context ${AGENT}
+    - kubectl config set-context --current --namespace=${NS}
+  variables:
+    AGENT: ${REVIEW_AGENT}
+    NS: ${CI_COMMIT_REF_SLUG}
+  script:
+    - kubectl create configmap metadata-api-configmap --from-env-file=.env.sample --dry-run=client -o yaml | kubectl apply -f -
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && 
+          $CI_COMMIT_BEFORE_SHA == "0000000000000000000000000000000000000000" && 
+          $CI_COMMIT_REF_NAME !~  "/^nodeploy\/.*$/"
+      when: always
 
 #Build docker image 
 Docker:
@@ -93,3 +113,12 @@ Dev:
   variables:
     AGENT: ${DEV_AGENT}
     NS: ${DEV_NS}
+
+Review:
+  stage: deploy-test
+  extends: .deploy-review
+  environment:
+    name: development
+  variables:
+    AGENT: ${REVIEW_AGENT}
+    NS: ${CI_COMMIT_REF_SLUG}
