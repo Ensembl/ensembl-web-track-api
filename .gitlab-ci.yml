@@ -30,6 +30,8 @@ variables:
   script:
     - git clone --depth 1 --branch k8s123-migration https://gitlab.ebi.ac.uk/ensembl-web/ensembl-k8s-manifests.git
     - cd ensembl-k8s-manifests/ensembl-web-track-api
+    - sed -i "s#<NFS_SERVER>#${NFS_SERVER}#g" ./deployment.yaml
+    - sed -i "s#<NFS_PATH>#${NFS_PATH}#g" ./deployment.yaml
     - kustomize edit set image DOCKER_IMAGE=${DOCKER_IMAGE}
     - kubectl apply -k .
 
