@@ -34,7 +34,7 @@ TRACK_ID_NAMESPACE = uuid.UUID("9bc37713-89eb-44fd-9d71-0cdbbef394c0")
 
 
 def normalize_uuid(value: Any) -> str:
-    return uuid.UUID(str(value)).hex
+    return str(uuid.UUID(str(value)))
 
 
 def uuid_for_track(genome_id: str, template_name: str, datafiles: dict[str, str]) -> str:
@@ -47,7 +47,7 @@ def uuid_for_track(genome_id: str, template_name: str, datafiles: dict[str, str]
         sort_keys=True,
         separators=(",", ":"),
     )
-    return uuid.uuid5(TRACK_ID_NAMESPACE, fingerprint).hex
+    return str(uuid.uuid5(TRACK_ID_NAMESPACE, fingerprint))
 
 
 def sqlite_json(value: Any) -> str:
@@ -76,16 +76,16 @@ def create_sqlite_schema(conn: sqlite3.Connection) -> None:
 
         CREATE TABLE tracks_track (
             id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-            track_id char(32) NOT NULL UNIQUE,
-            dataset_id char(32) NOT NULL,
-            genome_id char(32) NOT NULL,
+            track_id char(36) NOT NULL UNIQUE,
+            dataset_id char(36) NOT NULL,
+            genome_id char(36) NOT NULL,
             datafiles text NOT NULL CHECK ((JSON_VALID(datafiles) OR datafiles IS NULL))
         );
 
         CREATE TABLE tracks_datasetrelease (
             id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-            dataset_id char(32) NOT NULL,
-            genome_id char(32) NOT NULL,
+            dataset_id char(36) NOT NULL,
+            genome_id char(36) NOT NULL,
             release_label varchar(50) NOT NULL,
             CONSTRAINT unique_dataset_genome_release
                 UNIQUE (dataset_id, genome_id, release_label)

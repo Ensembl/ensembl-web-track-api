@@ -16,6 +16,8 @@
 import uuid
 from django.db import models
 
+from .fields import HyphenatedUUIDField
+
 """
 Django datamodels representing tracks in Track API database.
 """
@@ -50,9 +52,9 @@ class Specifications(models.Model):
 class Track(models.Model):
     specifications = models.ManyToManyField(Specifications, related_name="tracks")
     sources = models.ManyToManyField("Source", related_name="tracks")
-    track_id = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
-    dataset_id = models.UUIDField()
-    genome_id = models.UUIDField()
+    track_id = HyphenatedUUIDField(unique=True, editable=False, default=uuid.uuid4)
+    dataset_id = HyphenatedUUIDField()
+    genome_id = HyphenatedUUIDField()
     datafiles = models.JSONField(default=dict)
 
 
@@ -65,8 +67,8 @@ class Source(models.Model):
         constraints = [models.UniqueConstraint(fields=["name", "url", "details"], name="unique_source")]
 
 class DatasetRelease(models.Model):
-    dataset_id = models.UUIDField()
-    genome_id = models.UUIDField()
+    dataset_id = HyphenatedUUIDField()
+    genome_id = HyphenatedUUIDField()
     release_label = models.CharField(max_length=50)
 
     class Meta:

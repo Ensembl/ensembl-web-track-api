@@ -38,10 +38,10 @@ TRACK_TABLES = (
 
 
 def normalize_uuid(value: Any) -> str:
-    """Return Django SQLite UUIDField representation: 32 lowercase hex chars."""
+    """Return the hyphenated UUID representation used by this SQLite schema."""
     if value is None:
         raise ValueError("UUID value cannot be null")
-    return uuid.UUID(str(value)).hex
+    return str(uuid.UUID(str(value)))
 
 
 def parse_json_field(value: Any, default: Any) -> Any:
@@ -185,16 +185,16 @@ def create_sqlite_schema(conn: sqlite3.Connection) -> None:
 
         CREATE TABLE tracks_track (
             id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-            track_id char(32) NOT NULL UNIQUE,
-            dataset_id char(32) NOT NULL,
-            genome_id char(32) NOT NULL,
+            track_id char(36) NOT NULL UNIQUE,
+            dataset_id char(36) NOT NULL,
+            genome_id char(36) NOT NULL,
             datafiles text NOT NULL CHECK ((JSON_VALID(datafiles) OR datafiles IS NULL))
         );
 
         CREATE TABLE tracks_datasetrelease (
             id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-            dataset_id char(32) NOT NULL,
-            genome_id char(32) NOT NULL,
+            dataset_id char(36) NOT NULL,
+            genome_id char(36) NOT NULL,
             release_label varchar(50) NOT NULL,
             CONSTRAINT unique_dataset_genome_release
                 UNIQUE (dataset_id, genome_id, release_label)
