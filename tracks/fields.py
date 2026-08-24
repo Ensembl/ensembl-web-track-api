@@ -29,7 +29,7 @@ class HyphenatedUUIDField(models.UUIDField):
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
-        del kwargs["max_length"]
+        kwargs.pop("max_length", None)
         return name, path, args, kwargs
 
     def db_type(self, connection):
