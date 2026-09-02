@@ -20,6 +20,7 @@ staticfiles/
 # Environments
 env/
 .venv/
+venv/
 
 ### VisualStudioCode template
 .vscode/*
@@ -36,3 +37,5 @@ prod.env
 # Temporary files
 tmp/
 *.log
+
+*.egg-info

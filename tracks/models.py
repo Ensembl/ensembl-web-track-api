@@ -1,41 +1,80 @@
-from django.db import models
-from django.contrib.postgres.fields import ArrayField
+#
+#  See the NOTICE file distributed with this work for additional information
+#  regarding copyright ownership.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 import uuid
+from django.db import models
+
+from .fields import HyphenatedUUIDField
 
 """
 Django datamodels representing tracks in Track API database.
 """
 
+
 class Category(models.Model):
     label = models.CharField(max_length=50)
     track_category_id = models.CharField(unique=True, max_length=50)
-    CategoryType = models.TextChoices("CategoryType", ["Genomic","Variation","Regulation"])
+    CategoryType = models.TextChoices("CategoryType", ["Genomic", "Variation", "Regulation"])
     type = models.CharField(choices=CategoryType.choices, default="Genomic", max_length=20)
 
-class Track(models.Model):
-    track_id = models.UUIDField(unique=True, editable=False, default=uuid.uuid4) #auto-generate track IDs
-    genome_id = models.UUIDField()
-    category = models.ForeignKey(Category, related_name="tracks", on_delete=models.CASCADE)
+
+class Specifications(models.Model):
+    name = models.CharField(max_length=50, unique=True)
     label = models.CharField(max_length=50)
-    trigger = ArrayField(models.CharField(max_length=50))
-    TrackType = models.TextChoices("TrackType", ["gene","variant","regular"])
-    type = models.CharField(choices=TrackType.choices, max_length=20)
-    datafiles = models.JSONField(default=dict)
-    colour = models.CharField(blank=True, default="", max_length=20)
+    category = models.ForeignKey(Category, related_name="tracks", on_delete=models.CASCADE)
+    trigger = models.JSONField(default=list)
+    TrackType = models.TextChoices("TrackType", ["gene", "variant", "regular"])
+    type = models.CharField(choices=TrackType.choices, max_length=8)
     on_by_default = models.BooleanField(default=False)
     display_order = models.IntegerField(default=2000)
     additional_info = models.CharField(blank=True, default="", max_length=50)
     description = models.TextField(blank=True, default="")
     settings = models.JSONField(blank=True, default=dict)
+    files = models.JSONField(default=list)
+    StrandType = models.TextChoices("StrandType", ["forward", "reverse"])
+    strand = models.CharField(choices=StrandType.choices, max_length=20, blank=True, null=True)
+    BrowserType = models.TextChoices("BrowserType", ["GenomeBrowser", "StructuralVariant"])
+    browser = models.CharField(choices=BrowserType.choices, max_length=20)
 
-    class Meta:
-        ordering = ["display_order"]
-        constraints = [models.UniqueConstraint(fields=["genome_id", "label", "additional_info", "datafiles"], name="unique_track")]
+
+class Track(models.Model):
+    specifications = models.ManyToManyField(Specifications, related_name="tracks")
+    sources = models.ManyToManyField("Source", related_name="tracks")
+    track_id = HyphenatedUUIDField(unique=True, editable=False, default=uuid.uuid4)
+    dataset_id = HyphenatedUUIDField()
+    genome_id = HyphenatedUUIDField()
+    datafiles = models.JSONField(default=dict)
+
 
 class Source(models.Model):
-    track = models.ManyToManyField(Track, related_name="sources")
     name = models.CharField(max_length=100)
     url = models.URLField()
+    details = models.CharField(max_length=100)
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["name", "url"], name="unique_source")]
+        constraints = [models.UniqueConstraint(fields=["name", "url", "details"], name="unique_source")]
+
+class DatasetRelease(models.Model):
+    dataset_id = HyphenatedUUIDField()
+    genome_id = HyphenatedUUIDField()
+    release_label = models.CharField(max_length=50)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["dataset_id", "genome_id", "release_label"],
+                name="unique_dataset_genome_release"
+            )
+        ]

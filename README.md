@@ -16,29 +16,29 @@ See the [OpenAPI specification](https://editor.swagger.io/?url=https://raw.githu
 
     - `$ git clone https://gitlab.ebi.ac.uk/ensembl-web/ensembl-track-api.git`
     - `$ cd ensembl-track-api`
+    - `$ pip install -e ".[dev]"` # installs dependencies from pyproject.toml
 
 2. Build the database:
 
-    - `$ docker-compose run web python manage.py makemigrations`
-    - `$ docker-compose run web python manage.py migrate`
+    - `$ docker compose run web python manage.py makemigrations`
+    - `$ docker compose run web python manage.py migrate`
     - `$ ./utils/submit_track_templates.py -t transcripts -g [genome_id]`
 
     See below for more information.
 
 3. Start the service:
 
-    - `$ docker-compose up` #add '-d' to run in background
+    - `$ docker compose up` #add '-d' to run in background
 
 4. Usage:
 
     - `http://localhost:8000/track_categories/:genome_id`
 
 5. Stop the service:
-    - `$ docker-compose down` #or Crtl+C if running in foreground
+    - `$ docker compose down` #or Ctrl+C if running in foreground
 
 ### Data updates
 
 The `track/:track_id` REST endpoint supports `DELETE`/`POST` requests for adding/removing track entries. 
 For bulk/automated updates, use `./utils/submit_tracks.py` script. See the accompanied readme for more details.
-
 
