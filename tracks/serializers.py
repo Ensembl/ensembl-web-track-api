@@ -28,18 +28,19 @@ class CreateTrackSerializer(serializers.Serializer):
     Serializer for creating new tracks.
     Validates UUIDs, datafiles, and track_types compatibility.
     """
+
     dataset_id = serializers.UUIDField()
     genome_id = serializers.UUIDField()
     datafiles = serializers.ListField(
         child=serializers.CharField(),
         min_length=1,
         max_length=2,
-        help_text="List of 1-2 file paths"
+        help_text="List of 1-2 file paths",
     )
     track_types = serializers.ListField(
         child=serializers.CharField(),
         min_length=1,
-        help_text="List of Type names to associate with this track"
+        help_text="List of Type names to associate with this track",
     )
     sources = CreateSourceSerializer(many=True, required=False, default=list)
 
@@ -53,14 +54,14 @@ class CreateTrackSerializer(serializers.Serializer):
         # Check all types exist
         types = Specifications.objects.filter(name__in=value)
         if types.count() != len(value):
-            found = set(types.values_list('name', flat=True))
+            found = set(types.values_list("name", flat=True))
             missing = set(value) - found
             raise serializers.ValidationError(
                 f"Type(s) not found: {', '.join(missing)}"
             )
 
         # Check all have same files list
-        files_lists = list(types.values_list('files', flat=True))
+        files_lists = list(types.values_list("files", flat=True))
         first_files = files_lists[0]
 
         if not all(files == first_files for files in files_lists):
@@ -70,14 +71,14 @@ class CreateTrackSerializer(serializers.Serializer):
             )
 
         # Check all are for different browsers
-        browsers = list(types.values_list('browser', flat=True))
+        browsers = list(types.values_list("browser", flat=True))
         if len(browsers) != len(set(browsers)):
             raise serializers.ValidationError(
                 "Cannot link multiple specifications for the same browser to one track. "
                 "Each track can only have one specification per browser type."
             )
 
-        self.context['validated_types'] = types
+        self.context["validated_types"] = types
         return value
 
     def validate_datafiles(self, value):
@@ -93,13 +94,13 @@ class CreateTrackSerializer(serializers.Serializer):
         Create Track and link to Types.
         Build datafiles dict from list, filling empty strings for missing files.
         """
-        dataset_id = validated_data['dataset_id']
-        genome_id = validated_data['genome_id']
-        datafiles_list = validated_data['datafiles']
-        sources_data = validated_data.get('sources', [])
+        dataset_id = validated_data["dataset_id"]
+        genome_id = validated_data["genome_id"]
+        datafiles_list = validated_data["datafiles"]
+        sources_data = validated_data.get("sources", [])
 
         # Get the files keys from the first type
-        types = self.context['validated_types']
+        types = self.context["validated_types"]
         first_type = types.first()
         files_keys = first_type.files
 
@@ -114,9 +115,7 @@ class CreateTrackSerializer(serializers.Serializer):
                 datafiles[key] = ""
 
         track = Track.objects.create(
-            dataset_id=dataset_id,
-            genome_id=genome_id,
-            datafiles=datafiles
+            dataset_id=dataset_id, genome_id=genome_id, datafiles=datafiles
         )
         for type_obj in types:
             track.specifications.add(type_obj)
@@ -133,6 +132,7 @@ class LinkTypeToTrackSerializer(serializers.Serializer):
     Serializer for linking an additional Type to an existing Track.
     Validates that the Type's files match the Track's existing Types.
     """
+
     track_id = serializers.UUIDField()
     type_name = serializers.CharField()
 
@@ -146,13 +146,15 @@ class LinkTypeToTrackSerializer(serializers.Serializer):
         """
         # Check track exists
         try:
-            track = Track.objects.prefetch_related('specifications').get(track_id=data['track_id'])
+            track = Track.objects.prefetch_related("specifications").get(
+                track_id=data["track_id"]
+            )
         except Track.DoesNotExist:
             raise serializers.ValidationError({"track_id": "Track not found"})
 
         # Check type exists
         try:
-            new_type = Specifications.objects.get(name=data['type_name'])
+            new_type = Specifications.objects.get(name=data["type_name"])
         except Specifications.DoesNotExist:
             raise serializers.ValidationError({"type_name": "Type not found"})
 
@@ -168,20 +170,23 @@ class LinkTypeToTrackSerializer(serializers.Serializer):
             existing_files = existing_types.first().files
             if new_type.files != existing_files:
                 raise serializers.ValidationError(
-                    {"type_name": f"Type files {new_type.files} do not match "
-                                  f"track's existing types files {existing_files}"}
+                    {
+                        "type_name": f"Type files {new_type.files} do not match "
+                        f"track's existing types files {existing_files}"
+                    }
                 )
 
-        data['track'] = track
-        data['type'] = new_type
+        data["track"] = track
+        data["type"] = new_type
         return data
 
     def create(self, validated_data):
         """Link the type to the track."""
-        track = validated_data['track']
-        new_type = validated_data['type']
+        track = validated_data["track"]
+        new_type = validated_data["type"]
         track.specifications.add(new_type)
         return track
+
 
 class SourceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -194,14 +199,13 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ["label", "track_category_id", "type"]
-        extra_kwargs = {
-            "track_category_id": {"validators": []}
-        }
+        extra_kwargs = {"track_category_id": {"validators": []}}
 
 
 # Changed from ModelSerializer to Serializer
 class BaseTrackSerializer(serializers.Serializer):
     """Output format for track data (combines Track + Specification)."""
+
     track_id = serializers.UUIDField()
     label = serializers.CharField()
     trigger = serializers.ListField()
@@ -213,11 +217,13 @@ class BaseTrackSerializer(serializers.Serializer):
 
 class CategoryTrackSerializer(BaseTrackSerializer):
     """For /track_categories endpoint - adds description fields."""
+
     additional_info = serializers.CharField()
     description = serializers.CharField()
 
 
 class ReadTrackSerializer(BaseTrackSerializer):
     """For /track/{id} endpoint - adds datafiles and settings."""
+
     datafiles = serializers.DictField()
     settings = serializers.DictField()

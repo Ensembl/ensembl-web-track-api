@@ -17,8 +17,11 @@ from collections import defaultdict
 from typing import Dict, List, Set
 from tracks.models import Track, Category, DatasetRelease, Specifications
 from tracks.serializers import (
-    ReadTrackSerializer, CategorySerializer, CategoryTrackSerializer,
-    LinkTypeToTrackSerializer, CreateTrackSerializer
+    ReadTrackSerializer,
+    CategorySerializer,
+    CategoryTrackSerializer,
+    LinkTypeToTrackSerializer,
+    CreateTrackSerializer,
 )
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -29,6 +32,7 @@ from ensembl_track_api import settings
 
 
 # ── Helper Functions ──────────────────────────────────────────────────────────
+
 
 def get_target_release(genome_id: str, release_param: str = None) -> str:
     """
@@ -48,9 +52,11 @@ def get_target_release(genome_id: str, release_param: str = None) -> str:
         return release_param
 
     # Get most recent release for this genome
-    latest = DatasetRelease.objects.filter(
-        genome_id=genome_id
-    ).order_by('-release_label').first()
+    latest = (
+        DatasetRelease.objects.filter(genome_id=genome_id)
+        .order_by("-release_label")
+        .first()
+    )
 
     if not latest:
         raise ValueError(f"No releases found for genome {genome_id}")
@@ -69,17 +75,19 @@ def get_datasets_up_to_release(genome_id: str, target_release: str) -> List[Dict
     Returns:
         List of dicts with dataset_id and release_label
     """
-    datasets = DatasetRelease.objects.filter(
-        genome_id=genome_id,
-        release_label__lte=target_release
-    ).values('dataset_id', 'release_label').order_by('-release_label')
+    datasets = (
+        DatasetRelease.objects.filter(
+            genome_id=genome_id, release_label__lte=target_release
+        )
+        .values("dataset_id", "release_label")
+        .order_by("-release_label")
+    )
 
     return list(datasets)
 
 
 def get_specifications_for_datasets(
-        dataset_ids: List[str],
-        browser: str
+    dataset_ids: List[str], browser: str
 ) -> Dict[str, Set[str]]:
     """
     Build a mapping of dataset_id -> set of specification names for that browser.
@@ -91,13 +99,11 @@ def get_specifications_for_datasets(
     Returns:
         Dict mapping dataset_id to set of specification names
     """
-    tracks = Track.objects.filter(
-        dataset_id__in=dataset_ids
-    ).prefetch_related(
+    tracks = Track.objects.filter(dataset_id__in=dataset_ids).prefetch_related(
         Prefetch(
-            'specifications',
+            "specifications",
             queryset=Specifications.objects.filter(browser=browser),
-            to_attr='browser_specifications'
+            to_attr="browser_specifications",
         )
     )
 
@@ -112,8 +118,7 @@ def get_specifications_for_datasets(
 
 
 def bin_datasets_by_overlapping_specs(
-        datasets: List[Dict],
-        dataset_specs: Dict[str, Set[str]]
+    datasets: List[Dict], dataset_specs: Dict[str, Set[str]]
 ) -> List[List[Dict]]:
     """
     Bin datasets that share any specifications.
@@ -129,13 +134,13 @@ def bin_datasets_by_overlapping_specs(
     # Build spec -> datasets mapping
     spec_to_datasets = defaultdict(set)
     for dataset in datasets:
-        dataset_id = str(dataset['dataset_id'])
+        dataset_id = str(dataset["dataset_id"])
         specs = dataset_specs.get(dataset_id, set())
         for spec in specs:
             spec_to_datasets[spec].add(dataset_id)
 
     # Union-Find: parent[dataset_id] = parent_dataset_id
-    parent = {str(d['dataset_id']): str(d['dataset_id']) for d in datasets}
+    parent = {str(d["dataset_id"]): str(d["dataset_id"]) for d in datasets}
 
     def find(x):
         if parent[x] != x:
@@ -157,7 +162,7 @@ def bin_datasets_by_overlapping_specs(
     # Group datasets by their root parent
     bins = defaultdict(list)
     for dataset in datasets:
-        dataset_id = str(dataset['dataset_id'])
+        dataset_id = str(dataset["dataset_id"])
         root = find(dataset_id)
         bins[root].append(dataset)
 
@@ -176,16 +181,14 @@ def select_latest_dataset_from_bins(bins: List[List[Dict]]) -> List[str]:
     """
     selected = []
     for bin_datasets in bins:
-        latest = max(bin_datasets, key=lambda d: d['release_label'])
-        selected.append(str(latest['dataset_id']))
+        latest = max(bin_datasets, key=lambda d: d["release_label"])
+        selected.append(str(latest["dataset_id"]))
 
     return selected
 
 
 def combine_track_and_specification(
-        track: Track,
-        spec: Specifications,
-        include_datafiles: bool = False
+    track: Track, spec: Specifications, include_datafiles: bool = False
 ) -> Dict:
     """
     Combine Track and Specification data into old API format.
@@ -207,27 +210,27 @@ def combine_track_and_specification(
         trigger.append(str(track.track_id))
     ################# HACK END ##################
 
-
     data = {
-        'track_id': str(track.track_id),
-        'label': spec.label,
-        'trigger': trigger,
-        'type': spec.type,
-        'display_order': spec.display_order,
-        'on_by_default': spec.on_by_default,
-        'additional_info': spec.additional_info,
-        'description': spec.description,
-        'sources': [{'name': s.name, 'url': s.url} for s in track.sources.all()]
+        "track_id": str(track.track_id),
+        "label": spec.label,
+        "trigger": trigger,
+        "type": spec.type,
+        "display_order": spec.display_order,
+        "on_by_default": spec.on_by_default,
+        "additional_info": spec.additional_info,
+        "description": spec.description,
+        "sources": [{"name": s.name, "url": s.url} for s in track.sources.all()],
     }
 
     if include_datafiles:
-        data['datafiles'] = track.datafiles
-        data['settings'] = spec.settings
+        data["datafiles"] = track.datafiles
+        data["settings"] = spec.settings
 
     return data
 
 
 # ── Views ─────────────────────────────────────────────────────────────────────
+
 
 class GenomeTrackList(APIView):
     """
@@ -237,17 +240,18 @@ class GenomeTrackList(APIView):
         - browser: "GenomeBrowser" or "StructuralVariant" (default: GenomeBrowser)
         - release: Release label YYYY-MM-DD (default: most recent)
     """
-    http_method_names = ['get', 'delete']
+
+    http_method_names = ["get", "delete"]
 
     def get(self, request, genome_id):
-        browser = request.query_params.get('browser', 'GenomeBrowser')
-        release_param = request.query_params.get('release')
+        browser = request.query_params.get("browser", "GenomeBrowser")
+        release_param = request.query_params.get("release")
 
         # Validate browser
-        if browser not in ['GenomeBrowser', 'StructuralVariant']:
+        if browser not in ["GenomeBrowser", "StructuralVariant"]:
             return Response(
                 {"error": "browser must be 'GenomeBrowser' or 'StructuralVariant'"},
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         try:
@@ -260,11 +264,11 @@ class GenomeTrackList(APIView):
             if not datasets:
                 return Response(
                     {"error": "No datasets found for this genome and release."},
-                    status=status.HTTP_404_NOT_FOUND
+                    status=status.HTTP_404_NOT_FOUND,
                 )
 
             # Step 3: Get specifications for each dataset
-            dataset_ids = [d['dataset_id'] for d in datasets]
+            dataset_ids = [d["dataset_id"] for d in datasets]
             dataset_specs = get_specifications_for_datasets(dataset_ids, browser)
 
             # Step 4: Bin datasets by overlapping specifications
@@ -275,22 +279,23 @@ class GenomeTrackList(APIView):
 
             # Step 6: Get all tracks from selected datasets
             tracks = Track.objects.filter(
-                genome_id=genome_id,
-                dataset_id__in=selected_dataset_ids
+                genome_id=genome_id, dataset_id__in=selected_dataset_ids
             ).prefetch_related(
                 Prefetch(
-                    'specifications',
-                    queryset=Specifications.objects.filter(browser=browser).select_related('category'),
-                    to_attr='browser_specifications'
+                    "specifications",
+                    queryset=Specifications.objects.filter(
+                        browser=browser
+                    ).select_related("category"),
+                    to_attr="browser_specifications",
                 ),
-                'sources'
+                "sources",
             )
 
             tracks = list(tracks)
             if not tracks:
                 return Response(
                     {"error": "No tracks found for this genome."},
-                    status=status.HTTP_404_NOT_FOUND
+                    status=status.HTTP_404_NOT_FOUND,
                 )
 
             # Step 7: For each track, get specification and group by category
@@ -298,7 +303,11 @@ class GenomeTrackList(APIView):
 
             for track in tracks:
                 # Get the first specification matching the browser
-                spec = track.browser_specifications[0] if track.browser_specifications else None
+                spec = (
+                    track.browser_specifications[0]
+                    if track.browser_specifications
+                    else None
+                )
 
                 if not spec:
                     continue
@@ -317,31 +326,28 @@ class GenomeTrackList(APIView):
             if not categories:
                 return Response(
                     {"error": "No tracks found for this genome."},
-                    status=status.HTTP_404_NOT_FOUND
+                    status=status.HTTP_404_NOT_FOUND,
                 )
 
             # Sort track_list by display_order within each category
             for cat_data in categories.values():
-                cat_data["track_list"].sort(key=lambda x: x['display_order'])
+                cat_data["track_list"].sort(key=lambda x: x["display_order"])
 
             # Step 8: Return
             return Response(
                 {"track_categories": list(categories.values())},
-                status=status.HTTP_200_OK
+                status=status.HTTP_200_OK,
             )
 
         except ValueError as e:
-            return Response(
-                {"error": str(e)},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request, genome_id):
         tracks = Track.objects.filter(genome_id=genome_id)
         if not tracks.exists():
             return Response(
                 {"error": "No tracks found for this genome."},
-                status=status.HTTP_404_NOT_FOUND
+                status=status.HTTP_404_NOT_FOUND,
             )
         tracks.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -354,26 +360,27 @@ class TrackObject(APIView):
     GET params:
         - browser: "GenomeBrowser" or "StructuralVariant" (default: GenomeBrowser)
     """
-    http_method_names = ['get', 'delete']
+
+    http_method_names = ["get", "delete"]
 
     def get(self, request, track_id):
-        browser = request.query_params.get('browser', 'GenomeBrowser')
+        browser = request.query_params.get("browser", "GenomeBrowser")
 
         # Validate browser
-        if browser not in ['GenomeBrowser', 'StructuralVariant']:
+        if browser not in ["GenomeBrowser", "StructuralVariant"]:
             return Response(
                 {"error": "browser must be 'GenomeBrowser' or 'StructuralVariant'"},
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         try:
-            track = Track.objects.prefetch_related('specifications', 'sources').get(
+            track = Track.objects.prefetch_related("specifications", "sources").get(
                 track_id=track_id
             )
         except Track.DoesNotExist:
             return Response(
                 {"error": "No track found with this track id."},
-                status=status.HTTP_404_NOT_FOUND
+                status=status.HTTP_404_NOT_FOUND,
             )
 
         # Filter by browser and spec name
@@ -382,15 +389,17 @@ class TrackObject(APIView):
         if not spec:
             return Response(
                 {"error": f"Track has no configuration for browser '{browser}'."},
-                status=status.HTTP_404_NOT_FOUND
+                status=status.HTTP_404_NOT_FOUND,
             )
 
         # Combine track + spec data
-        track_data = combine_track_and_specification(track, spec, include_datafiles=True)
+        track_data = combine_track_and_specification(
+            track, spec, include_datafiles=True
+        )
 
         # Remove description and additional_info from single track view
-        track_data.pop('description', None)
-        track_data.pop('additional_info', None)
+        track_data.pop("description", None)
+        track_data.pop("additional_info", None)
 
         return Response(track_data)
 
@@ -400,13 +409,14 @@ class TrackObject(APIView):
         except Track.DoesNotExist:
             return Response(
                 {"error": "No track found with this track id."},
-                status=status.HTTP_404_NOT_FOUND
+                status=status.HTTP_404_NOT_FOUND,
             )
         track.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # ── Ingress Views ─────────────────────────────────────────────────────────────
+
 
 class CreateTrack(APIView):
     """
@@ -423,7 +433,8 @@ class CreateTrack(APIView):
         ]
     }
     """
-    http_method_names = ['post']
+
+    http_method_names = ["post"]
 
     def post(self, request):
         serializer = CreateTrackSerializer(data=request.data)
@@ -431,17 +442,16 @@ class CreateTrack(APIView):
             try:
                 track = serializer.save()
                 return Response(
-                    {"track_id": str(track.track_id)},
-                    status=status.HTTP_201_CREATED
+                    {"track_id": str(track.track_id)}, status=status.HTTP_201_CREATED
                 )
             except IntegrityError as e:
                 return Response(
                     {"error": f"Track creation failed: {e}"},
-                    status=status.HTTP_400_BAD_REQUEST
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
         return Response(
             {"error": "Validation failed", "details": serializer.errors},
-            status=status.HTTP_400_BAD_REQUEST
+            status=status.HTTP_400_BAD_REQUEST,
         )
 
 
@@ -456,7 +466,8 @@ class LinkTypeToTrack(APIView):
         "type_name": "type_name"
     }
     """
-    http_method_names = ['post']
+
+    http_method_names = ["post"]
 
     def post(self, request):
         serializer = LinkTypeToTrackSerializer(data=request.data)
@@ -466,16 +477,16 @@ class LinkTypeToTrack(APIView):
                 return Response(
                     {
                         "track_id": str(track.track_id),
-                        "message": "Type linked successfully"
+                        "message": "Type linked successfully",
                     },
-                    status=status.HTTP_200_OK
+                    status=status.HTTP_200_OK,
                 )
             except Exception as e:
                 return Response(
                     {"error": f"Failed to link type: {e}"},
-                    status=status.HTTP_400_BAD_REQUEST
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
         return Response(
             {"error": "Validation failed", "details": serializer.errors},
-            status=status.HTTP_400_BAD_REQUEST
+            status=status.HTTP_400_BAD_REQUEST,
         )

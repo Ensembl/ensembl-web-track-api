@@ -13,11 +13,15 @@ def rewrite_uuid_storage(apps, schema_editor):
 
     track_batch = list(Track.objects.all().iterator(chunk_size=1000))
     if track_batch:
-        Track.objects.bulk_update(track_batch, ["track_id", "dataset_id", "genome_id"], batch_size=1000)
+        Track.objects.bulk_update(
+            track_batch, ["track_id", "dataset_id", "genome_id"], batch_size=1000
+        )
 
     release_batch = list(DatasetRelease.objects.all().iterator(chunk_size=1000))
     if release_batch:
-        DatasetRelease.objects.bulk_update(release_batch, ["dataset_id", "genome_id"], batch_size=1000)
+        DatasetRelease.objects.bulk_update(
+            release_batch, ["dataset_id", "genome_id"], batch_size=1000
+        )
 
 
 class Migration(migrations.Migration):
@@ -50,7 +54,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="track",
             name="track_id",
-            field=tracks.fields.HyphenatedUUIDField(default=uuid.uuid4, editable=False, unique=True),
+            field=tracks.fields.HyphenatedUUIDField(
+                default=uuid.uuid4, editable=False, unique=True
+            ),
         ),
         migrations.RunPython(rewrite_uuid_storage, migrations.RunPython.noop),
     ]

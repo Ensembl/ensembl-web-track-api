@@ -26,14 +26,20 @@ Django datamodels representing tracks in Track API database.
 class Category(models.Model):
     label = models.CharField(max_length=50)
     track_category_id = models.CharField(unique=True, max_length=50)
-    CategoryType = models.TextChoices("CategoryType", ["Genomic", "Variation", "Regulation"])
-    type = models.CharField(choices=CategoryType.choices, default="Genomic", max_length=20)
+    CategoryType = models.TextChoices(
+        "CategoryType", ["Genomic", "Variation", "Regulation"]
+    )
+    type = models.CharField(
+        choices=CategoryType.choices, default="Genomic", max_length=20
+    )
 
 
 class Specifications(models.Model):
     name = models.CharField(max_length=50, unique=True)
     label = models.CharField(max_length=50)
-    category = models.ForeignKey(Category, related_name="tracks", on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        Category, related_name="tracks", on_delete=models.CASCADE
+    )
     trigger = models.JSONField(default=list)
     TrackType = models.TextChoices("TrackType", ["gene", "variant", "regular"])
     type = models.CharField(choices=TrackType.choices, max_length=8)
@@ -44,8 +50,12 @@ class Specifications(models.Model):
     settings = models.JSONField(blank=True, default=dict)
     files = models.JSONField(default=list)
     StrandType = models.TextChoices("StrandType", ["forward", "reverse"])
-    strand = models.CharField(choices=StrandType.choices, max_length=20, blank=True, null=True)
-    BrowserType = models.TextChoices("BrowserType", ["GenomeBrowser", "StructuralVariant"])
+    strand = models.CharField(
+        choices=StrandType.choices, max_length=20, blank=True, null=True
+    )
+    BrowserType = models.TextChoices(
+        "BrowserType", ["GenomeBrowser", "StructuralVariant"]
+    )
     browser = models.CharField(choices=BrowserType.choices, max_length=20)
 
 
@@ -70,7 +80,12 @@ class Source(models.Model):
     details = models.CharField(max_length=100)
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["name", "url", "details"], name="unique_source")]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "url", "details"], name="unique_source"
+            )
+        ]
+
 
 class DatasetRelease(models.Model):
     dataset_id = HyphenatedUUIDField()
@@ -81,7 +96,7 @@ class DatasetRelease(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["dataset_id", "genome_id", "release_label"],
-                name="unique_dataset_genome_release"
+                name="unique_dataset_genome_release",
             )
         ]
         indexes = [
