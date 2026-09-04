@@ -57,6 +57,12 @@ class Track(models.Model):
     genome_id = HyphenatedUUIDField()
     datafiles = models.JSONField(default=dict)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["dataset_id"]),
+            models.Index(fields=["genome_id", "dataset_id"]),
+        ]
+
 
 class Source(models.Model):
     name = models.CharField(max_length=100)
@@ -77,4 +83,7 @@ class DatasetRelease(models.Model):
                 fields=["dataset_id", "genome_id", "release_label"],
                 name="unique_dataset_genome_release"
             )
+        ]
+        indexes = [
+            models.Index(fields=["genome_id", "-release_label"]),
         ]
