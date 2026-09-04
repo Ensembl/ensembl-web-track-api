@@ -16,6 +16,7 @@
 from django.core.management.base import BaseCommand
 from src.ensembl.production.tracks.load_release_info import populate_dataset_releases
 
+
 class Command(BaseCommand):
     help = "Repopulates DatasetRelease table from metadata DB"
 
@@ -23,5 +24,5 @@ class Command(BaseCommand):
         parser.add_argument("--metadata_uri", type=str, required=True)
 
     def handle(self, *args, **options):
-        count = populate_dataset_releases( options["metadata_uri"] )
+        count = populate_dataset_releases(options["metadata_uri"])
         self.stdout.write(self.style.SUCCESS(f"Inserted {count} rows"))
