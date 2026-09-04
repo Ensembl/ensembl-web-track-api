@@ -24,6 +24,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.db import IntegrityError
+from django.db.models import Prefetch
 from ensembl_track_api import settings
 
 
@@ -92,12 +93,18 @@ def get_specifications_for_datasets(
     """
     tracks = Track.objects.filter(
         dataset_id__in=dataset_ids
-    ).prefetch_related('specifications')
+    ).prefetch_related(
+        Prefetch(
+            'specifications',
+            queryset=Specifications.objects.filter(browser=browser),
+            to_attr='browser_specifications'
+        )
+    )
 
     dataset_specs = defaultdict(set)
 
     for track in tracks:
-        specs = track.specifications.filter(browser=browser)
+        specs = track.browser_specifications
         for spec in specs:
             dataset_specs[str(track.dataset_id)].add(spec.name)
 
@@ -270,9 +277,17 @@ class GenomeTrackList(APIView):
             tracks = Track.objects.filter(
                 genome_id=genome_id,
                 dataset_id__in=selected_dataset_ids
-            ).prefetch_related('specifications', 'specifications__category', 'sources')
+            ).prefetch_related(
+                Prefetch(
+                    'specifications',
+                    queryset=Specifications.objects.filter(browser=browser).select_related('category'),
+                    to_attr='browser_specifications'
+                ),
+                'sources'
+            )
 
-            if not tracks.exists():
+            tracks = list(tracks)
+            if not tracks:
                 return Response(
                     {"error": "No tracks found for this genome."},
                     status=status.HTTP_404_NOT_FOUND
@@ -283,7 +298,7 @@ class GenomeTrackList(APIView):
 
             for track in tracks:
                 # Get the first specification matching the browser
-                spec = track.specifications.filter(browser=browser).first()
+                spec = track.browser_specifications[0] if track.browser_specifications else None
 
                 if not spec:
                     continue
