@@ -1,6 +1,7 @@
 """
 URL Configuration for Ensembl Track API endpoint
 """
+
 from django.urls import path, include
 
 urlpatterns = [

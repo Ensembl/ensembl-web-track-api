@@ -98,8 +98,8 @@ PROMETHEUS_LATENCY_BUCKETS = (
 # Django REST Framework settings
 
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
     ]
 }
 
@@ -119,7 +119,7 @@ DATABASES = {
 }
 
 # Datamodels
-DEFAULT_AUTO_FIELD='django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

@@ -9,72 +9,179 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('label', models.CharField(max_length=50)),
-                ('track_category_id', models.CharField(max_length=50, unique=True)),
-                ('type', models.CharField(choices=[('Genomic', 'Genomic'), ('Variation', 'Variation'), ('Regulation', 'Regulation')], default='Genomic', max_length=20)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("label", models.CharField(max_length=50)),
+                ("track_category_id", models.CharField(max_length=50, unique=True)),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[
+                            ("Genomic", "Genomic"),
+                            ("Variation", "Variation"),
+                            ("Regulation", "Regulation"),
+                        ],
+                        default="Genomic",
+                        max_length=20,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='DatasetRelease',
+            name="DatasetRelease",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('dataset_id', models.UUIDField()),
-                ('genome_id', models.UUIDField()),
-                ('release_label', models.CharField(max_length=50)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("dataset_id", models.UUIDField()),
+                ("genome_id", models.UUIDField()),
+                ("release_label", models.CharField(max_length=50)),
             ],
             options={
-                'constraints': [models.UniqueConstraint(fields=('dataset_id', 'genome_id', 'release_label'), name='unique_dataset_genome_release')],
+                "constraints": [
+                    models.UniqueConstraint(
+                        fields=("dataset_id", "genome_id", "release_label"),
+                        name="unique_dataset_genome_release",
+                    )
+                ],
             },
         ),
         migrations.CreateModel(
-            name='Source',
+            name="Source",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('url', models.URLField()),
-                ('details', models.CharField(max_length=100)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("url", models.URLField()),
+                ("details", models.CharField(max_length=100)),
             ],
             options={
-                'constraints': [models.UniqueConstraint(fields=('name', 'url', 'details'), name='unique_source')],
+                "constraints": [
+                    models.UniqueConstraint(
+                        fields=("name", "url", "details"), name="unique_source"
+                    )
+                ],
             },
         ),
         migrations.CreateModel(
-            name='Specifications',
+            name="Specifications",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50, unique=True)),
-                ('label', models.CharField(max_length=50)),
-                ('trigger', models.JSONField(default=list)),
-                ('type', models.CharField(choices=[('gene', 'Gene'), ('variant', 'Variant'), ('regular', 'Regular')], max_length=8)),
-                ('on_by_default', models.BooleanField(default=False)),
-                ('display_order', models.IntegerField(default=2000)),
-                ('additional_info', models.CharField(blank=True, default='', max_length=50)),
-                ('description', models.TextField(blank=True, default='')),
-                ('settings', models.JSONField(blank=True, default=dict)),
-                ('files', models.JSONField(default=list)),
-                ('strand', models.CharField(blank=True, choices=[('forward', 'Forward'), ('reverse', 'Reverse')], max_length=20, null=True)),
-                ('browser', models.CharField(choices=[('GenomeBrowser', 'Genomebrowser'), ('StructuralVariant', 'Structuralvariant')], max_length=20)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tracks', to='tracks.category')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50, unique=True)),
+                ("label", models.CharField(max_length=50)),
+                ("trigger", models.JSONField(default=list)),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[
+                            ("gene", "Gene"),
+                            ("variant", "Variant"),
+                            ("regular", "Regular"),
+                        ],
+                        max_length=8,
+                    ),
+                ),
+                ("on_by_default", models.BooleanField(default=False)),
+                ("display_order", models.IntegerField(default=2000)),
+                (
+                    "additional_info",
+                    models.CharField(blank=True, default="", max_length=50),
+                ),
+                ("description", models.TextField(blank=True, default="")),
+                ("settings", models.JSONField(blank=True, default=dict)),
+                ("files", models.JSONField(default=list)),
+                (
+                    "strand",
+                    models.CharField(
+                        blank=True,
+                        choices=[("forward", "Forward"), ("reverse", "Reverse")],
+                        max_length=20,
+                        null=True,
+                    ),
+                ),
+                (
+                    "browser",
+                    models.CharField(
+                        choices=[
+                            ("GenomeBrowser", "Genomebrowser"),
+                            ("StructuralVariant", "Structuralvariant"),
+                        ],
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="tracks",
+                        to="tracks.category",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Track',
+            name="Track",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('track_id', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
-                ('dataset_id', models.UUIDField()),
-                ('genome_id', models.UUIDField()),
-                ('datafiles', models.JSONField(default=dict)),
-                ('sources', models.ManyToManyField(related_name='tracks', to='tracks.source')),
-                ('specifications', models.ManyToManyField(related_name='tracks', to='tracks.specifications')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "track_id",
+                    models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
+                ),
+                ("dataset_id", models.UUIDField()),
+                ("genome_id", models.UUIDField()),
+                ("datafiles", models.JSONField(default=dict)),
+                (
+                    "sources",
+                    models.ManyToManyField(related_name="tracks", to="tracks.source"),
+                ),
+                (
+                    "specifications",
+                    models.ManyToManyField(
+                        related_name="tracks", to="tracks.specifications"
+                    ),
+                ),
             ],
         ),
     ]
