@@ -14,6 +14,7 @@
 #  limitations under the License.
 
 from collections import defaultdict
+import logging
 from typing import Dict, List, Set
 from tracks.models import Track, Category, DatasetRelease, Specifications
 from tracks.serializers import (
@@ -30,6 +31,7 @@ from django.db import IntegrityError
 from django.db.models import Prefetch
 from ensembl_track_api import settings
 
+logger = logging.getLogger(__name__)
 
 # ── Helper Functions ──────────────────────────────────────────────────────────
 
@@ -340,7 +342,11 @@ class GenomeTrackList(APIView):
             )
 
         except ValueError as e:
-            return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
+            logger.warning("Invalid request while retrieving tracks for genome_id=%s: %s", genome_id, e)
+            return Response(
+                {"error": "Requested resource could not be processed."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
     def delete(self, request, genome_id):
         tracks = Track.objects.filter(genome_id=genome_id)
