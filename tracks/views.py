@@ -30,6 +30,7 @@ from rest_framework import status
 from django.db import IntegrityError
 from django.db.models import Prefetch
 from ensembl_track_api import settings
+from utils.redis_cache import redis_cache
 
 logger = logging.getLogger(__name__)
 
@@ -245,17 +246,18 @@ class GenomeTrackList(APIView):
 
     http_method_names = ["get", "delete"]
 
+    # Defaults must match the query parameter handling below.
+    @redis_cache("track_category", params=(("browser", "GenomeBrowser"), ("release", "")))
     def get(self, request, genome_id):
         browser = request.query_params.get("browser", "GenomeBrowser")
         release_param = request.query_params.get("release")
-
         # Validate browser
         if browser not in ["GenomeBrowser", "StructuralVariant"]:
             return Response(
                 {"error": "browser must be 'GenomeBrowser' or 'StructuralVariant'"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
+        print(f"Validated browser: {browser}")
         try:
             # Step 1: Determine target release
             target_release = get_target_release(genome_id, release_param)
@@ -369,6 +371,7 @@ class TrackObject(APIView):
 
     http_method_names = ["get", "delete"]
 
+    @redis_cache("track", params=(("browser", "GenomeBrowser"),))
     def get(self, request, track_id):
         browser = request.query_params.get("browser", "GenomeBrowser")
 
