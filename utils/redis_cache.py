@@ -57,6 +57,14 @@ def get_database_version():
     return _database_version
 
 
+def _mark_cache_response(response, outcome, write_outcome=None):
+    """Expose cache diagnostics without changing the response payload or status."""
+    response['X-Track-Cache'] = outcome
+    if write_outcome is not None:
+        response['X-Track-Cache-Write'] = write_outcome
+    return response
+
+
 def redis_cache(key_prefix, *, params=(), ttl=None):
     """Cache 200 GET responses using route arguments and declared query defaults.
 
@@ -68,10 +76,10 @@ def redis_cache(key_prefix, *, params=(), ttl=None):
         @wraps(func)
         def wrapper(self, request, *args, **kwargs):
             if not settings.ENABLE_CACHE:
-                return func(self, request, *args, **kwargs)
+                return _mark_cache_response(func(self, request, *args, **kwargs), 'BYPASS')
             version = get_database_version()
             if version is None:
-                return func(self, request, *args, **kwargs)
+                return _mark_cache_response(func(self, request, *args, **kwargs), 'BYPASS')
             # Binding normalizes positional and keyword route arguments.
             bound = handler_signature.bind(self, request, *args, **kwargs)
             bound.apply_defaults()
@@ -86,14 +94,18 @@ def redis_cache(key_prefix, *, params=(), ttl=None):
             ]
             key = ':'.join([key_prefix, version, *route_parts, *query_parts])
             cache_write_allowed = True
+            outcome = 'MISS'
+            write_outcome = None
             try:
                 cached = redis_client.get(key)
                 if cached is not None:
-                    return Response(json.loads(cached))
+                    return _mark_cache_response(Response(json.loads(cached)), 'HIT')
             except RedisError:
+                outcome = 'ERROR'
                 cache_write_allowed = False
                 logger.warning('Redis cache read failed; bypassing cache for this request', exc_info=True)
             except (ValueError, UnicodeError):
+                outcome = 'ERROR'
                 logger.warning('Invalid cached response; querying database', exc_info=True)
 
             response = func(self, request, *args, **kwargs)
@@ -104,7 +116,10 @@ def redis_cache(key_prefix, *, params=(), ttl=None):
                         JSONRenderer().render(response.data),
                     )
                 except (RedisError, TypeError, ValueError):
+                    write_outcome = 'ERROR'
                     logger.warning('Redis cache write failed', exc_info=True)
-            return response
+                else:
+                    write_outcome = 'OK'
+            return _mark_cache_response(response, outcome, write_outcome)
         return wrapper
     return decorator

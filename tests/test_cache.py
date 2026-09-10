@@ -50,11 +50,16 @@ def test_cache_hit_and_key_isolation(setup_cache, settings):
     handler = Mock(return_value=Response({'track_categories': []}))
     wrapped = cache.redis_cache('track_category', params=(('browser', 'GenomeBrowser'), ('release', '')))(handler)
     request = Request(APIRequestFactory().get('/'))
-    wrapped(None, request, 'genome1')
+    response = wrapped(None, request, 'genome1')
+    assert response['X-Track-Cache'] == 'MISS'
+    assert response['X-Track-Cache-Write'] == 'OK'
     assert client.setex.call_args.args[1] == 86400
     first = client.get.call_args.args[0]
     client.get.return_value = '{"track_categories": []}'
-    assert wrapped(None, request, 'genome1').data == {'track_categories': []}
+    response = wrapped(None, request, 'genome1')
+    assert response.data == {'track_categories': []}
+    assert response['X-Track-Cache'] == 'HIT'
+    assert 'X-Track-Cache-Write' not in response
     assert handler.call_count == 1
     wrapped(None, request, 'genome2')
     assert client.get.call_args.args[0] != first
@@ -67,7 +72,9 @@ def test_disabled_bypasses_stat_and_redis(setup_cache, settings, monkeypatch):
     version = Mock(side_effect=AssertionError('must not stat'))
     monkeypatch.setattr(cache, 'get_database_version', version)
     handler = Mock(return_value=Response({}))
-    cache.redis_cache('track_category')(handler)(None, Request(APIRequestFactory().get('/')), 'genome')
+    response = cache.redis_cache('track_category')(handler)(None, Request(APIRequestFactory().get('/')), 'genome')
+    assert response['X-Track-Cache'] == 'BYPASS'
+    assert 'X-Track-Cache-Write' not in response
     client.get.assert_not_called()
     handler.assert_called_once()
 
@@ -82,6 +89,8 @@ def test_redis_read_failure_skips_write(setup_cache, error):
     )
     assert response.status_code == 200
     assert response.data == {'fresh': True}
+    assert response['X-Track-Cache'] == 'ERROR'
+    assert 'X-Track-Cache-Write' not in response
     handler.assert_called_once()
     client.get.assert_called_once()
     client.setex.assert_not_called()
@@ -95,6 +104,8 @@ def test_redis_write_failure_preserves_response(setup_cache):
         None, Request(APIRequestFactory().get('/')), 'genome'
     )
     assert response.data == {'fresh': True}
+    assert response['X-Track-Cache'] == 'MISS'
+    assert response['X-Track-Cache-Write'] == 'ERROR'
     handler.assert_called_once()
     client.setex.assert_called_once()
 
@@ -156,7 +167,10 @@ def test_error_responses_are_not_cached(stateful_cache, isolated_redis, code):
     handler = Mock(return_value=Response({'error': 'failure'}, status=code))
     wrapped = cache.redis_cache('test')(handler)
     for _ in range(2):
-        assert wrapped(None, Request(APIRequestFactory().get('/'))).status_code == code
+        response = wrapped(None, Request(APIRequestFactory().get('/')))
+        assert response.status_code == code
+        assert response['X-Track-Cache'] == 'MISS'
+        assert 'X-Track-Cache-Write' not in response
     assert handler.call_count == 2
     isolated_redis.setex.assert_not_called()
 
@@ -167,7 +181,9 @@ def test_missing_database_at_startup_bypasses_cache(stateful_cache, isolated_red
     monkeypatch.setattr(cache, '_version_initialized', False)
     cache.initialize_database_version()
     handler = Mock(return_value=Response({}))
-    cache.redis_cache('test')(handler)(None, Request(APIRequestFactory().get('/')))
+    response = cache.redis_cache('test')(handler)(None, Request(APIRequestFactory().get('/')))
+    assert response['X-Track-Cache'] == 'BYPASS'
+    assert 'X-Track-Cache-Write' not in response
     handler.assert_called_once()
     isolated_redis.get.assert_not_called()
     isolated_redis.setex.assert_not_called()
@@ -179,6 +195,8 @@ def test_corrupt_entry_is_replaced(stateful_cache, isolated_redis):
     handler = Mock(return_value=Response({'valid': True}))
     response = cache.redis_cache('test')(handler)(None, Request(APIRequestFactory().get('/')))
     assert response.data == {'valid': True}
+    assert response['X-Track-Cache'] == 'ERROR'
+    assert response['X-Track-Cache-Write'] == 'OK'
     handler.assert_called_once()
     isolated_redis.setex.assert_called_once()
 
