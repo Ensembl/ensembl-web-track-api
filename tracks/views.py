@@ -257,7 +257,6 @@ class GenomeTrackList(APIView):
                 {"error": "browser must be 'GenomeBrowser' or 'StructuralVariant'"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        print(f"Validated browser: {browser}")
         try:
             # Step 1: Determine target release
             target_release = get_target_release(genome_id, release_param)
