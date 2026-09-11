@@ -1,4 +1,4 @@
-name: ETM CI for format, lint, type check and tests
+name: Track API CI for format, lint, type check and tests
 
 on: [pull_request]
 
