@@ -57,3 +57,6 @@ Repository = "https://github.com/Ensembl/ensembl-web-track-py"
 DJANGO_SETTINGS_MODULE = "ensembl_track_api.settings"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
 testpaths = ["tests"]
+
+[tool.black]
+target-version = ["py310"]

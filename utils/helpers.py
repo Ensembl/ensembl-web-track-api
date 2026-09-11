@@ -1,6 +1,7 @@
 from django.core.exceptions import ImproperlyConfigured
 import re
 
+
 def parse_cache_ttl(value):
     """Convert seconds or a duration such as 30m, 24h or 1d to Redis seconds."""
     match = re.fullmatch(r"([0-9]+)([smhd]?)", value.strip().lower())

@@ -15,6 +15,7 @@
 """
 URL Configuration for the Tracks Django app in Ensembl Track API endpoint
 """
+
 from django.urls import path
 from . import views
 

@@ -24,8 +24,8 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from tracks.models import Track, Specifications, Category, Source
 
-
 # ── Fixtures ──────────────────────────────────────────────────────────────────
+
 
 @pytest.fixture
 def api_client():
@@ -37,9 +37,7 @@ def api_client():
 def category():
     """Create a test category."""
     return Category.objects.create(
-        label="Test Category",
-        track_category_id="test-category",
-        type="Genomic"
+        label="Test Category", track_category_id="test-category", type="Genomic"
     )
 
 
@@ -53,7 +51,7 @@ def specification_two_files(category):
         trigger=["track", "test"],
         type="regular",
         files=["detail-file", "summary-file"],
-        browser="GenomeBrowser"
+        browser="GenomeBrowser",
     )
 
 
@@ -67,7 +65,7 @@ def specification_one_file(category):
         trigger=["track", "test"],
         type="regular",
         files=["main-file"],
-        browser="GenomeBrowser"
+        browser="GenomeBrowser",
     )
 
 
@@ -81,7 +79,7 @@ def specification_matching_files(category):
         trigger=["track", "test2"],
         type="regular",
         files=["detail-file", "summary-file"],  # Same as specification_two_files
-        browser="StructuralVariant"
+        browser="StructuralVariant",
     )
 
 
@@ -95,7 +93,7 @@ def specification_different_files(category):
         trigger=["track", "test3"],
         type="regular",
         files=["other-file", "another-file"],
-        browser="GenomeBrowser"
+        browser="GenomeBrowser",
     )
 
 
@@ -105,13 +103,14 @@ def sample_track(specification_two_files):
     track = Track.objects.create(
         dataset_id=uuid.uuid4(),
         genome_id=uuid.uuid4(),
-        datafiles={"detail-file": "test.bb", "summary-file": "test.bw"}
+        datafiles={"detail-file": "test.bb", "summary-file": "test.bw"},
     )
     track.specifications.add(specification_two_files)
     return track
 
 
 # ── CreateTrack Tests ─────────────────────────────────────────────────────────
+
 
 @pytest.mark.django_db
 class TestCreateTrack:
@@ -123,10 +122,10 @@ class TestCreateTrack:
             "dataset_id": str(uuid.uuid4()),
             "genome_id": str(uuid.uuid4()),
             "datafiles": ["file1.bb"],
-            "track_types": ["test-spec-two-files"]
+            "track_types": ["test-spec-two-files"],
         }
 
-        response = api_client.post('/tracks/create', data, format='json')
+        response = api_client.post("/tracks/create", data, format="json")
 
         assert response.status_code == status.HTTP_201_CREATED
         assert "track_id" in response.data
@@ -143,37 +142,42 @@ class TestCreateTrack:
             "dataset_id": str(uuid.uuid4()),
             "genome_id": str(uuid.uuid4()),
             "datafiles": ["file1.bb", "file2.bw"],
-            "track_types": ["test-spec-two-files"]
+            "track_types": ["test-spec-two-files"],
         }
 
-        response = api_client.post('/tracks/create', data, format='json')
+        response = api_client.post("/tracks/create", data, format="json")
 
         assert response.status_code == status.HTTP_201_CREATED
 
         track = Track.objects.get(track_id=response.data["track_id"])
-        assert track.datafiles == {"detail-file": "file1.bb", "summary-file": "file2.bw"}
+        assert track.datafiles == {
+            "detail-file": "file1.bb",
+            "summary-file": "file2.bw",
+        }
 
     def test_create_track_with_multiple_types(
-            self, api_client, specification_two_files, specification_matching_files
+        self, api_client, specification_two_files, specification_matching_files
     ):
         """Test creating a track with multiple track types."""
         data = {
             "dataset_id": str(uuid.uuid4()),
             "genome_id": str(uuid.uuid4()),
             "datafiles": ["file1.bb", "file2.bw"],
-            "track_types": ["test-spec-two-files", "test-spec-matching"]
+            "track_types": ["test-spec-two-files", "test-spec-matching"],
         }
 
-        response = api_client.post('/tracks/create', data, format='json')
+        response = api_client.post("/tracks/create", data, format="json")
 
         assert response.status_code == status.HTTP_201_CREATED
 
         track = Track.objects.get(track_id=response.data["track_id"])
         assert track.specifications.count() == 2
-        type_names = set(track.specifications.values_list('name', flat=True))
+        type_names = set(track.specifications.values_list("name", flat=True))
         assert type_names == {"test-spec-two-files", "test-spec-matching"}
 
-    def test_create_track_with_multiple_sources(self, api_client, specification_two_files):
+    def test_create_track_with_multiple_sources(
+        self, api_client, specification_two_files
+    ):
         """Test creating a track with multiple sources."""
         data = {
             "dataset_id": str(uuid.uuid4()),
@@ -184,34 +188,36 @@ class TestCreateTrack:
                 {
                     "name": "GENCODE",
                     "url": "https://gencodegenes.org",
-                    "details": "Comprehensive annotation"
+                    "details": "Comprehensive annotation",
                 },
                 {
                     "name": "Ensembl",
                     "url": "https://www.ensembl.org",
-                    "details": "Gene build"
-                }
-            ]
+                    "details": "Gene build",
+                },
+            ],
         }
 
-        response = api_client.post('/tracks/create', data, format='json')
+        response = api_client.post("/tracks/create", data, format="json")
 
         assert response.status_code == status.HTTP_201_CREATED
 
         track = Track.objects.get(track_id=response.data["track_id"])
         assert track.sources.count() == 2
-        source_keys = set(track.sources.values_list('name', 'url', 'details'))
+        source_keys = set(track.sources.values_list("name", "url", "details"))
         assert source_keys == {
             ("GENCODE", "https://gencodegenes.org", "Comprehensive annotation"),
             ("Ensembl", "https://www.ensembl.org", "Gene build"),
         }
 
-    def test_create_track_reuses_existing_source(self, api_client, specification_two_files):
+    def test_create_track_reuses_existing_source(
+        self, api_client, specification_two_files
+    ):
         """Test creating a track attaches an existing source instead of duplicating it."""
         existing_source = Source.objects.create(
             name="GENCODE",
             url="https://gencodegenes.org",
-            details="Comprehensive annotation"
+            details="Comprehensive annotation",
         )
         data = {
             "dataset_id": str(uuid.uuid4()),
@@ -222,12 +228,12 @@ class TestCreateTrack:
                 {
                     "name": "GENCODE",
                     "url": "https://gencodegenes.org",
-                    "details": "Comprehensive annotation"
+                    "details": "Comprehensive annotation",
                 }
-            ]
+            ],
         }
 
-        response = api_client.post('/tracks/create', data, format='json')
+        response = api_client.post("/tracks/create", data, format="json")
 
         assert response.status_code == status.HTTP_201_CREATED
 
@@ -236,22 +242,19 @@ class TestCreateTrack:
         assert track.sources.first().id == existing_source.id
         assert Source.objects.count() == 1
 
-    def test_create_track_rejects_invalid_source_shape(self, api_client, specification_two_files):
+    def test_create_track_rejects_invalid_source_shape(
+        self, api_client, specification_two_files
+    ):
         """Test that sources must include name, url, and details."""
         data = {
             "dataset_id": str(uuid.uuid4()),
             "genome_id": str(uuid.uuid4()),
             "datafiles": ["file1.bb", "file2.bw"],
             "track_types": ["test-spec-two-files"],
-            "sources": [
-                {
-                    "name": "GENCODE",
-                    "url": "https://gencodegenes.org"
-                }
-            ]
+            "sources": [{"name": "GENCODE", "url": "https://gencodegenes.org"}],
         }
 
-        response = api_client.post('/tracks/create', data, format='json')
+        response = api_client.post("/tracks/create", data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "sources" in response.data["details"]
@@ -262,10 +265,10 @@ class TestCreateTrack:
             "dataset_id": "not-a-uuid",
             "genome_id": str(uuid.uuid4()),
             "datafiles": ["file1.bb"],
-            "track_types": ["test-spec"]
+            "track_types": ["test-spec"],
         }
 
-        response = api_client.post('/tracks/create', data, format='json')
+        response = api_client.post("/tracks/create", data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "dataset_id" in response.data["details"]
@@ -276,10 +279,10 @@ class TestCreateTrack:
             "dataset_id": str(uuid.uuid4()),
             "genome_id": "not-a-uuid",
             "datafiles": ["file1.bb"],
-            "track_types": ["test-spec"]
+            "track_types": ["test-spec"],
         }
 
-        response = api_client.post('/tracks/create', data, format='json')
+        response = api_client.post("/tracks/create", data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "genome_id" in response.data["details"]
@@ -290,10 +293,10 @@ class TestCreateTrack:
             "dataset_id": str(uuid.uuid4()),
             "genome_id": str(uuid.uuid4()),
             "datafiles": [],
-            "track_types": ["test-spec-two-files"]
+            "track_types": ["test-spec-two-files"],
         }
 
-        response = api_client.post('/tracks/create', data, format='json')
+        response = api_client.post("/tracks/create", data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "datafiles" in response.data["details"]
@@ -304,10 +307,10 @@ class TestCreateTrack:
             "dataset_id": str(uuid.uuid4()),
             "genome_id": str(uuid.uuid4()),
             "datafiles": ["file1.bb", "file2.bw", "file3.txt"],
-            "track_types": ["test-spec-two-files"]
+            "track_types": ["test-spec-two-files"],
         }
 
-        response = api_client.post('/tracks/create', data, format='json')
+        response = api_client.post("/tracks/create", data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "datafiles" in response.data["details"]
@@ -318,27 +321,27 @@ class TestCreateTrack:
             "dataset_id": str(uuid.uuid4()),
             "genome_id": str(uuid.uuid4()),
             "datafiles": ["file1.bb"],
-            "track_types": ["nonexistent-type"]
+            "track_types": ["nonexistent-type"],
         }
 
-        response = api_client.post('/tracks/create', data, format='json')
+        response = api_client.post("/tracks/create", data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "track_types" in response.data["details"]
         assert "not found" in str(response.data["details"]["track_types"])
 
     def test_create_track_mismatched_files(
-            self, api_client, specification_two_files, specification_different_files
+        self, api_client, specification_two_files, specification_different_files
     ):
         """Test that track types with different file lists are rejected."""
         data = {
             "dataset_id": str(uuid.uuid4()),
             "genome_id": str(uuid.uuid4()),
             "datafiles": ["file1.bb", "file2.bw"],
-            "track_types": ["test-spec-two-files", "test-spec-different"]
+            "track_types": ["test-spec-two-files", "test-spec-different"],
         }
 
-        response = api_client.post('/tracks/create', data, format='json')
+        response = api_client.post("/tracks/create", data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "track_types" in response.data["details"]
@@ -351,7 +354,7 @@ class TestCreateTrack:
             # Missing genome_id, datafiles, track_types
         }
 
-        response = api_client.post('/tracks/create', data, format='json')
+        response = api_client.post("/tracks/create", data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "genome_id" in response.data["details"]
@@ -361,18 +364,21 @@ class TestCreateTrack:
 
 # ── LinkTypeToTrack Tests ─────────────────────────────────────────────────────
 
+
 @pytest.mark.django_db
 class TestLinkTypeToTrack:
     """Tests for POST /tracks/link_type endpoint."""
 
-    def test_link_type_success(self, api_client, sample_track, specification_matching_files):
+    def test_link_type_success(
+        self, api_client, sample_track, specification_matching_files
+    ):
         """Test successfully linking a new type to an existing track."""
         data = {
             "track_id": str(sample_track.track_id),
-            "type_name": "test-spec-matching"
+            "type_name": "test-spec-matching",
         }
 
-        response = api_client.post('/tracks/link_type', data, format='json')
+        response = api_client.post("/tracks/link_type", data, format="json")
 
         assert response.status_code == status.HTTP_200_OK
         assert response.data["track_id"] == str(sample_track.track_id)
@@ -381,17 +387,14 @@ class TestLinkTypeToTrack:
         # Verify link was created
         sample_track.refresh_from_db()
         assert sample_track.specifications.count() == 2
-        type_names = set(sample_track.specifications.values_list('name', flat=True))
+        type_names = set(sample_track.specifications.values_list("name", flat=True))
         assert "test-spec-matching" in type_names
 
     def test_link_type_track_not_found(self, api_client):
         """Test that linking to nonexistent track fails."""
-        data = {
-            "track_id": str(uuid.uuid4()),
-            "type_name": "test-spec"
-        }
+        data = {"track_id": str(uuid.uuid4()), "type_name": "test-spec"}
 
-        response = api_client.post('/tracks/link_type', data, format='json')
+        response = api_client.post("/tracks/link_type", data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "track_id" in response.data["details"]
@@ -399,38 +402,39 @@ class TestLinkTypeToTrack:
 
     def test_link_type_type_not_found(self, api_client, sample_track):
         """Test that linking nonexistent type fails."""
-        data = {
-            "track_id": str(sample_track.track_id),
-            "type_name": "nonexistent-type"
-        }
+        data = {"track_id": str(sample_track.track_id), "type_name": "nonexistent-type"}
 
-        response = api_client.post('/tracks/link_type', data, format='json')
+        response = api_client.post("/tracks/link_type", data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "type_name" in response.data["details"]
         assert "not found" in str(response.data["details"]["type_name"])
 
-    def test_link_type_already_linked(self, api_client, sample_track, specification_two_files):
+    def test_link_type_already_linked(
+        self, api_client, sample_track, specification_two_files
+    ):
         """Test that linking already-linked type fails."""
         data = {
             "track_id": str(sample_track.track_id),
-            "type_name": "test-spec-two-files"  # Already linked in fixture
+            "type_name": "test-spec-two-files",  # Already linked in fixture
         }
 
-        response = api_client.post('/tracks/link_type', data, format='json')
+        response = api_client.post("/tracks/link_type", data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "type_name" in response.data["details"]
         assert "already linked" in str(response.data["details"]["type_name"])
 
-    def test_link_type_files_mismatch(self, api_client, sample_track, specification_different_files):
+    def test_link_type_files_mismatch(
+        self, api_client, sample_track, specification_different_files
+    ):
         """Test that linking type with different files fails."""
         data = {
             "track_id": str(sample_track.track_id),
-            "type_name": "test-spec-different"
+            "type_name": "test-spec-different",
         }
 
-        response = api_client.post('/tracks/link_type', data, format='json')
+        response = api_client.post("/tracks/link_type", data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "type_name" in response.data["details"]
@@ -438,12 +442,9 @@ class TestLinkTypeToTrack:
 
     def test_link_type_invalid_track_uuid(self, api_client):
         """Test that invalid track UUID is rejected."""
-        data = {
-            "track_id": "not-a-uuid",
-            "type_name": "test-spec"
-        }
+        data = {"track_id": "not-a-uuid", "type_name": "test-spec"}
 
-        response = api_client.post('/tracks/link_type', data, format='json')
+        response = api_client.post("/tracks/link_type", data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "track_id" in response.data["details"]
@@ -455,7 +456,7 @@ class TestLinkTypeToTrack:
             # Missing type_name
         }
 
-        response = api_client.post('/tracks/link_type', data, format='json')
+        response = api_client.post("/tracks/link_type", data, format="json")
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "type_name" in response.data["details"]

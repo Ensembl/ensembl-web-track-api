@@ -20,35 +20,26 @@ Variation Orchestration. This script will be moved entirely to airflow once airf
 
 We want this modular so we can hopefully move it to any orchestration/pipeline manager and swap them if needed.
 """
+
 import argparse
 
-#Step 1: Input Json
+# Step 1: Input Json
 
-#Step 2: Validation
+# Step 2: Validation
 
-#Step 3: Run Datachecks
+# Step 3: Run Datachecks
 
-#Step 4: Metadata dataset factory
+# Step 4: Metadata dataset factory
 
-#Step 5: Copy/rename
-
-
-
-
-
-
-
-
-
+# Step 5: Copy/rename
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Deploy track files to genome directory structure'
+        description="Deploy track files to genome directory structure"
     )
     parser.add_argument(
-        'json_input',
-        help='JSON string or path to JSON file with track info'
+        "json_input", help="JSON string or path to JSON file with track info"
     )
     args = parser.parse_args()
 
@@ -59,7 +50,7 @@ def main():
             create_dirs=not args.no_create_dirs,
             overwrite=args.overwrite,
             skip_existing=args.skip_existing,
-            verify_existing=not args.no_verify
+            verify_existing=not args.no_verify,
         )
 
         print(f"\n✓ Copy completed:")
@@ -68,15 +59,17 @@ def main():
         print(f"  Skipped: {len(results['skipped'])} files")
         print(f"  Failed: {len(results['failed'])} files")
 
-        if results['copied']:
+        if results["copied"]:
             print("\nCopied files:")
-            for f in results['copied']:
+            for f in results["copied"]:
                 print(f"  - {f}")
 
-        if results['failed']:
+        if results["failed"]:
             print("\nFailed files:")
-            for fail in results['failed']:
-                print(f"  - {fail['item'].get('source_file', 'unknown')}: {fail['error']}")
+            for fail in results["failed"]:
+                print(
+                    f"  - {fail['item'].get('source_file', 'unknown')}: {fail['error']}"
+                )
             return 1
 
     except TrackCopyError as e:
@@ -86,7 +79,7 @@ def main():
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
 
     sys.exit(main())

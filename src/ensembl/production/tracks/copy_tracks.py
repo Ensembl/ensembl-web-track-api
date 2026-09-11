@@ -34,14 +34,14 @@ from pathlib import Path
 from uuid import UUID
 
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
 
 class TrackCopyError(Exception):
     """Custom exception for track deployment errors."""
+
     pass
 
 
@@ -55,11 +55,7 @@ def validate_uuid(uuid_string: str, field_name: str) -> str:
 
 
 def get_destination_path(
-        base_path: str,
-        genome_uuid: str,
-        dataset_uuid: str,
-        track_name: str,
-        extension: str
+    base_path: str, genome_uuid: str, dataset_uuid: str, track_name: str, extension: str
 ) -> Path:
     """
     Construct the destination path for a track file.
@@ -79,15 +75,20 @@ def get_destination_path(
     """
     validate_uuid(genome_uuid, "genome_uuid")
     validate_uuid(dataset_uuid, "dataset_uuid")
-    if not extension.startswith('.'):
-        extension = f'.{extension}'
+    if not extension.startswith("."):
+        extension = f".{extension}"
     genome_prefix = genome_uuid[:2].lower()
-    destination = Path(base_path) / genome_prefix / genome_uuid / f"{dataset_uuid}_{track_name}{extension}"
+    destination = (
+        Path(base_path)
+        / genome_prefix
+        / genome_uuid
+        / f"{dataset_uuid}_{track_name}{extension}"
+    )
 
     return destination
 
 
-def calculate_checksum(file_path: Path, algorithm: str = 'sha256') -> str:
+def calculate_checksum(file_path: Path, algorithm: str = "sha256") -> str:
     """
     Calculate checksum of a file.
 
@@ -99,8 +100,8 @@ def calculate_checksum(file_path: Path, algorithm: str = 'sha256') -> str:
         Hexadecimal checksum string
     """
     hash_func = hashlib.new(algorithm)
-    with open(file_path, 'rb') as f:
-        for chunk in iter(lambda: f.read(8192), b''):
+    with open(file_path, "rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
             hash_func.update(chunk)
     return hash_func.hexdigest()
 
@@ -129,15 +130,15 @@ def verify_existing_file(source: Path, destination: Path) -> bool:
 
 
 def copy_track_file(
-        source_file: str,
-        base_path: str,
-        genome_uuid: str,
-        dataset_uuid: str,
-        track_name: str,
-        create_dirs: bool = True,
-        overwrite: bool = False,
-        skip_existing: bool = False,
-        verify_existing: bool = True
+    source_file: str,
+    base_path: str,
+    genome_uuid: str,
+    dataset_uuid: str,
+    track_name: str,
+    create_dirs: bool = True,
+    overwrite: bool = False,
+    skip_existing: bool = False,
+    verify_existing: bool = True,
 ) -> tuple[Path, str]:
     """
     Copies a single track file to its destination.
@@ -172,7 +173,7 @@ def copy_track_file(
         genome_uuid=genome_uuid,
         dataset_uuid=dataset_uuid,
         track_name=track_name,
-        extension=extension
+        extension=extension,
     )
 
     # Handle existing files
@@ -181,13 +182,13 @@ def copy_track_file(
             if verify_existing:
                 if verify_existing_file(source, destination):
                     logger.info(f"Verified existing file: {destination}")
-                    return destination, 'verified'
+                    return destination, "verified"
                 else:
                     logger.warning(f"Checksum mismatch for {destination}, re-copying")
                     # Fall through to copy
             else:
                 logger.info(f"Skipped existing file: {destination}")
-                return destination, 'skipped'
+                return destination, "skipped"
         elif not overwrite:
             raise TrackCopyError(
                 f"Destination file already exists: {destination}. "
@@ -208,18 +209,18 @@ def copy_track_file(
     try:
         shutil.copy2(source, destination)
         logger.info(f"Copied: {source} -> {destination}")
-        return destination, 'copied'
+        return destination, "copied"
     except Exception as e:
         raise TrackCopyError(f"Failed to copy file: {e}")
 
 
 def copy_from_json(
-        json_input: str,
-        base_path: str,
-        create_dirs: bool = True,
-        overwrite: bool = False,
-        skip_existing: bool = False,
-        verify_existing: bool = True
+    json_input: str,
+    base_path: str,
+    create_dirs: bool = True,
+    overwrite: bool = False,
+    skip_existing: bool = False,
+    verify_existing: bool = True,
 ) -> dict:
     """
     Copy track files based on JSON input.
@@ -257,7 +258,7 @@ def copy_from_json(
         data = json.loads(json_input)
     except json.JSONDecodeError:
         try:
-            with open(json_input, 'r') as f:
+            with open(json_input, "r") as f:
                 data = json.load(f)
         except Exception as e:
             raise TrackCopyError(f"Failed to parse JSON input: {e}")
@@ -268,39 +269,34 @@ def copy_from_json(
     elif not isinstance(data, list):
         raise TrackCopyError("JSON must be a dict or list of dicts")
 
-    results = {
-        'copied': [],
-        'skipped': [],
-        'verified': [],
-        'failed': []
-    }
+    results = {"copied": [], "skipped": [], "verified": [], "failed": []}
 
     for i, item in enumerate(data):
         # Validate required fields
-        required_fields = ['source_file', 'track_name', 'dataset_uuid', 'genome_uuid']
+        required_fields = ["source_file", "track_name", "dataset_uuid", "genome_uuid"]
         missing = [f for f in required_fields if f not in item]
         if missing:
             error_msg = f"Item {i}: Missing required fields: {', '.join(missing)}"
             logger.error(error_msg)
-            results['failed'].append({'item': item, 'error': error_msg})
+            results["failed"].append({"item": item, "error": error_msg})
             continue
 
         try:
             copied, status = copy_track_file(
-                source_file=item['source_file'],
+                source_file=item["source_file"],
                 base_path=base_path,
-                genome_uuid=item['genome_uuid'],
-                dataset_uuid=item['dataset_uuid'],
-                track_name=item['track_name'],
+                genome_uuid=item["genome_uuid"],
+                dataset_uuid=item["dataset_uuid"],
+                track_name=item["track_name"],
                 create_dirs=create_dirs,
                 overwrite=overwrite,
                 skip_existing=skip_existing,
-                verify_existing=verify_existing
+                verify_existing=verify_existing,
             )
             results[status].append(str(copied))
         except TrackCopyError as e:
             logger.error(f"Failed to copy item {i}: {e}")
-            results['failed'].append({'item': item, 'error': str(e)})
+            results["failed"].append({"item": item, "error": str(e)})
 
     logger.info(
         f"Results: {len(results['copied'])} copied, "
@@ -314,36 +310,31 @@ def copy_from_json(
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Deploy track files to genome directory structure'
+        description="Deploy track files to genome directory structure"
     )
     parser.add_argument(
-        'json_input',
-        help='JSON string or path to JSON file with deployment info'
+        "json_input", help="JSON string or path to JSON file with deployment info"
     )
     parser.add_argument(
-        '--base-path',
-        required=True,
-        help='Base directory for track files'
+        "--base-path", required=True, help="Base directory for track files"
     )
     parser.add_argument(
-        '--overwrite',
-        action='store_true',
-        help='Overwrite existing files'
+        "--overwrite", action="store_true", help="Overwrite existing files"
     )
     parser.add_argument(
-        '--skip-existing',
-        action='store_true',
-        help='Skip files that already exist at destination'
+        "--skip-existing",
+        action="store_true",
+        help="Skip files that already exist at destination",
     )
     parser.add_argument(
-        '--no-verify',
-        action='store_true',
-        help='Skip checksum verification when using --skip-existing'
+        "--no-verify",
+        action="store_true",
+        help="Skip checksum verification when using --skip-existing",
     )
     parser.add_argument(
-        '--no-create-dirs',
-        action='store_true',
-        help='Do not create destination directories'
+        "--no-create-dirs",
+        action="store_true",
+        help="Do not create destination directories",
     )
     args = parser.parse_args()
 
@@ -354,7 +345,7 @@ def main():
             create_dirs=not args.no_create_dirs,
             overwrite=args.overwrite,
             skip_existing=args.skip_existing,
-            verify_existing=not args.no_verify
+            verify_existing=not args.no_verify,
         )
 
         print(f"\n✓ Copy completed:")
@@ -363,15 +354,17 @@ def main():
         print(f"  Skipped: {len(results['skipped'])} files")
         print(f"  Failed: {len(results['failed'])} files")
 
-        if results['copied']:
+        if results["copied"]:
             print("\nCopied files:")
-            for f in results['copied']:
+            for f in results["copied"]:
                 print(f"  - {f}")
 
-        if results['failed']:
+        if results["failed"]:
             print("\nFailed files:")
-            for fail in results['failed']:
-                print(f"  - {fail['item'].get('source_file', 'unknown')}: {fail['error']}")
+            for fail in results["failed"]:
+                print(
+                    f"  - {fail['item'].get('source_file', 'unknown')}: {fail['error']}"
+                )
             return 1
 
     except TrackCopyError as e:
@@ -381,7 +374,7 @@ def main():
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
 
     sys.exit(main())

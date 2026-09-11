@@ -247,7 +247,9 @@ class GenomeTrackList(APIView):
     http_method_names = ["get", "delete"]
 
     # Defaults must match the query parameter handling below.
-    @redis_cache("track_category", params=(("browser", "GenomeBrowser"), ("release", "")))
+    @redis_cache(
+        "track_category", params=(("browser", "GenomeBrowser"), ("release", ""))
+    )
     def get(self, request, genome_id):
         browser = request.query_params.get("browser", "GenomeBrowser")
         release_param = request.query_params.get("release")
@@ -343,7 +345,11 @@ class GenomeTrackList(APIView):
             )
 
         except ValueError as e:
-            logger.warning("Invalid request while retrieving tracks for genome_id=%s: %s", genome_id, e)
+            logger.warning(
+                "Invalid request while retrieving tracks for genome_id=%s: %s",
+                genome_id,
+                e,
+            )
             return Response(
                 {"error": "Requested resource could not be processed."},
                 status=status.HTTP_404_NOT_FOUND,

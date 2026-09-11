@@ -70,16 +70,17 @@ from typing import List, Dict, Optional
 
 # Setup Django
 # Assume script is run from project root, or use DJANGO_PROJECT_ROOT env var
-project_root = os.getenv('DJANGO_PROJECT_ROOT', os.getcwd())
+project_root = os.getenv("DJANGO_PROJECT_ROOT", os.getcwd())
 sys.path.insert(0, project_root)
 
 # Load .env file if it exists
-env_file = Path(project_root) / '.env'
+env_file = Path(project_root) / ".env"
 if env_file.exists():
     from dotenv import load_dotenv
+
     load_dotenv(env_file)
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ensembl_track_api.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ensembl_track_api.settings")
 django.setup()
 
 from tracks.serializers import CreateTrackSerializer
@@ -101,10 +102,10 @@ def read_json_input(input_source: str) -> List[Dict]:
         json.JSONDecodeError: If JSON is invalid
         FileNotFoundError: If file doesn't exist
     """
-    if input_source == '-':
+    if input_source == "-":
         data = json.load(sys.stdin)
     else:
-        with open(input_source, 'r') as f:
+        with open(input_source, "r") as f:
             data = json.load(f)
 
     # Ensure we have a list
@@ -129,11 +130,13 @@ def check_track_exists(dataset_id: str, track_types: List[str]) -> Optional[Trac
         Existing Track if found, None otherwise
     """
     # Get all tracks for this dataset
-    tracks = Track.objects.filter(dataset_id=dataset_id).prefetch_related('specifications')
+    tracks = Track.objects.filter(dataset_id=dataset_id).prefetch_related(
+        "specifications"
+    )
 
     # Check if any track has exactly these specifications
     for track in tracks:
-        existing_spec_names = set(track.specifications.values_list('name', flat=True))
+        existing_spec_names = set(track.specifications.values_list("name", flat=True))
         if existing_spec_names == set(track_types):
             return track
 
@@ -158,17 +161,18 @@ def create_single_track(track_data: Dict, skip_duplicates: bool = True) -> Dict:
     try:
         if skip_duplicates:
             existing_track = check_track_exists(
-                track_data.get("dataset_id"),
-                track_data.get("track_types", [])
+                track_data.get("dataset_id"), track_data.get("track_types", [])
             )
 
             if existing_track:
-                result.update({
-                    "track_id": str(existing_track.track_id),
-                    "specifications": track_data.get("track_types", []),
-                    "status": "already_exists",
-                    "message": "Track already exists for this dataset with these specifications"
-                })
+                result.update(
+                    {
+                        "track_id": str(existing_track.track_id),
+                        "specifications": track_data.get("track_types", []),
+                        "status": "already_exists",
+                        "message": "Track already exists for this dataset with these specifications",
+                    }
+                )
                 return result
 
         # Validate and create track
@@ -176,28 +180,23 @@ def create_single_track(track_data: Dict, skip_duplicates: bool = True) -> Dict:
 
         if serializer.is_valid():
             track = serializer.save()
-            result.update({
-                "track_id": str(track.track_id),
-                "specifications": track_data.get("track_types", []),
-                "status": "success"
-            })
+            result.update(
+                {
+                    "track_id": str(track.track_id),
+                    "specifications": track_data.get("track_types", []),
+                    "status": "success",
+                }
+            )
         else:
             # Validation failed
-            result.update({
-                "error": serializer.errors,
-                "status": "failed"
-            })
+            result.update({"error": serializer.errors, "status": "failed"})
 
     except IntegrityError as e:
-        result.update({
-            "error": f"Database integrity error: {str(e)}",
-            "status": "failed"
-        })
+        result.update(
+            {"error": f"Database integrity error: {str(e)}", "status": "failed"}
+        )
     except Exception as e:
-        result.update({
-            "error": f"Unexpected error: {str(e)}",
-            "status": "failed"
-        })
+        result.update({"error": f"Unexpected error: {str(e)}", "status": "failed"})
 
     return result
 
@@ -220,11 +219,13 @@ def load_tracks(tracks_data: List[Dict], skip_duplicates: bool = True) -> List[D
             result = create_single_track(track_data, skip_duplicates=skip_duplicates)
             results.append(result)
         except Exception as e:
-            results.append({
-                "dataset_id": track_data.get("dataset_id"),
-                "error": f"Critical error processing track {i}: {str(e)}",
-                "status": "failed"
-            })
+            results.append(
+                {
+                    "dataset_id": track_data.get("dataset_id"),
+                    "error": f"Critical error processing track {i}: {str(e)}",
+                    "status": "failed",
+                }
+            )
 
     return results
 
@@ -234,23 +235,22 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description='Load tracks into database from JSON',
+        description="Load tracks into database from JSON",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=__doc__
+        epilog=__doc__,
     )
     parser.add_argument(
-        'input_file',
-        help='JSON file with track data (use "-" for stdin)'
+        "input_file", help='JSON file with track data (use "-" for stdin)'
     )
     parser.add_argument(
-        '--no-pretty',
-        action='store_true',
-        help='Disable pretty-print JSON output (default: pretty-print enabled)'
+        "--no-pretty",
+        action="store_true",
+        help="Disable pretty-print JSON output (default: pretty-print enabled)",
     )
     parser.add_argument(
-        '--allow-duplicates',
-        action='store_true',
-        help='Allow duplicate tracks (default: skip duplicates)'
+        "--allow-duplicates",
+        action="store_true",
+        help="Allow duplicate tracks (default: skip duplicates)",
     )
 
     args = parser.parse_args()
@@ -262,7 +262,10 @@ def main():
         print(json.dumps(error_output), file=sys.stderr)
         sys.exit(1)
     except FileNotFoundError:
-        error_output = {"error": f"File not found: {args.input_file}", "status": "failed"}
+        error_output = {
+            "error": f"File not found: {args.input_file}",
+            "status": "failed",
+        }
         print(json.dumps(error_output), file=sys.stderr)
         sys.exit(1)
     except ValueError as e:
@@ -279,19 +282,19 @@ def main():
     else:
         print(json.dumps(results, indent=2))
 
-    success_count = sum(1 for r in results if r['status'] == 'success')
-    duplicate_count = sum(1 for r in results if r['status'] == 'already_exists')
-    failed_count = sum(1 for r in results if r['status'] == 'failed')
+    success_count = sum(1 for r in results if r["status"] == "success")
+    duplicate_count = sum(1 for r in results if r["status"] == "already_exists")
+    failed_count = sum(1 for r in results if r["status"] == "failed")
 
     print(
         f"Summary: {success_count} created, {duplicate_count} duplicates skipped, "
         f"{failed_count} failed (total: {len(results)})",
-        file=sys.stderr
+        file=sys.stderr,
     )
 
     if failed_count > 0:
         sys.exit(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
