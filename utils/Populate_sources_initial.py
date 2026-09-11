@@ -21,8 +21,9 @@ Run from project root: python src/ensembl/production/tracks/populate_sources.py
 
 import os
 import sys
-import django
 from pathlib import Path
+
+import django
 
 # Setup Django
 project_root = os.getenv("DJANGO_PROJECT_ROOT", os.getcwd())
@@ -192,7 +193,7 @@ def populate_sources():
                 print(f"  WARNING: Specification not found: {spec_name}")
 
     print("\n" + "=" * 60)
-    print(f"Summary:")
+    print("Summary:")
     print(f"  Sources created: {created_count}")
     print(f"  Links created: {linked_count}")
 

@@ -17,7 +17,7 @@ import uuid
 
 import pytest
 
-from src.ensembl.production.tracks.load_tracks import create_single_track
+from ensembl.production.tracks.load_tracks import create_single_track
 from tracks.models import Category, Source, Specifications, Track
 
 

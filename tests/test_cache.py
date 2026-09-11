@@ -2,9 +2,9 @@ from unittest.mock import Mock
 
 import pytest
 from redis.exceptions import ConnectionError, TimeoutError
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
-from rest_framework.request import Request
 
 from utils import redis_cache as cache
 
@@ -238,6 +238,7 @@ def test_handler_exception_is_not_retried(stateful_cache, isolated_redis):
 @pytest.fixture
 def cached_track(db, stateful_cache):
     import uuid
+
     from tracks.models import Category, DatasetRelease, Specifications, Track
 
     genome_id, dataset_id = uuid.uuid4(), uuid.uuid4()
@@ -297,6 +298,7 @@ def test_release_cache_isolation(cached_track, django_assert_num_queries):
 
 def test_track_cache_separates_track_ids(cached_track, django_assert_num_queries):
     from rest_framework.test import APIClient
+
     from tracks.models import Track
 
     other = Track.objects.create(
@@ -354,6 +356,7 @@ def test_track_invalid_browser_not_cached(cached_track, isolated_redis, browser)
 
 def test_track_missing_id_not_cached(cached_track, isolated_redis):
     import uuid
+
     from rest_framework.test import APIClient
 
     client = APIClient()

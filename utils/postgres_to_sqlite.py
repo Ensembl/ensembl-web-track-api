@@ -278,7 +278,9 @@ def postgres_table_exists(
 ) -> bool:
     with pg_conn.cursor() as cursor:
         cursor.execute("SELECT to_regclass(%s)", (table_name,))
-        return cursor.fetchone()[0] is not None
+        row = cursor.fetchone()
+        assert row is not None
+        return row[0] is not None
 
 
 def load_sqlite(
@@ -400,7 +402,11 @@ def load_sqlite(
                     "GenomeBrowser",
                 ),
             )
-            spec_ids_by_key[spec_key] = int(cursor.lastrowid)
+            lastrowid = cursor.lastrowid
+            if lastrowid is None:
+                raise RuntimeError("Failed to get inserted specification ID")
+
+            spec_ids_by_key[spec_key] = lastrowid
 
         track_id = normalize_uuid(track["track_id"])
         genome_id = normalize_uuid(track["genome_id"])

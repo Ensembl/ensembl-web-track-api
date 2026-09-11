@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import sqlite3
 import sys
 import uuid
@@ -27,7 +26,7 @@ import yaml
 try:
     import duckdb
 except ImportError:  # pragma: no cover - depends on local environment
-    duckdb = None
+    duckdb = None  # type: ignore[assignment]
 
 
 TRACK_ID_NAMESPACE = uuid.UUID("9bc37713-89eb-44fd-9d71-0cdbbef394c0")

@@ -18,11 +18,13 @@ Unit tests for Track API egress endpoints.
 Tests GenomeTrackList and TrackObject views with release and browser filtering.
 """
 
-import pytest
 import uuid
-from rest_framework.test import APIClient
+
+import pytest
 from rest_framework import status
-from tracks.models import Track, Specifications, Category, DatasetRelease, Source
+from rest_framework.test import APIClient
+
+from tracks.models import Category, DatasetRelease, Source, Specifications, Track
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 

@@ -28,8 +28,8 @@ Example:
 import argparse
 import hashlib
 import json
-import shutil
 import logging
+import shutil
 from pathlib import Path
 from uuid import UUID
 
@@ -41,8 +41,6 @@ logger = logging.getLogger(__name__)
 
 class TrackCopyError(Exception):
     """Custom exception for track deployment errors."""
-
-    pass
 
 
 def validate_uuid(uuid_string: str, field_name: str) -> str:
@@ -124,7 +122,7 @@ def verify_existing_file(source: Path, destination: Path) -> bool:
         source_checksum = calculate_checksum(source)
         dest_checksum = calculate_checksum(destination)
         return source_checksum == dest_checksum
-    except Exception as e:
+    except OSError as e:
         logger.warning(f"Checksum verification failed: {e}")
         return False
 
@@ -210,7 +208,7 @@ def copy_track_file(
         shutil.copy2(source, destination)
         logger.info(f"Copied: {source} -> {destination}")
         return destination, "copied"
-    except Exception as e:
+    except OSError as e:
         raise TrackCopyError(f"Failed to copy file: {e}")
 
 
@@ -260,7 +258,7 @@ def copy_from_json(
         try:
             with open(json_input, "r") as f:
                 data = json.load(f)
-        except Exception as e:
+        except (OSError, ValueError) as e:
             raise TrackCopyError(f"Failed to parse JSON input: {e}")
 
     # Ensure data is a list
@@ -269,7 +267,12 @@ def copy_from_json(
     elif not isinstance(data, list):
         raise TrackCopyError("JSON must be a dict or list of dicts")
 
-    results = {"copied": [], "skipped": [], "verified": [], "failed": []}
+    results: dict[str, list] = {
+        "copied": [],
+        "skipped": [],
+        "verified": [],
+        "failed": [],
+    }
 
     for i, item in enumerate(data):
         # Validate required fields
@@ -348,7 +351,7 @@ def main():
             verify_existing=not args.no_verify,
         )
 
-        print(f"\n✓ Copy completed:")
+        print("\n✓ Copy completed:")
         print(f"  Copied: {len(results['copied'])} files")
         print(f"  Verified: {len(results['verified'])} files")
         print(f"  Skipped: {len(results['skipped'])} files")

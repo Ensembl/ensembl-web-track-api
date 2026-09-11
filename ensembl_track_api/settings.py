@@ -11,9 +11,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 import os
-import re
-
 from pathlib import Path
+
 from utils.helpers import parse_cache_ttl
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,7 +28,7 @@ SECRET_KEY = os.getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DJANGO_DEBUG", False)
+DEBUG = os.getenv("DJANGO_DEBUG", "false").strip().lower() == "true"
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
 

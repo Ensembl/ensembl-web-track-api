@@ -18,11 +18,13 @@ Unit tests for Track API ingress endpoints.
 Tests CreateTrack and LinkTypeToTrack views.
 """
 
-import pytest
 import uuid
-from rest_framework.test import APIClient
+
+import pytest
 from rest_framework import status
-from tracks.models import Track, Specifications, Category, Source
+from rest_framework.test import APIClient
+
+from tracks.models import Category, Source, Specifications, Track
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 

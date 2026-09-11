@@ -15,18 +15,18 @@ Unit tests for track_copy module.
 """
 
 import json
-import pytest
 from pathlib import Path
 
+import pytest
 
-from src.ensembl.production.tracks.copy_tracks import (
+from ensembl.production.tracks.copy_tracks import (
     TrackCopyError,
-    validate_uuid,
-    get_destination_path,
     calculate_checksum,
-    verify_existing_file,
-    copy_track_file,
     copy_from_json,
+    copy_track_file,
+    get_destination_path,
+    validate_uuid,
+    verify_existing_file,
 )
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────

@@ -61,12 +61,14 @@ Output JSON format (stdout):
     ]
 """
 
+import json
+import logging
 import os
 import sys
-import json
-import django
 from pathlib import Path
-from typing import List, Dict, Optional
+from typing import Any
+
+import django
 
 # Setup Django
 # Assume script is run from project root, or use DJANGO_PROJECT_ROOT env var
@@ -83,12 +85,15 @@ if env_file.exists():
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ensembl_track_api.settings")
 django.setup()
 
-from tracks.serializers import CreateTrackSerializer
-from tracks.models import Track, Specifications
 from django.db import IntegrityError
 
+from tracks.models import Track
+from tracks.serializers import CreateTrackSerializer
 
-def read_json_input(input_source: str) -> List[Dict]:
+logger = logging.getLogger(__name__)
+
+
+def read_json_input(input_source: str) -> list[dict]:
     """
     Read and parse JSON input from file or stdin.
 
@@ -113,12 +118,12 @@ def read_json_input(input_source: str) -> List[Dict]:
         data = [data]
 
     if not isinstance(data, list):
-        raise ValueError("JSON input must be a dict or list of dicts")
+        raise TypeError("JSON input must be a dict or list of dicts")
 
     return data
 
 
-def check_track_exists(dataset_id: str, track_types: List[str]) -> Optional[Track]:
+def check_track_exists(dataset_id: str, track_types: list[str]) -> Track | None:
     """
     Check if a track already exists for this dataset with these specifications.
 
@@ -143,25 +148,24 @@ def check_track_exists(dataset_id: str, track_types: List[str]) -> Optional[Trac
     return None
 
 
-def create_single_track(track_data: Dict, skip_duplicates: bool = True) -> Dict:
-    """
-    Create a single track from data dictionary.
+def create_single_track(track_data: dict, skip_duplicates: bool = True) -> dict:
+    dataset_id = track_data.get("dataset_id")
+    if not isinstance(dataset_id, str):
+        return {
+            "dataset_id": dataset_id,
+            "status": "failed",
+            "error": "dataset_id is required and must be a string",
+        }
 
-    Args:
-        track_data: Dict with dataset_id, genome_id, datafiles, track_types
-        skip_duplicates: If True, skip tracks that already exist (default: True)
-
-    Returns:
-        Result dict with dataset_id, track_id, specifications, status
-    """
-    result = {
-        "dataset_id": track_data.get("dataset_id"),
+    result: dict[str, Any] = {
+        "dataset_id": dataset_id,
     }
 
     try:
         if skip_duplicates:
             existing_track = check_track_exists(
-                track_data.get("dataset_id"), track_data.get("track_types", [])
+                dataset_id,
+                track_data.get("track_types", []),
             )
 
             if existing_track:
@@ -170,12 +174,14 @@ def create_single_track(track_data: Dict, skip_duplicates: bool = True) -> Dict:
                         "track_id": str(existing_track.track_id),
                         "specifications": track_data.get("track_types", []),
                         "status": "already_exists",
-                        "message": "Track already exists for this dataset with these specifications",
+                        "message": (
+                            "Track already exists for this dataset "
+                            "with these specifications"
+                        ),
                     }
                 )
                 return result
 
-        # Validate and create track
         serializer = CreateTrackSerializer(data=track_data)
 
         if serializer.is_valid():
@@ -188,20 +194,33 @@ def create_single_track(track_data: Dict, skip_duplicates: bool = True) -> Dict:
                 }
             )
         else:
-            # Validation failed
-            result.update({"error": serializer.errors, "status": "failed"})
+            result.update(
+                {
+                    "error": serializer.errors,
+                    "status": "failed",
+                }
+            )
 
     except IntegrityError as e:
         result.update(
-            {"error": f"Database integrity error: {str(e)}", "status": "failed"}
+            {
+                "error": f"Database integrity error: {e!s}",
+                "status": "failed",
+            }
         )
     except Exception as e:
-        result.update({"error": f"Unexpected error: {str(e)}", "status": "failed"})
+        logger.exception("Unexpected error creating track")
+        result.update(
+            {
+                "error": f"Unexpected error: {e!s}",
+                "status": "failed",
+            }
+        )
 
     return result
 
 
-def load_tracks(tracks_data: List[Dict], skip_duplicates: bool = True) -> List[Dict]:
+def load_tracks(tracks_data: list[dict], skip_duplicates: bool = True) -> list[dict]:
     """
     Load multiple tracks from list of data dictionaries.
 
@@ -219,10 +238,11 @@ def load_tracks(tracks_data: List[Dict], skip_duplicates: bool = True) -> List[D
             result = create_single_track(track_data, skip_duplicates=skip_duplicates)
             results.append(result)
         except Exception as e:
+            logger.exception("Unexpected error processing track %s", i)
             results.append(
                 {
                     "dataset_id": track_data.get("dataset_id"),
-                    "error": f"Critical error processing track {i}: {str(e)}",
+                    "error": f"Critical error processing track {i}: {e!s}",
                     "status": "failed",
                 }
             )

@@ -16,7 +16,6 @@ import sys
 from pathlib import Path
 
 import django
-
 from ensembl.production.metadata.api.models import (
     Dataset,
     DatasetStatus,

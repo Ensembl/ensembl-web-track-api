@@ -22,6 +22,11 @@ We want this modular so we can hopefully move it to any orchestration/pipeline m
 """
 
 import argparse
+import logging
+
+from ensembl.production.tracks.copy_tracks import TrackCopyError, copy_from_json
+
+logger = logging.getLogger(__name__)
 
 # Step 1: Input Json
 
@@ -41,6 +46,13 @@ def main():
     parser.add_argument(
         "json_input", help="JSON string or path to JSON file with track info"
     )
+    parser.add_argument(
+        "--base-path", required=True, help="Base directory for track files"
+    )
+    parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument("--skip-existing", action="store_true")
+    parser.add_argument("--no-verify", action="store_true")
+    parser.add_argument("--no-create-dirs", action="store_true")
     args = parser.parse_args()
 
     try:
@@ -53,7 +65,7 @@ def main():
             verify_existing=not args.no_verify,
         )
 
-        print(f"\n✓ Copy completed:")
+        print("\n✓ Copy completed:")
         print(f"  Copied: {len(results['copied'])} files")
         print(f"  Verified: {len(results['verified'])} files")
         print(f"  Skipped: {len(results['skipped'])} files")

@@ -1,5 +1,6 @@
-from django.core.exceptions import ImproperlyConfigured
 import re
+
+from django.core.exceptions import ImproperlyConfigured
 
 
 def parse_cache_ttl(value):

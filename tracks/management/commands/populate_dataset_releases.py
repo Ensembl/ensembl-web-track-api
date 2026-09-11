@@ -14,7 +14,8 @@
 #  limitations under the License.
 
 from django.core.management.base import BaseCommand
-from src.ensembl.production.tracks.load_release_info import populate_dataset_releases
+
+from ensembl.production.tracks.load_release_info import populate_dataset_releases
 
 
 class Command(BaseCommand):

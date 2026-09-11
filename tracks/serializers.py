@@ -13,8 +13,12 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from .models import Category, Track, Source, Specifications
+from typing import ClassVar
+
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
+
+from .models import Category, Source, Specifications, Track
 
 
 class CreateSourceSerializer(serializers.Serializer):
@@ -67,7 +71,7 @@ class CreateTrackSerializer(serializers.Serializer):
         if not all(files == first_files for files in files_lists):
             raise serializers.ValidationError(
                 "All track_types must have the same files list. "
-                f"Found different files configurations across types."
+                "Found different files configurations across types."
             )
 
         # Check all are for different browsers
@@ -191,15 +195,14 @@ class LinkTypeToTrackSerializer(serializers.Serializer):
 class SourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Source
-        fields = ["name", "url"]
-        validators = []
+        fields: ClassVar = ["name", "url"]
+        validators: ClassVar[list[UniqueTogetherValidator]] = []
 
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ["label", "track_category_id", "type"]
-        extra_kwargs = {"track_category_id": {"validators": []}}
+        fields: ClassVar = ["label", "track_category_id", "type"]
 
 
 # Changed from ModelSerializer to Serializer
@@ -207,7 +210,7 @@ class BaseTrackSerializer(serializers.Serializer):
     """Output format for track data (combines Track + Specification)."""
 
     track_id = serializers.UUIDField()
-    label = serializers.CharField()
+    label = serializers.CharField()  # type: ignore[assignment]
     trigger = serializers.ListField()
     type = serializers.CharField()
     display_order = serializers.IntegerField()
