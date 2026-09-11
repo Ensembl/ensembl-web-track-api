@@ -41,6 +41,9 @@ dependencies = [
 ]
 [project.optional-dependencies]
 dev = [
+    "black",
+    "ruff",
+    "mypy",
     "pytest",
     "pytest-django",
     "ensembl-metadata-api @ git+https://github.com/Ensembl/ensembl-metadata-api.git",   #for metadata interaction
