@@ -13,8 +13,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 import re
 
-from django.core.exceptions import ImproperlyConfigured
 from pathlib import Path
+from utils.helpers import parse_cache_ttl
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -157,18 +157,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 # Optional Redis response cache.
-ENABLE_CACHE = os.getenv("ENABLE_CACHE", "true").strip().lower() == "true"
+ENABLE_CACHE = os.getenv("ENABLE_CACHE", "false").strip().lower() == "true"
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 REDIS_MAX_CONNECTION = int(os.getenv("REDIS_MAX_CONNECTION", "10"))
-
-def parse_cache_ttl(value):
-    """Convert seconds or a duration such as 30m, 24h or 1d to Redis seconds."""
-    match = re.fullmatch(r"([0-9]+)([smhd]?)", value.strip().lower())
-    if not match or int(match[1]) <= 0:
-        raise ImproperlyConfigured(
-            "CACHE_TTL must be a positive integer in seconds or a duration such as 24h."
-        )
-    return int(match[1]) * {"": 1, "s": 1, "m": 60, "h": 3600, "d": 86400}[match[2]]
-
-
 CACHE_TTL = parse_cache_ttl(os.getenv("CACHE_TTL", "24h"))
