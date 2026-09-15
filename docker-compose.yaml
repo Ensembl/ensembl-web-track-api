@@ -1,21 +1,49 @@
-version: '3.5'
 services:
-  db:
-    image: postgres:latest
-    container_name: tracks_db
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+  redis:
+    image: redis:7-alpine
+    command:
+      - redis-server
+      - --maxmemory
+      - 256mb
+      - --maxmemory-policy
+      - allkeys-lru
+      - --save
+      - ""
+      - --appendonly
+      - "no"
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
   web:
     build:
       context: .
       dockerfile: Dockerfile
     env_file: .env
-    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      # The project directory is mounted at /code inside the container.
+      DATABASE_PATH: /code/db.sqlite3
+      REDIS_URL: redis://redis:6379/0
+      ALLOWED_METHODS: "${ALLOWED_METHODS}"
+      DJANGO_DEBUG: "${DJANGO_DEBUG}"
+      LANGUAGE_CODE: "${LANGUAGE_CODE}"
+      TIME_ZONE: "${TIME_ZONE}"
+      ENABLE_CACHE: true
+      CACHE_TTL: 1h
+    command:
+      - /bin/sh
+      - -ec
+      - |
+        ENABLE_CACHE=false python manage.py migrate --noinput
+        exec python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      redis:
+        condition: service_healthy

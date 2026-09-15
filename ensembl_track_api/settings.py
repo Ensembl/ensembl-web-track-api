@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 
+from utils.helpers import parse_cache_ttl
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +28,7 @@ SECRET_KEY = os.getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DJANGO_DEBUG", False)
+DEBUG = os.getenv("DJANGO_DEBUG", "false").strip().lower() == "true"
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
 
@@ -152,3 +154,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
+
+# Optional Redis response cache.
+ENABLE_CACHE = os.getenv("ENABLE_CACHE", "false").strip().lower() == "true"
+REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+REDIS_MAX_CONNECTION = int(os.getenv("REDIS_MAX_CONNECTION", "10"))
+CACHE_TTL = parse_cache_ttl(os.getenv("CACHE_TTL", "24h"))

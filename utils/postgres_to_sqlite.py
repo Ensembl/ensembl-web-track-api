@@ -25,7 +25,6 @@ from typing import Any
 import psycopg2
 import psycopg2.extras
 
-
 TRACK_TABLES = (
     "tracks_track_specifications",
     "tracks_track_sources",
@@ -95,7 +94,10 @@ def load_dataset_map(path: str | None) -> dict[str, tuple[str, str | None]]:
                 release_label = dataset_value.get("release_label")
             else:
                 dataset_id = dataset_value
-            mapping[normalize_uuid(genome_id)] = (normalize_uuid(dataset_id), release_label)
+            mapping[normalize_uuid(genome_id)] = (
+                normalize_uuid(dataset_id),
+                release_label,
+            )
         return mapping
 
     if isinstance(data, list):
@@ -123,7 +125,10 @@ def load_track_dataset_map(path: str | None) -> dict[str, tuple[str, str | None]
                 release_label = dataset_value.get("release_label")
             else:
                 dataset_id = dataset_value
-            mapping[normalize_uuid(track_id)] = (normalize_uuid(dataset_id), release_label)
+            mapping[normalize_uuid(track_id)] = (
+                normalize_uuid(dataset_id),
+                release_label,
+            )
         return mapping
 
     if isinstance(data, list):
@@ -164,8 +169,7 @@ def postgres_dsn(args: argparse.Namespace) -> str:
 
 
 def create_sqlite_schema(conn: sqlite3.Connection) -> None:
-    conn.executescript(
-        """
+    conn.executescript("""
         PRAGMA foreign_keys = OFF;
 
         DROP TABLE IF EXISTS tracks_track_sources;
@@ -258,20 +262,25 @@ def create_sqlite_schema(conn: sqlite3.Connection) -> None:
         CREATE INDEX tracks_track_sources_source_id_idx ON tracks_track_sources (source_id);
 
         PRAGMA foreign_keys = ON;
-        """
-    )
+        """)
 
 
-def fetch_rows(pg_conn: psycopg2.extensions.connection, sql: str) -> list[dict[str, Any]]:
+def fetch_rows(
+    pg_conn: psycopg2.extensions.connection, sql: str
+) -> list[dict[str, Any]]:
     with pg_conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
         cursor.execute(sql)
         return [dict(row) for row in cursor.fetchall()]
 
 
-def postgres_table_exists(pg_conn: psycopg2.extensions.connection, table_name: str) -> bool:
+def postgres_table_exists(
+    pg_conn: psycopg2.extensions.connection, table_name: str
+) -> bool:
     with pg_conn.cursor() as cursor:
         cursor.execute("SELECT to_regclass(%s)", (table_name,))
-        return cursor.fetchone()[0] is not None
+        row = cursor.fetchone()
+        assert row is not None
+        return row[0] is not None
 
 
 def load_sqlite(
@@ -393,7 +402,11 @@ def load_sqlite(
                     "GenomeBrowser",
                 ),
             )
-            spec_ids_by_key[spec_key] = int(cursor.lastrowid)
+            lastrowid = cursor.lastrowid
+            if lastrowid is None:
+                raise RuntimeError("Failed to get inserted specification ID")
+
+            spec_ids_by_key[spec_key] = lastrowid
 
         track_id = normalize_uuid(track["track_id"])
         genome_id = normalize_uuid(track["genome_id"])
@@ -520,7 +533,10 @@ def main() -> int:
     output = Path(args.output)
 
     if output.exists() and not args.overwrite:
-        print(f"Output already exists: {output}. Use --overwrite to replace it.", file=sys.stderr)
+        print(
+            f"Output already exists: {output}. Use --overwrite to replace it.",
+            file=sys.stderr,
+        )
         return 1
     if output.exists():
         output.unlink()

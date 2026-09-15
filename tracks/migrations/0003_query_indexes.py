@@ -1,13 +1,15 @@
+from typing import ClassVar
+
 from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
 
-    dependencies = [
+    dependencies: ClassVar = [
         ("tracks", "0002_hyphenated_uuid_storage"),
     ]
 
-    operations = [
+    operations: ClassVar = [
         migrations.AddIndex(
             model_name="track",
             index=models.Index(

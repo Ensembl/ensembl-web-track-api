@@ -16,9 +16,12 @@ import sys
 from pathlib import Path
 
 import django
-
 from ensembl.production.metadata.api.models import (
-    Dataset, DatasetStatus, EnsemblRelease, Genome, GenomeDataset
+    Dataset,
+    DatasetStatus,
+    EnsemblRelease,
+    Genome,
+    GenomeDataset,
 )
 from ensembl.utils.database import DBConnection
 
@@ -28,7 +31,7 @@ def populate_dataset_releases(metadata_uri: str) -> int:
     Clears and repopulates DatasetRelease table from ensembl_genome_metadata database.
     Returns the number of rows inserted.
     """
-    #Don't move this to the top. Django settings has to be imported first to use its models.
+    # Don't move this to the top. Django settings has to be imported first to use its models.
     from tracks.models import DatasetRelease, Track
 
     track_dataset_uuids = list(
@@ -48,15 +51,15 @@ def populate_dataset_releases(metadata_uri: str) -> int:
     with metadata_db.session_scope() as session:
         rows = (
             session.query(
-                Genome.genome_uuid,
-                Dataset.dataset_uuid,
-                EnsemblRelease.label
+                Genome.genome_uuid, Dataset.dataset_uuid, EnsemblRelease.label
             )
             .join(GenomeDataset, Genome.genome_id == GenomeDataset.genome_id)
             .join(Dataset, Dataset.dataset_id == GenomeDataset.dataset_id)
             .join(EnsemblRelease, EnsemblRelease.release_id == GenomeDataset.release_id)
             .filter(Dataset.status == DatasetStatus.RELEASED)
-            .filter(EnsemblRelease.release_type == "partial") #TODO: Make sure it works with integrated!!!
+            .filter(
+                EnsemblRelease.release_type == "partial"
+            )  # TODO: Make sure it works with integrated!!!
             .filter(Dataset.dataset_uuid.in_(track_dataset_uuids_str))
             .all()
         )
@@ -95,17 +98,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
     # Setup Django
     # Assume script is run from project root, or use DJANGO_PROJECT_ROOT env var
-    project_root = os.getenv('DJANGO_PROJECT_ROOT', os.getcwd())
+    project_root = os.getenv("DJANGO_PROJECT_ROOT", os.getcwd())
     sys.path.insert(0, project_root)
 
     # Load .env file if it exists
-    env_file = Path(project_root) / '.env'
+    env_file = Path(project_root) / ".env"
     if env_file.exists():
         from dotenv import load_dotenv
 
         load_dotenv(env_file)
 
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', args.django_settings)
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", args.django_settings)
     django.setup()
 
     count = populate_dataset_releases(args.metadata_uri)

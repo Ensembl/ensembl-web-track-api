@@ -34,12 +34,20 @@ dependencies = [
     "PyYAML>=5.3",
     "gunicorn>=20.0.1",
     "django-prometheus",
+    "redis>=5",
     "python-dotenv",     # loads .env files for load_tracks.py / load_release_info.py / Populate_sources_initial.py
     "psycopg2-binary",   # Postgres driver for utils/postgres_to_sqlite.py
     "duckdb",            # used by utils/build_sqlite_from_track_files.py
 ]
 [project.optional-dependencies]
 dev = [
+    "black",
+    "ruff",
+    "mypy",
+    "django-stubs>=5.2,<5.3",
+    "djangorestframework-stubs",
+    "types-PyYAML",
+    "types-psycopg2",
     "pytest",
     "pytest-django",
     "ensembl-metadata-api @ git+https://github.com/Ensembl/ensembl-metadata-api.git",   #for metadata interaction
@@ -53,3 +61,22 @@ Repository = "https://github.com/Ensembl/ensembl-web-track-py"
 DJANGO_SETTINGS_MODULE = "ensembl_track_api.settings"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
 testpaths = ["tests"]
+
+[tool.black]
+target-version = ["py310"]
+
+[tool.mypy]
+# Generated package copies are not source files.
+exclude = ["^build/", "^dist/"]
+plugins = ["mypy_django_plugin.main"]
+namespace_packages = true
+explicit_package_bases = true
+mypy_path = ["$MYPY_CONFIG_FILE_DIR", "$MYPY_CONFIG_FILE_DIR/src"]
+
+[tool.django-stubs]
+django_settings_module = "ensembl_track_api.settings"
+
+# These external libraries do not currently publish type information.
+[[tool.mypy.overrides]]
+module = ["ensembl.production.metadata.api.models", "ensembl.utils.database"]
+ignore_missing_imports = true

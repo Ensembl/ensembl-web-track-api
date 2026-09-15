@@ -15,18 +15,18 @@ Unit tests for track_copy module.
 """
 
 import json
-import pytest
 from pathlib import Path
 
+import pytest
 
-from src.ensembl.production.tracks.copy_tracks import (
+from ensembl.production.tracks.copy_tracks import (
     TrackCopyError,
-    validate_uuid,
-    get_destination_path,
     calculate_checksum,
-    verify_existing_file,
-    copy_track_file,
     copy_from_json,
+    copy_track_file,
+    get_destination_path,
+    validate_uuid,
+    verify_existing_file,
 )
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
@@ -53,35 +53,40 @@ def base_path(tmp_path) -> Path:
 
 @pytest.fixture
 def valid_json_single(source_file) -> str:
-    return json.dumps({
-        "source_file": str(source_file),
-        "track_name": TRACK_NAME,
-        "dataset_uuid": DATASET_UUID,
-        "genome_uuid": GENOME_UUID,
-    })
+    return json.dumps(
+        {
+            "source_file": str(source_file),
+            "track_name": TRACK_NAME,
+            "dataset_uuid": DATASET_UUID,
+            "genome_uuid": GENOME_UUID,
+        }
+    )
 
 
 @pytest.fixture
 def valid_json_multiple(tmp_path, source_file) -> str:
     second_file = tmp_path / "other_track.bb"
     second_file.write_bytes(b"other track data")
-    return json.dumps([
-        {
-            "source_file": str(source_file),
-            "track_name": TRACK_NAME,
-            "dataset_uuid": DATASET_UUID,
-            "genome_uuid": GENOME_UUID,
-        },
-        {
-            "source_file": str(second_file),
-            "track_name": "other_track",
-            "dataset_uuid": DATASET_UUID,
-            "genome_uuid": GENOME_UUID,
-        },
-    ])
+    return json.dumps(
+        [
+            {
+                "source_file": str(source_file),
+                "track_name": TRACK_NAME,
+                "dataset_uuid": DATASET_UUID,
+                "genome_uuid": GENOME_UUID,
+            },
+            {
+                "source_file": str(second_file),
+                "track_name": "other_track",
+                "dataset_uuid": DATASET_UUID,
+                "genome_uuid": GENOME_UUID,
+            },
+        ]
+    )
 
 
 # ── validate_uuid ─────────────────────────────────────────────────────────────
+
 
 class TestValidateUuid:
     def test_valid_uuid(self):
@@ -103,42 +108,60 @@ class TestValidateUuid:
 
 # ── get_destination_path ──────────────────────────────────────────────────────
 
+
 class TestGetDestinationPath:
     def test_correct_structure(self):
-        dest = get_destination_path("/base", GENOME_UUID, DATASET_UUID, TRACK_NAME, EXTENSION)
+        dest = get_destination_path(
+            "/base", GENOME_UUID, DATASET_UUID, TRACK_NAME, EXTENSION
+        )
         assert dest == Path(f"/base/ab/{GENOME_UUID}/{DATASET_UUID}_{TRACK_NAME}.bb")
 
     def test_genome_prefix_is_first_two_chars(self):
-        dest = get_destination_path("/base", GENOME_UUID, DATASET_UUID, TRACK_NAME, EXTENSION)
+        dest = get_destination_path(
+            "/base", GENOME_UUID, DATASET_UUID, TRACK_NAME, EXTENSION
+        )
         assert dest.parts[-3] == GENOME_UUID[:2].lower()
 
     def test_extension_without_dot(self):
-        dest = get_destination_path("/base", GENOME_UUID, DATASET_UUID, TRACK_NAME, "bb")
+        dest = get_destination_path(
+            "/base", GENOME_UUID, DATASET_UUID, TRACK_NAME, "bb"
+        )
         assert dest.suffix == ".bb"
 
     def test_extension_with_dot(self):
-        dest = get_destination_path("/base", GENOME_UUID, DATASET_UUID, TRACK_NAME, ".bb")
+        dest = get_destination_path(
+            "/base", GENOME_UUID, DATASET_UUID, TRACK_NAME, ".bb"
+        )
         assert dest.suffix == ".bb"
 
     def test_dataset_and_track_name_concatenated_with_underscore(self):
-        dest = get_destination_path("/base", GENOME_UUID, DATASET_UUID, TRACK_NAME, EXTENSION)
+        dest = get_destination_path(
+            "/base", GENOME_UUID, DATASET_UUID, TRACK_NAME, EXTENSION
+        )
         assert dest.name == f"{DATASET_UUID}_{TRACK_NAME}.bb"
 
     def test_invalid_genome_uuid_raises(self):
         with pytest.raises(TrackCopyError):
-            get_destination_path("/base", "bad-uuid", DATASET_UUID, TRACK_NAME, EXTENSION)
+            get_destination_path(
+                "/base", "bad-uuid", DATASET_UUID, TRACK_NAME, EXTENSION
+            )
 
     def test_invalid_dataset_uuid_raises(self):
         with pytest.raises(TrackCopyError):
-            get_destination_path("/base", GENOME_UUID, "bad-uuid", TRACK_NAME, EXTENSION)
+            get_destination_path(
+                "/base", GENOME_UUID, "bad-uuid", TRACK_NAME, EXTENSION
+            )
 
     def test_genome_prefix_is_lowercase(self):
         upper_uuid = GENOME_UUID.upper()
-        dest = get_destination_path("/base", upper_uuid, DATASET_UUID, TRACK_NAME, EXTENSION)
+        dest = get_destination_path(
+            "/base", upper_uuid, DATASET_UUID, TRACK_NAME, EXTENSION
+        )
         assert dest.parts[-3] == upper_uuid[:2].lower()
 
 
 # ── calculate_checksum ────────────────────────────────────────────────────────
+
 
 class TestCalculateChecksum:
     def test_returns_string(self, source_file):
@@ -166,6 +189,7 @@ class TestCalculateChecksum:
 
 # ── verify_existing_file ──────────────────────────────────────────────────────
 
+
 class TestVerifyExistingFile:
     def test_identical_files_return_true(self, tmp_path):
         content = b"some track data"
@@ -190,84 +214,145 @@ class TestVerifyExistingFile:
 
 # ── copy_track_file ───────────────────────────────────────────────────────────
 
+
 class TestCopyTrackFile:
     def test_successful_copy(self, source_file, base_path):
-        dest, status = copy_track_file(str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME)
+        dest, status = copy_track_file(
+            str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME
+        )
         assert dest.exists()
         assert status == "copied"
 
     def test_correct_destination_path(self, source_file, base_path):
-        dest, _ = copy_track_file(str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME)
-        assert dest == base_path / "ab" / GENOME_UUID / f"{DATASET_UUID}_{TRACK_NAME}.bb"
+        dest, _ = copy_track_file(
+            str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME
+        )
+        assert (
+            dest == base_path / "ab" / GENOME_UUID / f"{DATASET_UUID}_{TRACK_NAME}.bb"
+        )
 
     def test_creates_directories_by_default(self, source_file, base_path):
         assert not base_path.exists()
-        copy_track_file(str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME)
+        copy_track_file(
+            str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME
+        )
         assert base_path.exists()
 
     def test_no_create_dirs_raises_if_missing(self, source_file, base_path):
-        with pytest.raises(TrackCopyError, match="Destination directory does not exist"):
+        with pytest.raises(
+            TrackCopyError, match="Destination directory does not exist"
+        ):
             copy_track_file(
-                str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME,
-                create_dirs=False
+                str(source_file),
+                str(base_path),
+                GENOME_UUID,
+                DATASET_UUID,
+                TRACK_NAME,
+                create_dirs=False,
             )
 
     def test_nonexistent_source_raises(self, base_path):
         with pytest.raises(TrackCopyError, match="Source file does not exist"):
-            copy_track_file("/nonexistent/file.bb", str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME)
+            copy_track_file(
+                "/nonexistent/file.bb",
+                str(base_path),
+                GENOME_UUID,
+                DATASET_UUID,
+                TRACK_NAME,
+            )
 
     def test_source_is_directory_raises(self, tmp_path, base_path):
         with pytest.raises(TrackCopyError, match="Source path is not a file"):
-            copy_track_file(str(tmp_path), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME)
+            copy_track_file(
+                str(tmp_path), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME
+            )
 
     def test_existing_file_raises_without_overwrite(self, source_file, base_path):
-        copy_track_file(str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME)
+        copy_track_file(
+            str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME
+        )
         with pytest.raises(TrackCopyError, match="already exists"):
-            copy_track_file(str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME)
+            copy_track_file(
+                str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME
+            )
 
     def test_overwrite_replaces_file(self, source_file, base_path):
-        copy_track_file(str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME)
+        copy_track_file(
+            str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME
+        )
         source_file.write_bytes(b"updated content")
         dest, status = copy_track_file(
-            str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME,
-            overwrite=True
+            str(source_file),
+            str(base_path),
+            GENOME_UUID,
+            DATASET_UUID,
+            TRACK_NAME,
+            overwrite=True,
         )
         assert dest.read_bytes() == b"updated content"
         assert status == "copied"
 
     def test_skip_existing_returns_skipped(self, source_file, base_path):
-        copy_track_file(str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME)
+        copy_track_file(
+            str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME
+        )
         _, status = copy_track_file(
-            str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME,
-            skip_existing=True, verify_existing=False
+            str(source_file),
+            str(base_path),
+            GENOME_UUID,
+            DATASET_UUID,
+            TRACK_NAME,
+            skip_existing=True,
+            verify_existing=False,
         )
         assert status == "skipped"
 
-    def test_skip_existing_with_matching_checksum_returns_verified(self, source_file, base_path):
-        copy_track_file(str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME)
+    def test_skip_existing_with_matching_checksum_returns_verified(
+        self, source_file, base_path
+    ):
+        copy_track_file(
+            str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME
+        )
         _, status = copy_track_file(
-            str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME,
-            skip_existing=True, verify_existing=True
+            str(source_file),
+            str(base_path),
+            GENOME_UUID,
+            DATASET_UUID,
+            TRACK_NAME,
+            skip_existing=True,
+            verify_existing=True,
         )
         assert status == "verified"
 
-    def test_skip_existing_with_mismatched_checksum_recopies(self, source_file, base_path):
-        copy_track_file(str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME)
+    def test_skip_existing_with_mismatched_checksum_recopies(
+        self, source_file, base_path
+    ):
+        copy_track_file(
+            str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME
+        )
         source_file.write_bytes(b"new content that differs")
         dest, status = copy_track_file(
-            str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME,
-            skip_existing=True, verify_existing=True
+            str(source_file),
+            str(base_path),
+            GENOME_UUID,
+            DATASET_UUID,
+            TRACK_NAME,
+            skip_existing=True,
+            verify_existing=True,
         )
         assert status == "copied"
         assert dest.read_bytes() == b"new content that differs"
 
     def test_file_content_is_preserved(self, source_file, base_path):
         original_content = source_file.read_bytes()
-        dest, _ = copy_track_file(str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME)
+        dest, _ = copy_track_file(
+            str(source_file), str(base_path), GENOME_UUID, DATASET_UUID, TRACK_NAME
+        )
         assert dest.read_bytes() == original_content
 
 
 # ── copy_from_json ────────────────────────────────────────────────────────────
+
 
 class TestCopyFromJson:
     def test_single_dict_json(self, valid_json_single, base_path):
@@ -300,33 +385,39 @@ class TestCopyFromJson:
         """One bad file should not prevent others from being copied."""
         good_file = tmp_path / "good.bb"
         good_file.write_bytes(b"good data")
-        data = json.dumps([
-            {
-                "source_file": "/nonexistent/bad.bb",
-                "track_name": "bad_track",
-                "dataset_uuid": DATASET_UUID,
-                "genome_uuid": GENOME_UUID,
-            },
-            {
-                "source_file": str(good_file),
-                "track_name": "good_track",
-                "dataset_uuid": DATASET_UUID,
-                "genome_uuid": GENOME_UUID,
-            },
-        ])
+        data = json.dumps(
+            [
+                {
+                    "source_file": "/nonexistent/bad.bb",
+                    "track_name": "bad_track",
+                    "dataset_uuid": DATASET_UUID,
+                    "genome_uuid": GENOME_UUID,
+                },
+                {
+                    "source_file": str(good_file),
+                    "track_name": "good_track",
+                    "dataset_uuid": DATASET_UUID,
+                    "genome_uuid": GENOME_UUID,
+                },
+            ]
+        )
         results = copy_from_json(data, str(base_path))
         assert len(results["copied"]) == 1
         assert len(results["failed"]) == 1
 
     def test_skip_existing_in_copy_from_json(self, valid_json_single, base_path):
         copy_from_json(valid_json_single, str(base_path))
-        results = copy_from_json(valid_json_single, str(base_path), skip_existing=True, verify_existing=False)
+        results = copy_from_json(
+            valid_json_single, str(base_path), skip_existing=True, verify_existing=False
+        )
         assert len(results["skipped"]) == 1
         assert len(results["copied"]) == 0
 
     def test_verified_existing_in_copy_from_json(self, valid_json_single, base_path):
         copy_from_json(valid_json_single, str(base_path))
-        results = copy_from_json(valid_json_single, str(base_path), skip_existing=True, verify_existing=True)
+        results = copy_from_json(
+            valid_json_single, str(base_path), skip_existing=True, verify_existing=True
+        )
         assert len(results["verified"]) == 1
 
     def test_invalid_list_type_raises(self, base_path):

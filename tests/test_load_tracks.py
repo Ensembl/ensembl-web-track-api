@@ -17,16 +17,14 @@ import uuid
 
 import pytest
 
-from src.ensembl.production.tracks.load_tracks import create_single_track
+from ensembl.production.tracks.load_tracks import create_single_track
 from tracks.models import Category, Source, Specifications, Track
 
 
 @pytest.fixture
 def category():
     return Category.objects.create(
-        label="Test Category",
-        track_category_id="test-category",
-        type="Genomic"
+        label="Test Category", track_category_id="test-category", type="Genomic"
     )
 
 
@@ -39,36 +37,40 @@ def specification_two_files(category):
         trigger=["track", "test"],
         type="regular",
         files=["detail-file", "summary-file"],
-        browser="GenomeBrowser"
+        browser="GenomeBrowser",
     )
 
 
 @pytest.mark.django_db
-def test_create_single_track_with_sources_reuses_existing_source(specification_two_files):
+def test_create_single_track_with_sources_reuses_existing_source(
+    specification_two_files,
+):
     existing_source = Source.objects.create(
         name="GENCODE",
         url="https://gencodegenes.org",
-        details="Comprehensive annotation"
+        details="Comprehensive annotation",
     )
 
-    result = create_single_track({
-        "dataset_id": str(uuid.uuid4()),
-        "genome_id": str(uuid.uuid4()),
-        "datafiles": ["file1.bb", "file2.bw"],
-        "track_types": ["test-spec-two-files"],
-        "sources": [
-            {
-                "name": "GENCODE",
-                "url": "https://gencodegenes.org",
-                "details": "Comprehensive annotation"
-            },
-            {
-                "name": "Ensembl",
-                "url": "https://www.ensembl.org",
-                "details": "Gene build"
-            }
-        ]
-    })
+    result = create_single_track(
+        {
+            "dataset_id": str(uuid.uuid4()),
+            "genome_id": str(uuid.uuid4()),
+            "datafiles": ["file1.bb", "file2.bw"],
+            "track_types": ["test-spec-two-files"],
+            "sources": [
+                {
+                    "name": "GENCODE",
+                    "url": "https://gencodegenes.org",
+                    "details": "Comprehensive annotation",
+                },
+                {
+                    "name": "Ensembl",
+                    "url": "https://www.ensembl.org",
+                    "details": "Gene build",
+                },
+            ],
+        }
+    )
 
     assert result["status"] == "success"
 

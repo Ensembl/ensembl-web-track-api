@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import sqlite3
 import sys
 import uuid
@@ -27,7 +26,7 @@ import yaml
 try:
     import duckdb
 except ImportError:  # pragma: no cover - depends on local environment
-    duckdb = None
+    duckdb = None  # type: ignore[assignment]
 
 
 TRACK_ID_NAMESPACE = uuid.UUID("9bc37713-89eb-44fd-9d71-0cdbbef394c0")
@@ -37,7 +36,9 @@ def normalize_uuid(value: Any) -> str:
     return str(uuid.UUID(str(value)))
 
 
-def uuid_for_track(genome_id: str, template_name: str, datafiles: dict[str, str]) -> str:
+def uuid_for_track(
+    genome_id: str, template_name: str, datafiles: dict[str, str]
+) -> str:
     fingerprint = json.dumps(
         {
             "genome_id": normalize_uuid(genome_id),
@@ -55,8 +56,7 @@ def sqlite_json(value: Any) -> str:
 
 
 def create_sqlite_schema(conn: sqlite3.Connection) -> None:
-    conn.executescript(
-        """
+    conn.executescript("""
         PRAGMA foreign_keys = OFF;
 
         DROP TABLE IF EXISTS tracks_track_sources;
@@ -149,8 +149,7 @@ def create_sqlite_schema(conn: sqlite3.Connection) -> None:
         CREATE INDEX tracks_track_sources_source_id_idx ON tracks_track_sources (source_id);
 
         PRAGMA foreign_keys = ON;
-        """
-    )
+        """)
 
 
 def load_templates(template_dir: Path) -> dict[str, dict[str, Any]]:
@@ -445,8 +444,7 @@ def build_sqlite(args: argparse.Namespace) -> dict[str, int]:
         genome_dirs = [
             path
             for path in sorted(file_root.iterdir())
-            if path.is_dir()
-            and (not args.genome_uuid or path.name in args.genome_uuid)
+            if path.is_dir() and (not args.genome_uuid or path.name in args.genome_uuid)
         ]
         for genome_dir in genome_dirs:
             genome_id = normalize_uuid(genome_dir.name)
@@ -458,7 +456,9 @@ def build_sqlite(args: argparse.Namespace) -> dict[str, int]:
             for path in sorted(genome_dir.iterdir()):
                 if not path.is_file() or path.suffix not in {".bb", ".bw"}:
                     continue
-                for template_name, datafile_override in matching_templates(path.name, templates):
+                for template_name, datafile_override in matching_templates(
+                    path.name, templates
+                ):
                     payload = json.loads(json.dumps(templates[template_name]))
                     payload["genome_id"] = str(uuid.UUID(genome_id))
                     if datafile_override:
@@ -493,13 +493,25 @@ def parse_args() -> argparse.Namespace:
         description="Build SQLite Track API DB from DuckDB metadata and track files."
     )
     parser.add_argument("--duck-meta-db", required=True, help="Path to duck_meta.db")
-    parser.add_argument("--file-path", required=True, help="Genome-browser files directory")
-    parser.add_argument("--track-templates-dir", required=True, help="Track YAML templates directory")
-    parser.add_argument("--output", required=True, help="SQLite database path to create")
-    parser.add_argument("--genome-uuid", nargs="*", default=[], help="Optional genome UUID filter")
-    parser.add_argument("--dataset-type", default="genebuild", help="Metadata dataset type")
+    parser.add_argument(
+        "--file-path", required=True, help="Genome-browser files directory"
+    )
+    parser.add_argument(
+        "--track-templates-dir", required=True, help="Track YAML templates directory"
+    )
+    parser.add_argument(
+        "--output", required=True, help="SQLite database path to create"
+    )
+    parser.add_argument(
+        "--genome-uuid", nargs="*", default=[], help="Optional genome UUID filter"
+    )
+    parser.add_argument(
+        "--dataset-type", default="genebuild", help="Metadata dataset type"
+    )
     parser.add_argument("--release-label", help="Optional ensembl_release.label filter")
-    parser.add_argument("--release-type", default="partial", help="Optional release_type filter")
+    parser.add_argument(
+        "--release-type", default="partial", help="Optional release_type filter"
+    )
     parser.add_argument("--handover-json", help="Optional variant handover JSON")
     parser.add_argument("--overwrite", action="store_true", help="Overwrite output DB")
     return parser.parse_args()

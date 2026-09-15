@@ -13,30 +13,31 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from collections import defaultdict
 import logging
-from typing import Dict, List, Set
-from tracks.models import Track, Category, DatasetRelease, Specifications
-from tracks.serializers import (
-    ReadTrackSerializer,
-    CategorySerializer,
-    CategoryTrackSerializer,
-    LinkTypeToTrackSerializer,
-    CreateTrackSerializer,
-)
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from collections import defaultdict
+from typing import TypedDict
+from uuid import UUID
+
 from django.db import IntegrityError
 from django.db.models import Prefetch
-from ensembl_track_api import settings
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from tracks.models import DatasetRelease, Specifications, Track
+from tracks.serializers import (
+    CategorySerializer,
+    CreateTrackSerializer,
+    LinkTypeToTrackSerializer,
+)
+from utils.redis_cache import redis_cache
 
 logger = logging.getLogger(__name__)
 
 # ── Helper Functions ──────────────────────────────────────────────────────────
 
 
-def get_target_release(genome_id: str, release_param: str = None) -> str:
+def get_target_release(genome_id: str, release_param: str | None = None) -> str:
     """
     Determine the target release label to use for filtering.
 
@@ -66,7 +67,14 @@ def get_target_release(genome_id: str, release_param: str = None) -> str:
     return latest.release_label
 
 
-def get_datasets_up_to_release(genome_id: str, target_release: str) -> List[Dict]:
+class DatasetReleaseRow(TypedDict):
+    dataset_id: UUID
+    release_label: str
+
+
+def get_datasets_up_to_release(
+    genome_id: str, target_release: str
+) -> list[DatasetReleaseRow]:
     """
     Get all datasets for a genome up to and including target release.
 
@@ -89,8 +97,8 @@ def get_datasets_up_to_release(genome_id: str, target_release: str) -> List[Dict
 
 
 def get_specifications_for_datasets(
-    dataset_ids: List[str], browser: str
-) -> Dict[str, Set[str]]:
+    dataset_ids: list[str], browser: str
+) -> dict[str, set[str]]:
     """
     Build a mapping of dataset_id -> set of specification names for that browser.
 
@@ -120,8 +128,8 @@ def get_specifications_for_datasets(
 
 
 def bin_datasets_by_overlapping_specs(
-    datasets: List[Dict], dataset_specs: Dict[str, Set[str]]
-) -> List[List[Dict]]:
+    datasets: list[dict], dataset_specs: dict[str, set[str]]
+) -> list[list[dict]]:
     """
     Bin datasets that share any specifications.
     Uses Union-Find algorithm for efficient grouping.
@@ -171,7 +179,7 @@ def bin_datasets_by_overlapping_specs(
     return list(bins.values())
 
 
-def select_latest_dataset_from_bins(bins: List[List[Dict]]) -> List[str]:
+def select_latest_dataset_from_bins(bins: list[list[dict]]) -> list[str]:
     """
     From each bin, select the dataset with the most recent release_label.
 
@@ -191,7 +199,7 @@ def select_latest_dataset_from_bins(bins: List[List[Dict]]) -> List[str]:
 
 def combine_track_and_specification(
     track: Track, spec: Specifications, include_datafiles: bool = False
-) -> Dict:
+) -> dict:
     """
     Combine Track and Specification data into old API format.
 
@@ -243,19 +251,21 @@ class GenomeTrackList(APIView):
         - release: Release label YYYY-MM-DD (default: most recent)
     """
 
-    http_method_names = ["get", "delete"]
+    http_method_names: list[str] = ["get", "delete"]  # noqa: RUF012
 
+    # Defaults must match the query parameter handling below.
+    @redis_cache(
+        "track_category", params=(("browser", "GenomeBrowser"), ("release", ""))
+    )
     def get(self, request, genome_id):
         browser = request.query_params.get("browser", "GenomeBrowser")
         release_param = request.query_params.get("release")
-
         # Validate browser
         if browser not in ["GenomeBrowser", "StructuralVariant"]:
             return Response(
                 {"error": "browser must be 'GenomeBrowser' or 'StructuralVariant'"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
         try:
             # Step 1: Determine target release
             target_release = get_target_release(genome_id, release_param)
@@ -342,7 +352,11 @@ class GenomeTrackList(APIView):
             )
 
         except ValueError as e:
-            logger.warning("Invalid request while retrieving tracks for genome_id=%s: %s", genome_id, e)
+            logger.warning(
+                "Invalid request while retrieving tracks for genome_id=%s: %s",
+                genome_id,
+                e,
+            )
             return Response(
                 {"error": "Requested resource could not be processed."},
                 status=status.HTTP_404_NOT_FOUND,
@@ -367,8 +381,9 @@ class TrackObject(APIView):
         - browser: "GenomeBrowser" or "StructuralVariant" (default: GenomeBrowser)
     """
 
-    http_method_names = ["get", "delete"]
+    http_method_names: list[str] = ["get", "delete"]  # noqa: RUF012
 
+    @redis_cache("track", params=(("browser", "GenomeBrowser"),))
     def get(self, request, track_id):
         browser = request.query_params.get("browser", "GenomeBrowser")
 
@@ -440,7 +455,7 @@ class CreateTrack(APIView):
     }
     """
 
-    http_method_names = ["post"]
+    http_method_names: list[str] = ["post"]  # noqa: RUF012
 
     def post(self, request):
         serializer = CreateTrackSerializer(data=request.data)
@@ -473,7 +488,7 @@ class LinkTypeToTrack(APIView):
     }
     """
 
-    http_method_names = ["post"]
+    http_method_names: list[str] = ["post"]  # noqa: RUF012
 
     def post(self, request):
         serializer = LinkTypeToTrackSerializer(data=request.data)
@@ -488,6 +503,7 @@ class LinkTypeToTrack(APIView):
                     status=status.HTTP_200_OK,
                 )
             except Exception as e:
+                logger.exception("Failed to link type to track")
                 return Response(
                     {"error": f"Failed to link type: {e}"},
                     status=status.HTTP_400_BAD_REQUEST,
