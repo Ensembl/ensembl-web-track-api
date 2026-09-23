@@ -1,0 +1,32 @@
+genome_id: <genome_id>
+category:
+  track_category_id: genes-transcripts
+  label: Genes & transcripts
+  type: Genomic
+type: gene
+label: Other genes
+additional_info: Reverse strand
+display_order: 110
+on_by_default: true
+description: Shows all non-coding genes on the reverse strand.
+sources:
+  - name: Ensembl
+    url: https://rapid.ensembl.org/info/genome/genebuild/full_genebuild.html
+settings:
+  gene-overview:
+    scales: [23, 100, 6]
+  gene:
+    scales: [19, 22, 4]
+  transcript:
+    scales: [9, 18, 6]
+    switches: [several, transcript-label]
+  zoomed-transcript-no-letters:
+    program: zoomed-transcript
+    scales: [7, 8, 2]
+    switches: [several, transcript-label]
+    values: [{scale-no-letters: true}]
+  zoomed-transcript:
+    scales: [0, 6, 7]
+    switches: [several, transcript-label]
+datafiles:
+  gene: transcripts.bb
