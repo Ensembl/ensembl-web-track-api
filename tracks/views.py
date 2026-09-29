@@ -27,7 +27,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from tracks.models import DatasetRelease, Specifications, Track, TranscriptomicConfiguration
+from tracks.models import (
+    DatasetRelease,
+    Specifications,
+    Track,
+    TranscriptomicConfiguration,
+)
 from tracks.serializers import (
     CategorySerializer,
     CreateTrackSerializer,
@@ -246,19 +251,27 @@ def get_transcriptomic_category(request, genome_id: str, browser: str, dataset_i
     if browser != "GenomeBrowser":
         return None
 
-    configuration = TranscriptomicConfiguration.objects.filter(
-        genome_id=genome_id,
-        dataset_id__in=dataset_ids,
-        track_count__gt=0,
-        specification__browser=browser,
-        specification__discovery_mode="configured",
-    ).select_related("specification__category").defer("configuration").first()
+    configuration = (
+        TranscriptomicConfiguration.objects.filter(
+            genome_id=genome_id,
+            dataset_id__in=dataset_ids,
+            track_count__gt=0,
+            specification__browser=browser,
+            specification__discovery_mode="configured",
+        )
+        .select_related("specification__category")
+        .defer("configuration")
+        .first()
+    )
 
-    if configuration is None or not Track.objects.filter(
-        genome_id=genome_id,
-        dataset_id=configuration.dataset_id,
-        specifications=configuration.specification,
-    ).exists():
+    if (
+        configuration is None
+        or not Track.objects.filter(
+            genome_id=genome_id,
+            dataset_id=configuration.dataset_id,
+            specifications=configuration.specification,
+        ).exists()
+    ):
         return None
 
     configuration_path = reverse(
@@ -270,9 +283,9 @@ def get_transcriptomic_category(request, genome_id: str, browser: str, dataset_i
         **CategorySerializer(configuration.specification.category).data,
         "track_list": [],
         "configuration": {
-            "href": request.build_absolute_uri(configuration_path) + "?" + urlencode(
-                {"dataset_id": str(configuration.dataset_id)}
-            ),
+            "href": request.build_absolute_uri(configuration_path)
+            + "?"
+            + urlencode({"dataset_id": str(configuration.dataset_id)}),
         },
     }
 
@@ -379,17 +392,23 @@ class GenomeTrackList(APIView):
                 cat_data["track_list"].sort(key=lambda x: x["display_order"])
 
             # Step 8: Get transcriptomic category
-            configured_category = get_transcriptomic_category(request, genome_id, browser, selected_dataset_ids)
+            configured_category = get_transcriptomic_category(
+                request, genome_id, browser, selected_dataset_ids
+            )
             if configured_category is not None:
                 existing = next(
                     (
-                        category for category in categories.values()
-                        if category["track_category_id"] == configured_category["track_category_id"]
+                        category
+                        for category in categories.values()
+                        if category["track_category_id"]
+                        == configured_category["track_category_id"]
                     ),
                     None,
                 )
                 if existing is None:
-                    categories[configured_category["track_category_id"]] = (configured_category)
+                    categories[configured_category["track_category_id"]] = (
+                        configured_category
+                    )
                 else:
                     existing["configuration"] = configured_category["configuration"]
 
@@ -583,16 +602,21 @@ class TranscriptomicConfigurationView(APIView):
         dataset_param = request.query_params.get("dataset_id")
         release_param = request.query_params.get("release")
         if dataset_param is not None and release_param is not None:
-            return Response({"error": "Use dataset_id or release, not both."}, status=400)
+            return Response(
+                {"error": "Use dataset_id or release, not both."}, status=400
+            )
         if dataset_param is not None:
             try:
                 dataset_id = UUID(dataset_param)
             except ValueError:
                 return Response({"error": "dataset_id must be a UUID."}, status=400)
             # A pinned link keeps resolving its historical configuration after a new release.
-            dataset_ids = list(DatasetRelease.objects.filter(
-                genome_id=genome_id, dataset_id=dataset_id,
-            ).values_list("dataset_id", flat=True))
+            dataset_ids = list(
+                DatasetRelease.objects.filter(
+                    genome_id=genome_id,
+                    dataset_id=dataset_id,
+                ).values_list("dataset_id", flat=True)
+            )
         else:
             try:
                 target_release = get_target_release(genome_id, release_param)
@@ -617,15 +641,21 @@ class TranscriptomicConfigurationView(APIView):
             dataset_ids = select_latest_dataset_from_bins(bins)
 
         configuration = (
-            TranscriptomicConfiguration.objects
-            .filter(genome_id=genome_id, dataset_id__in=dataset_ids, track_count__gt=0,
-                    specification__browser="GenomeBrowser", specification__discovery_mode="configured")
+            TranscriptomicConfiguration.objects.filter(
+                genome_id=genome_id,
+                dataset_id__in=dataset_ids,
+                track_count__gt=0,
+                specification__browser="GenomeBrowser",
+                specification__discovery_mode="configured",
+            )
             .values_list("configuration", flat=True)
             .first()
         )
         if configuration is None:
             return Response(
-                {"error": "No transcriptomic configuration for this genome and dataset/release."},
+                {
+                    "error": "No transcriptomic configuration for this genome and dataset/release."
+                },
                 status=status.HTTP_404_NOT_FOUND,
             )
         return Response(configuration)

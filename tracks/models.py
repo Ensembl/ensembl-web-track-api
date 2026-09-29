@@ -94,7 +94,9 @@ class Specifications(models.Model):
     )
 
     discovery_mode = models.CharField(
-        max_length=20, choices=DiscoveryMode.choices, default=DiscoveryMode.INLINE,
+        max_length=20,
+        choices=DiscoveryMode.choices,
+        default=DiscoveryMode.INLINE,
     )
 
 

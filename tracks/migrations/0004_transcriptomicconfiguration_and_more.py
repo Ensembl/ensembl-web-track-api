@@ -9,62 +9,102 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tracks', '0003_query_indexes'),
+        ("tracks", "0003_query_indexes"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='TranscriptomicConfiguration',
+            name="TranscriptomicConfiguration",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('genome_id', tracks.fields.HyphenatedUUIDField()),
-                ('dataset_id', tracks.fields.HyphenatedUUIDField(default=uuid.uuid4, editable=False)),
-                ('track_count', models.PositiveIntegerField(default=0)),
-                ('configuration', models.JSONField(default=dict)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("genome_id", tracks.fields.HyphenatedUUIDField()),
+                (
+                    "dataset_id",
+                    tracks.fields.HyphenatedUUIDField(
+                        default=uuid.uuid4, editable=False
+                    ),
+                ),
+                ("track_count", models.PositiveIntegerField(default=0)),
+                ("configuration", models.JSONField(default=dict)),
             ],
         ),
         migrations.RenameIndex(
-            model_name='datasetrelease',
-            new_name='tracks_data_genome__34d615_idx',
-            old_name='tracks_release_genome_label_idx',
+            model_name="datasetrelease",
+            new_name="tracks_data_genome__34d615_idx",
+            old_name="tracks_release_genome_label_idx",
         ),
         migrations.RenameIndex(
-            model_name='track',
-            new_name='tracks_trac_dataset_95bf62_idx',
-            old_name='tracks_track_dataset_idx',
+            model_name="track",
+            new_name="tracks_trac_dataset_95bf62_idx",
+            old_name="tracks_track_dataset_idx",
         ),
         migrations.RenameIndex(
-            model_name='track',
-            new_name='tracks_trac_genome__f2675d_idx',
-            old_name='tracks_track_genome_dataset_idx',
+            model_name="track",
+            new_name="tracks_trac_genome__f2675d_idx",
+            old_name="tracks_track_genome_dataset_idx",
         ),
         migrations.AddField(
-            model_name='specifications',
-            name='discovery_mode',
-            field=models.CharField(choices=[('inline', 'Inline'), ('configured', 'Configured')], default='inline', max_length=20),
+            model_name="specifications",
+            name="discovery_mode",
+            field=models.CharField(
+                choices=[("inline", "Inline"), ("configured", "Configured")],
+                default="inline",
+                max_length=20,
+            ),
         ),
         migrations.AlterField(
-            model_name='specifications',
-            name='browser',
-            field=models.CharField(choices=[('GenomeBrowser', 'GenomeBrowser'), ('StructuralVariant', 'StructuralVariant')], max_length=20),
+            model_name="specifications",
+            name="browser",
+            field=models.CharField(
+                choices=[
+                    ("GenomeBrowser", "GenomeBrowser"),
+                    ("StructuralVariant", "StructuralVariant"),
+                ],
+                max_length=20,
+            ),
         ),
         migrations.AlterField(
-            model_name='specifications',
-            name='strand',
-            field=models.CharField(blank=True, choices=[('forward', 'forward'), ('reverse', 'reverse')], max_length=20, null=True),
+            model_name="specifications",
+            name="strand",
+            field=models.CharField(
+                blank=True,
+                choices=[("forward", "forward"), ("reverse", "reverse")],
+                max_length=20,
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='specifications',
-            name='type',
-            field=models.CharField(choices=[('gene', 'gene'), ('variant', 'variant'), ('regular', 'regular')], max_length=8),
+            model_name="specifications",
+            name="type",
+            field=models.CharField(
+                choices=[
+                    ("gene", "gene"),
+                    ("variant", "variant"),
+                    ("regular", "regular"),
+                ],
+                max_length=8,
+            ),
         ),
         migrations.AddField(
-            model_name='transcriptomicconfiguration',
-            name='specification',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='tracks.specifications'),
+            model_name="transcriptomicconfiguration",
+            name="specification",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, to="tracks.specifications"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='transcriptomicconfiguration',
-            constraint=models.UniqueConstraint(fields=('genome_id', 'dataset_id'), name='unique_transcriptomic_genome_dataset'),
+            model_name="transcriptomicconfiguration",
+            constraint=models.UniqueConstraint(
+                fields=("genome_id", "dataset_id"),
+                name="unique_transcriptomic_genome_dataset",
+            ),
         ),
     ]
