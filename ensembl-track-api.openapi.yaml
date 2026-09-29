@@ -26,6 +26,64 @@ servers:
   - url: http://www.ensembl.org/api/tracks
     description: Production server
 paths:
+  /transcriptomic/{genome_id}/configuration:
+    get:
+      summary: Returns prepared transcriptomic selections and static filter counts.
+      description: >
+        Resolved through the same dataset/release selection as track_categories, or
+        pinned with dataset_id. Counts are occurrences across
+        handover records, grouped case-insensitively, and do not change with
+        selection. Source metadata is preserved. Each product includes a track_id
+        referencing the registered track. Rendering settings may not yet be configured.
+      parameters:
+        - name: genome_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: dataset_id
+          in: query
+          description: Pin a registered dataset for this genome; mutually exclusive with release.
+          schema:
+            type: string
+            format: uuid
+        - name: release
+          in: query
+          description: Select the catalogue as of this release; defaults to latest when neither parameter is given.
+          schema:
+            type: string
+            format: date
+      responses:
+        '400':
+          description: Invalid dataset UUID or conflicting query parameters.
+        '200':
+          description: Prepared coverage catalogue.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  track_count:
+                    type: integer
+                  filters:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          value:
+                            type: string
+                          count:
+                            type: integer
+                  selections:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+        '404':
+          description: No coverage configuration for the requested genome.
   /track_categories/{genome_id}:
     get:
       summary: Returns all track categories (and tracks) for a given genome at a specific release.
@@ -33,6 +91,8 @@ paths:
         Returns tracks filtered by release date and browser type. 
         Automatically deduplicates tracks with overlapping specifications, 
         keeping only the most recent version of each track type.
+        Configured transcriptomic categories use the same release selection and
+        return a dataset-pinned configuration link with an empty track_list.
       parameters:
         - name: genome_id
           in: path
@@ -251,6 +311,13 @@ components:
     TrackCategory:
       type: object
       properties:
+        configuration:
+          type: object
+          description: Optional discovery entry point; enables categories with an empty track_list.
+          properties:
+            href:
+              type: string
+              format: uri
         track_category_id:
           type: string
           example: genes-transcripts
