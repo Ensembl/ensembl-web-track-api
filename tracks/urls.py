@@ -34,4 +34,9 @@ urlpatterns = [
     # New ingress endpoints
     path("tracks/create", views.CreateTrack.as_view(), name="create_track"),
     path("tracks/link_type", views.LinkTypeToTrack.as_view(), name="link_type"),
+    path(
+        "transcriptomic/<uuid:genome_id>/configuration",
+        views.TranscriptomicConfigurationView.as_view(),
+        name="transcriptomic_configuration",
+    ),
 ]
