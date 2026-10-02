@@ -567,8 +567,9 @@ class TestTrackObject:
         response = api_client.get(f"/track/{track.track_id}?browser=InvalidBrowser")
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_delete_track(self, api_client, genome_id, spec_gc_genomebrowser):
+    def test_delete_track(self, api_client, genome_id, spec_gc_genomebrowser, settings):
         """Test deleting a track."""
+        settings.ALLOWED_METHODS = ["get", "post", "delete"]
         track = Track.objects.create(
             dataset_id=uuid.uuid4(),
             genome_id=genome_id,
@@ -582,8 +583,9 @@ class TestTrackObject:
         # Verify track was deleted
         assert not Track.objects.filter(track_id=track.track_id).exists()
 
-    def test_delete_nonexistent_track(self, api_client):
+    def test_delete_nonexistent_track(self, api_client, settings):
         """Test deleting nonexistent track returns 404."""
+        settings.ALLOWED_METHODS = ["get", "post", "delete"]
         non_existent_track = uuid.uuid4()
         response = api_client.delete(f"/track/{non_existent_track}")
         assert response.status_code == status.HTTP_404_NOT_FOUND

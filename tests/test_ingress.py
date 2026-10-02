@@ -29,6 +29,12 @@ from tracks.models import Category, Source, Specifications, Track
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
 
+@pytest.fixture(autouse=True)
+def allow_post_requests(settings):
+    """Ensure POST requests are allowed for tests."""
+    settings.ALLOWED_METHODS = ["get", "post", "delete"]
+
+
 @pytest.fixture
 def api_client():
     """Return DRF API client for making requests."""
