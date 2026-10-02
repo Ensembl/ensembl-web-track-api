@@ -427,6 +427,86 @@ class TestGenomeTrackList:
         assert "genomic" in category_ids
         assert "variation" in category_ids
 
+    def test_delete_genome_tracks(self, api_client, genome_id, settings):
+        """Test deleting all tracks for a genome."""
+        settings.ALLOWED_METHODS = ["delete"]
+        other_genome_id = uuid.uuid4()
+
+        for dataset_id in [uuid.uuid4(), uuid.uuid4()]:
+            # Create 2 tracks per dataset
+            for _ in range(2):
+                Track.objects.create(
+                    genome_id=genome_id,
+                    dataset_id=dataset_id,
+                    datafiles={"gc-content": "gc.bw"},
+                )
+
+            # Create a track for a different genome but same dataset
+            Track.objects.create(
+                genome_id=other_genome_id,
+                dataset_id=dataset_id,
+                datafiles={"gc-content": "other.bw"},
+            )
+
+        other_tracks_before = list(
+            Track.objects.filter(genome_id=other_genome_id).order_by("pk").values()
+        )
+
+        # Delete all tracks for genome_id
+        response = api_client.delete(f"/track_categories/{genome_id}")
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert response.content == b""
+        assert not Track.objects.filter(genome_id=genome_id).exists()
+        assert (
+            list(
+                Track.objects.filter(genome_id=other_genome_id).order_by("pk").values()
+            )
+            == other_tracks_before
+        )
+
+    def test_delete_missing_genome_tracks(
+        self, api_client, genome_id, spec_gc_genomebrowser, source_gencode, settings
+    ):
+        """Test deleting tracks for a genome with no tracks returns 404 and no changes."""
+        settings.ALLOWED_METHODS = ["delete"]
+
+        # Create track
+        track = Track.objects.create(
+            genome_id=genome_id,
+            dataset_id=uuid.uuid4(),
+            datafiles={"gc-content": "gc.bw"},
+        )
+        track.specifications.add(spec_gc_genomebrowser)
+        track.sources.add(source_gencode)
+
+        models = (
+            Category,
+            DatasetRelease,
+            Source,
+            Specifications,
+            Track,
+            Track.specifications.through,
+            Track.sources.through,
+        )
+
+        def snapshot():
+            return {
+                model._meta.label: list(model.objects.order_by("pk").values())
+                for model in models
+            }
+
+        before = snapshot()
+        missing_genome_id = uuid.uuid4()
+        assert not Track.objects.filter(genome_id=missing_genome_id).exists()
+
+        # Delete tracks for missing genome
+        response = api_client.delete(f"/track_categories/{missing_genome_id}")
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        assert response.json() == {"error": "No tracks found for this genome."}
+        assert snapshot() == before
+
 
 # ── TrackObject Tests ─────────────────────────────────────────────────────────
 
