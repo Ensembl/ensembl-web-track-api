@@ -1,8 +1,8 @@
 """Preparation of the current run-level RNA-seq coverage handover."""
 
+import re
 from collections import Counter, defaultdict
 from copy import deepcopy
-import re
 
 
 def prepare_configuration(records):
@@ -20,7 +20,7 @@ def prepare_configuration(records):
 
     for index, record in enumerate(records):
         if not isinstance(record, dict):
-            raise ValueError(f"Record {index} must be an object.")
+            raise TypeError(f"Record {index} must be an object.")
         for key in ("selection_id", "parent_sample_id", "display_label"):
             if not isinstance(record.get(key), str) or not record[key]:
                 raise ValueError(f"Record {index}: missing or invalid {key}.")

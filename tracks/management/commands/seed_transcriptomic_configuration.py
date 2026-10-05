@@ -1,9 +1,10 @@
 """Register the coverage pilot and its prepared discovery configuration."""
 
 import json
-from datetime import datetime
-from pathlib import Path
+import re
 import uuid
+from datetime import date
+from pathlib import Path
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
@@ -44,17 +45,16 @@ class Command(BaseCommand):
         genome_id = options["genome_id"]
 
         release = options["release"]
-        for date_format in ("%Y-%m", "%Y-%m-%d"):
-            try:
-                parsed = datetime.strptime(release, date_format)
-            except ValueError:
-                continue
-
-            # Require the exact, zero-padded format.
-            if parsed.strftime(date_format) == release:
-                break
-        else:
+        if not re.fullmatch(r"[0-9]{4}-[0-9]{2}(?:-[0-9]{2})?", release):
             raise CommandError("--release must use YYYY-MM or YYYY-MM-DD.")
+
+        try:
+            # Add a day only for calendar validation; preserve the release label.
+            date.fromisoformat(release if len(release) == 10 else f"{release}-01")
+        except ValueError as error:
+            raise CommandError(
+                "--release must contain a valid year, month and optional day."
+            ) from error
 
         dataset_id = options.get("dataset_id") or uuid.uuid4()
         for record in records:
