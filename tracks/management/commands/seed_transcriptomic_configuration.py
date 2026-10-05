@@ -133,13 +133,22 @@ class Command(BaseCommand):
                 )
 
             created_count = 0
-            for record in prepared["selections"]:
+            for record in records:
                 product = record["track_products"][0]
 
                 # Retained catalogue UUID gives stable track IDs across repeated seeds.
                 track_id = uuid.uuid5(
                     config.dataset_id, record["selection_id"] + ":rnaseq_coverage"
                 )
+
+                existing_track = Track.objects.filter(track_id=track_id).first()
+                if existing_track is not None and existing_track.datafiles != {
+                    "rnaseq_coverage": product["track_file"]
+                }:
+                    raise CommandError(
+                        f"Track {track_id} already exists with a different file path. Omit --dataset-id to create a new version at a new release."
+                    )
+
                 track, created = Track.objects.update_or_create(
                     track_id=track_id,
                     defaults={
@@ -149,7 +158,6 @@ class Command(BaseCommand):
                     },
                 )
                 track.specifications.add(spec)
-                product["track_id"] = str(track.track_id)
                 created_count += int(created)
 
             config.configuration = prepared

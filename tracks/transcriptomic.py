@@ -2,7 +2,6 @@
 
 import re
 from collections import Counter, defaultdict
-from copy import deepcopy
 
 
 def prepare_configuration(records):
@@ -95,5 +94,19 @@ def prepare_configuration(records):
             ]
             for key, values in sorted(counts.items())
         },
-        "selections": deepcopy(records),
+        "selections": [
+            {
+                "selection_id": record["selection_id"],
+                "parent_sample_id": record["parent_sample_id"],
+                "display_label": record["display_label"],
+                "selection_level": record["selection_level"],
+                "data_type": record["data_type"],
+                "metadata": dict(record["metadata"]),
+                "track_products": [
+                    {"track_type": product["track_type"]}
+                    for product in record["track_products"]
+                ],
+            }
+            for record in records
+        ],
     }
