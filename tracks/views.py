@@ -17,9 +17,6 @@ import logging
 from collections import defaultdict
 from typing import TypedDict
 from uuid import UUID
-from urllib.parse import urlencode
-
-from django.urls import reverse
 
 from django.db import IntegrityError
 from django.db.models import Prefetch
@@ -247,7 +244,7 @@ def combine_track_and_specification(
     return data
 
 
-def get_transcriptomic_category(request, genome_id: str, browser: str, dataset_ids):
+def get_transcriptomic_category(genome_id: str, browser: str, dataset_ids):
     if browser != "GenomeBrowser":
         return None
 
@@ -274,19 +271,9 @@ def get_transcriptomic_category(request, genome_id: str, browser: str, dataset_i
     ):
         return None
 
-    configuration_path = reverse(
-        "tracks:transcriptomic_configuration",
-        kwargs={"genome_id": genome_id},
-    )
-
     return {
         **CategorySerializer(configuration.specification.category).data,
         "track_list": [],
-        "configuration": {
-            "href": request.build_absolute_uri(configuration_path)
-            + "?"
-            + urlencode({"dataset_id": str(configuration.dataset_id)}),
-        },
     }
 
 
@@ -393,7 +380,7 @@ class GenomeTrackList(APIView):
 
             # Step 8: Get transcriptomic category
             configured_category = get_transcriptomic_category(
-                request, genome_id, browser, selected_dataset_ids
+                genome_id, browser, selected_dataset_ids
             )
             if configured_category is not None:
                 existing = next(
@@ -409,8 +396,6 @@ class GenomeTrackList(APIView):
                     categories[configured_category["track_category_id"]] = (
                         configured_category
                     )
-                else:
-                    existing["configuration"] = configured_category["configuration"]
 
             if not categories:
                 return Response(

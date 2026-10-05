@@ -92,7 +92,7 @@ paths:
         Automatically deduplicates tracks with overlapping specifications, 
         keeping only the most recent version of each track type.
         Configured transcriptomic categories use the same release selection and
-        return a dataset-pinned configuration link with an empty track_list.
+        return an empty track_list.
       parameters:
         - name: genome_id
           in: path
@@ -311,13 +311,6 @@ components:
     TrackCategory:
       type: object
       properties:
-        configuration:
-          type: object
-          description: Optional discovery entry point; enables categories with an empty track_list.
-          properties:
-            href:
-              type: string
-              format: uri
         track_category_id:
           type: string
           example: genes-transcripts
