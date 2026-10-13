@@ -35,6 +35,7 @@ from tracks.serializers import (
     CreateTrackSerializer,
     LinkTypeToTrackSerializer,
 )
+from tracks.temporary_coverage import override_pig_coverage
 from utils.redis_cache import redis_cache
 
 logger = logging.getLogger(__name__)
@@ -441,7 +442,8 @@ class TrackObject(APIView):
 
     http_method_names: list[str] = ["get", "delete"]  # noqa: RUF012
 
-    @redis_cache("track", params=(("browser", "GenomeBrowser"),))
+    # Temporary namespace to not reuse the cache before the RNASeq override
+    @redis_cache("track-pig-coverage-v1", params=(("browser", "GenomeBrowser"),))
     def get(self, request, track_id):
         browser = request.query_params.get("browser", "GenomeBrowser")
 
@@ -479,6 +481,9 @@ class TrackObject(APIView):
         # Remove description and additional_info from single track view
         track_data.pop("description", None)
         track_data.pop("additional_info", None)
+
+        # Temporary Pig RNASeq track payload override
+        override_pig_coverage(track, track_data)
 
         return Response(track_data)
 
