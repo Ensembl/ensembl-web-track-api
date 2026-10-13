@@ -44,7 +44,7 @@ def override_pig_coverage(track, payload):
         payload["label"] = selection["selection_id"]
         payload["additional_info"] = selection.get("metadata", {}).get("tissue", "")
         payload["datafiles"] = {
-            "rnaseq_coverage": (
+            "rnaseq-coverage": (
                 f"{PIG_GENOME_ID[:3]}/{PIG_GENOME_ID}/{PurePosixPath(filepath).name}"
             )
         }
