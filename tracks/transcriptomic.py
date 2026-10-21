@@ -4,11 +4,48 @@ import re
 from collections import Counter, defaultdict
 
 
-def prepare_configuration(records):
-    """Validate the coverage pilot and count records, preserving source metadata.
+def build_selection_hierarchy(selections):
+    """Create a hierarchy of selection IDs: tissue -> sample -> run.
+    Samples and runs retain input order within each alphabetically sorted tissue.
+    """
+    tissues = {}
+    identifiers = set()
+    for selection in selections:
+        selection_id = selection["selection_id"]
+        sample_id = selection["parent_sample_id"]
+        if not isinstance(selection_id, str) or not selection_id:
+            raise ValueError("Missing or invalid selection_id.")
+        if selection_id in identifiers:
+            raise ValueError(f"Duplicate selection_id: {selection_id}")
+        if not isinstance(sample_id, str) or not sample_id:
+            raise ValueError(f"{selection_id}: missing or invalid parent_sample_id.")
+        identifiers.add(selection_id)
+        value = selection["metadata"].get("tissue")
+        if value is not None and not isinstance(value, str):
+            raise ValueError(f"{selection_id}: tissue must be a string or null.")
+        # Normalize tissue labels for grouping (preserve the first label spelling)
+        label = (value or "").strip()
+        key = label.casefold()
+        tissue = tissues.setdefault(
+            key, {"display_label": label or "Unspecified tissue", "samples": {}}
+        )
+        tissue["samples"].setdefault(sample_id, []).append(selection_id)
 
-    This deliberately accepts the current string-valued run-level handover.
-    New selection levels and metadata shapes require an explicit extension.
+    return [
+        {
+            "tissue": key,
+            "display_label": tissue["display_label"],
+            "samples": [
+                {"sample_id": sample_id, "selection_ids": selection_ids}
+                for sample_id, selection_ids in tissue["samples"].items()
+            ],
+        }
+        for key, tissue in sorted(tissues.items())
+    ]
+
+
+def prepare_configuration(records):
+    """Validate the transcriptomic tracks handover JSON and count records.
     """
     if not isinstance(records, list) or not records:
         raise ValueError("Expected a non-empty list of selection records.")
@@ -87,6 +124,7 @@ def prepare_configuration(records):
 
     return {
         "track_count": len(records),
+        "selection_hierarchy": build_selection_hierarchy(records),
         "filters": {
             key: [
                 {"value": value, "count": count}

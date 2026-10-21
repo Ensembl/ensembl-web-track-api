@@ -35,7 +35,7 @@ from tracks.serializers import (
     CreateTrackSerializer,
     LinkTypeToTrackSerializer,
 )
-from tracks.temporary_coverage import override_pig_coverage
+from tracks.transcriptomic_rendering import rendering_metadata_for_tracks
 from utils.redis_cache import redis_cache
 
 logger = logging.getLogger(__name__)
@@ -432,6 +432,88 @@ class GenomeTrackList(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+def browser_tracks(browser):
+    return Track.objects.prefetch_related(
+        Prefetch(
+            "specifications",
+            queryset=Specifications.objects.filter(browser=browser),
+            to_attr="browser_specs",
+        ),
+        "sources",
+    )
+
+
+def track_payload(track, specification, rendering):
+    data = combine_track_and_specification(track, specification, include_datafiles=True)
+    data.pop("description", None)
+    data.pop("additional_info", None)
+    if rendering is not None:
+        data.update(rendering)
+    return data
+
+
+class TrackBatch(APIView):
+    """Backend-facing bulk form of /track/{UUID}; every requested UUID must resolve."""
+
+    http_method_names = ["get"]  # noqa: RUF012
+
+    @redis_cache(
+        "tracks_bulk", params=(("browser", "GenomeBrowser"), ("track_ids", ""))
+    )
+    def get(self, request):
+        browser = request.query_params.get("browser", "GenomeBrowser")
+        if browser not in ("GenomeBrowser", "StructuralVariant"):
+            return Response(
+                {"error": "browser must be 'GenomeBrowser' or 'StructuralVariant'"},
+                status=400,
+            )
+        values = request.query_params.get("track_ids", "").split(",")
+        if not 1 <= len(values) <= 100:
+            return Response(
+                {"error": "Provide between 1 and 100 track UUIDs."}, status=400
+            )
+        try:
+            track_ids = list(dict.fromkeys(str(UUID(value)) for value in values))
+        except ValueError:
+            return Response(
+                {"error": "track_ids must be comma-separated UUIDs."}, status=400
+            )
+        tracks = {
+            str(track.track_id): track
+            for track in browser_tracks(browser).filter(track_id__in=track_ids)
+        }
+        missing = [track_id for track_id in track_ids if track_id not in tracks]
+        if missing:
+            return Response(
+                {"error": "Some tracks were not found.", "track_ids": missing},
+                status=404,
+            )
+        unconfigured = [
+            track_id for track_id, track in tracks.items() if not track.browser_specs
+        ]
+        if unconfigured:
+            return Response(
+                {
+                    "error": f"Tracks have no configuration for browser '{browser}'.",
+                    "track_ids": unconfigured,
+                },
+                status=404,
+            )
+        rendering = rendering_metadata_for_tracks(tracks.values())
+        return Response(
+            {
+                "tracks": [
+                    track_payload(
+                        tracks[track_id],
+                        tracks[track_id].browser_specs[0],
+                        rendering.get(track_id),
+                    )
+                    for track_id in track_ids
+                ]
+            }
+        )
+
+
 class TrackObject(APIView):
     """
     Retrieve a single track by track_id.
@@ -442,8 +524,7 @@ class TrackObject(APIView):
 
     http_method_names: list[str] = ["get", "delete"]  # noqa: RUF012
 
-    # Temporary namespace to not reuse the cache before the RNASeq override
-    @redis_cache("track-pig-coverage-v1", params=(("browser", "GenomeBrowser"),))
+    @redis_cache("track", params=(("browser", "GenomeBrowser"),))
     def get(self, request, track_id):
         browser = request.query_params.get("browser", "GenomeBrowser")
 
@@ -455,9 +536,7 @@ class TrackObject(APIView):
             )
 
         try:
-            track = Track.objects.prefetch_related("specifications", "sources").get(
-                track_id=track_id
-            )
+            track = browser_tracks(browser).get(track_id=track_id)
         except Track.DoesNotExist:
             return Response(
                 {"error": "No track found with this track id."},
@@ -465,7 +544,7 @@ class TrackObject(APIView):
             )
 
         # Filter by browser and spec name
-        spec = track.specifications.filter(browser=browser).first()
+        spec = track.browser_specs[0] if track.browser_specs else None
 
         if not spec:
             return Response(
@@ -473,19 +552,8 @@ class TrackObject(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        # Combine track + spec data
-        track_data = combine_track_and_specification(
-            track, spec, include_datafiles=True
-        )
-
-        # Remove description and additional_info from single track view
-        track_data.pop("description", None)
-        track_data.pop("additional_info", None)
-
-        # Temporary Pig RNASeq track payload override
-        override_pig_coverage(track, track_data)
-
-        return Response(track_data)
+        rendering = rendering_metadata_for_tracks([track])
+        return Response(track_payload(track, spec, rendering.get(str(track.track_id))))
 
     def delete(self, request, track_id):
         try:
@@ -630,17 +698,13 @@ class TranscriptomicConfigurationView(APIView):
             bins = bin_datasets_by_overlapping_specs(datasets, dataset_specs)
             dataset_ids = select_latest_dataset_from_bins(bins)
 
-        configuration = (
-            TranscriptomicConfiguration.objects.filter(
-                genome_id=genome_id,
-                dataset_id__in=dataset_ids,
-                track_count__gt=0,
-                specification__browser="GenomeBrowser",
-                specification__discovery_mode="configured",
-            )
-            .values_list("configuration", flat=True)
-            .first()
-        )
+        configuration = TranscriptomicConfiguration.objects.filter(
+            genome_id=genome_id,
+            dataset_id__in=dataset_ids,
+            track_count__gt=0,
+            specification__browser="GenomeBrowser",
+            specification__discovery_mode="configured",
+        ).first()
         if configuration is None:
             return Response(
                 {
@@ -648,4 +712,10 @@ class TranscriptomicConfigurationView(APIView):
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
-        return Response(configuration)
+        return Response(
+            {
+                **configuration.configuration,
+                "genome_id": str(configuration.genome_id),
+                "dataset_id": str(configuration.dataset_id),
+            }
+        )

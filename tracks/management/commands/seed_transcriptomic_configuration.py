@@ -4,7 +4,7 @@ import json
 import re
 import uuid
 from datetime import date
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
@@ -79,9 +79,9 @@ class Command(BaseCommand):
                     "browser": "GenomeBrowser",
                     "type": "regular",
                     "discovery_mode": "configured",
-                    "files": ["rnaseq_coverage"],
+                    "files": ["rnaseq-coverage"],
                     "trigger": [],
-                    "settings": {},
+                    "settings": {"rnaseq-coverage": {"scales": [0, 100, 3]}},
                     "on_by_default": False,
                     "description": "Run-level RNA-seq coverage supplied by Genebuild.",
                 },
@@ -90,7 +90,7 @@ class Command(BaseCommand):
                 spec.category_id != category.pk
                 or spec.browser != "GenomeBrowser"
                 or spec.discovery_mode != "configured"
-                or spec.files != ["rnaseq_coverage"]
+                or spec.files != ["rnaseq-coverage"]
             ):
                 raise CommandError(
                     "Existing coverage specification conflicts with this importer."
@@ -135,6 +135,8 @@ class Command(BaseCommand):
             created_count = 0
             for record in records:
                 product = record["track_products"][0]
+                # Change absolute (handover) file paths to relative paths for Track API
+                filepath = f"{str(genome_id)[:3]}/{genome_id}/{PurePosixPath(product['track_file']).name}"
 
                 # Retained catalogue UUID gives stable track IDs across repeated seeds.
                 track_id = uuid.uuid5(
@@ -143,7 +145,7 @@ class Command(BaseCommand):
 
                 existing_track = Track.objects.filter(track_id=track_id).first()
                 if existing_track is not None and existing_track.datafiles != {
-                    "rnaseq_coverage": product["track_file"]
+                    "rnaseq-coverage": filepath
                 }:
                     raise CommandError(
                         f"Track {track_id} already exists with a different file path. Omit --dataset-id to create a new version at a new release."
@@ -154,7 +156,7 @@ class Command(BaseCommand):
                     defaults={
                         "genome_id": genome_id,
                         "dataset_id": config.dataset_id,
-                        "datafiles": {"rnaseq_coverage": product["track_file"]},
+                        "datafiles": {"rnaseq-coverage": filepath},
                     },
                 )
                 track.specifications.add(spec)
@@ -173,6 +175,6 @@ class Command(BaseCommand):
             self.style.SUCCESS(
                 f"Seeded {config.track_count} tracks for genome {genome_id} "
                 f"({created_count} created); dataset {config.dataset_id}; release {release}. "
-                "File paths are preserved; trigger/settings remain unchanged."
+                "Datafiles use bucket-relative paths and rnaseq-coverage renderer settings."
             )
         )
