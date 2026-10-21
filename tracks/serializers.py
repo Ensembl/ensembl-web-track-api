@@ -211,7 +211,7 @@ class BaseTrackSerializer(serializers.Serializer):
 
     track_id = serializers.UUIDField()
     label = serializers.CharField()  # type: ignore[assignment]
-    trigger = serializers.ListField() # TODO: remove this field
+    trigger = serializers.ListField()  # TODO: remove this field
     type = serializers.CharField()
     display_order = serializers.IntegerField()
     on_by_default = serializers.BooleanField()

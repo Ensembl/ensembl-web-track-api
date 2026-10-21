@@ -26,12 +26,9 @@ class Command(BaseCommand):
         parser.add_argument("--genome-id", required=True, type=uuid.UUID)
         parser.add_argument("--records", required=True, type=Path)
         parser.add_argument(
-            "--release", required=True, help="Release label, YYYY-MM-DD"
-        )
-        parser.add_argument(
-            "--dataset-id",
-            type=uuid.UUID,
-            help="Existing dataset for an identical retry; omit to create a new version.",
+            "--release",
+            required=True,
+            help="Upstream release association, YYYY-MM or YYYY-MM-DD.",
         )
 
     def handle(self, *args, **options):
@@ -56,7 +53,6 @@ class Command(BaseCommand):
                 "--release must contain a valid year, month and optional day."
             ) from error
 
-        dataset_id = options.get("dataset_id") or uuid.uuid4()
         for record in records:
             supplied_uuid = record["target_genome"].get("genome_uuid")
             if supplied_uuid and supplied_uuid != str(genome_id):
@@ -98,7 +94,6 @@ class Command(BaseCommand):
 
             config, _ = TranscriptomicConfiguration.objects.get_or_create(
                 genome_id=genome_id,
-                dataset_id=dataset_id,
                 defaults={"specification": spec},
             )
             if config.specification_id != spec.pk:
@@ -106,75 +101,97 @@ class Command(BaseCommand):
                     "This genome already has a different configured specification."
                 )
 
-            # The existing selector has no tie-breaker for competing versions in one release.
-            competing = DatasetRelease.objects.filter(
-                genome_id=genome_id,
-                release_label=release,
-                dataset_id__in=Track.objects.filter(
+            # Remember existing POC coverage datasets for later cleanup.
+            old_dataset_ids = set(
+                Track.objects.filter(
                     genome_id=genome_id,
                     specifications=spec,
-                ).values("dataset_id"),
-            ).exclude(dataset_id=dataset_id)
-            if competing.exists():
-                raise CommandError(
-                    "A coverage dataset already exists for this release; retry with its --dataset-id."
-                )
+                ).values_list("dataset_id", flat=True)
+            )
 
-            for record in prepared["selections"]:
-                record["track_products"][0]["track_id"] = str(
-                    uuid.uuid5(
-                        config.dataset_id, record["selection_id"] + ":rnaseq_coverage"
-                    )
-                )
-
-            if config.configuration and config.configuration != prepared:
-                raise CommandError(
-                    "Dataset content differs. Omit --dataset-id to create a new version at a new release."
-                )
-
+            selections_by_id = {
+                selection["selection_id"]: selection
+                for selection in prepared["selections"]
+            }
+            retained_track_ids = []
             created_count = 0
+
             for record in records:
                 product = record["track_products"][0]
                 # Change absolute (handover) file paths to relative paths for Track API
                 filepath = f"{str(genome_id)[:3]}/{genome_id}/{PurePosixPath(product['track_file']).name}"
+                product_key = f"{record['selection_id']}:{product['track_type']}"
 
-                # Retained catalogue UUID gives stable track IDs across repeated seeds.
-                track_id = uuid.uuid5(
-                    config.dataset_id, record["selection_id"] + ":rnaseq_coverage"
+                # Local POC IDs only. Production uses Automation dataset IDs.
+                dataset_id = uuid.uuid5(
+                    genome_id, f"expression-poc-dataset:{product_key}"
                 )
 
-                existing_track = Track.objects.filter(track_id=track_id).first()
-                if existing_track is not None and existing_track.datafiles != {
-                    "rnaseq-coverage": filepath
-                }:
-                    raise CommandError(
-                        f"Track {track_id} already exists with a different file path. Omit --dataset-id to create a new version at a new release."
-                    )
+                track_id = uuid.uuid5(genome_id, f"expression-track:{product_key}")
 
                 track, created = Track.objects.update_or_create(
                     track_id=track_id,
                     defaults={
                         "genome_id": genome_id,
-                        "dataset_id": config.dataset_id,
+                        "dataset_id": dataset_id,
                         "datafiles": {"rnaseq-coverage": filepath},
                     },
                 )
                 track.specifications.add(spec)
+                retained_track_ids.append(track.track_id)
                 created_count += int(created)
+
+                selection = selections_by_id[record["selection_id"]]
+                selection["track_products"][0]["track_id"] = str(track.track_id)
+
+                # Preserve the upstream release association, without
+                # using it to version or select the configuration.
+                DatasetRelease.objects.get_or_create(
+                    genome_id=genome_id,
+                    dataset_id=dataset_id,
+                    release_label=release,
+                )
+
+            # Retire POC coverage tracks absent from the replacement input.
+            stale_tracks = list(
+                Track.objects.filter(
+                    genome_id=genome_id,
+                    specifications=spec,
+                ).exclude(track_id__in=retained_track_ids)
+            )
+
+            for track in stale_tracks:
+                track.specifications.remove(spec)
+                # Preserve a row if another specification still uses it.
+                if not track.specifications.exists():
+                    track.delete()
+
+            # Remove obsolete associations only when no track for this
+            # genome still uses the dataset.
+            remaining_dataset_ids = set(
+                Track.objects.filter(
+                    genome_id=genome_id,
+                    dataset_id__in=old_dataset_ids,
+                ).values_list("dataset_id", flat=True)
+            )
+            unused_dataset_ids = old_dataset_ids - remaining_dataset_ids
+
+            DatasetRelease.objects.filter(
+                genome_id=genome_id,
+                dataset_id__in=unused_dataset_ids,
+            ).delete()
 
             config.configuration = prepared
             config.track_count = prepared["track_count"]
             config.save(update_fields=["configuration", "track_count"])
-            DatasetRelease.objects.get_or_create(
-                genome_id=genome_id,
-                dataset_id=config.dataset_id,
-                release_label=release,
-            )
 
         self.stdout.write(
             self.style.SUCCESS(
                 f"Seeded {config.track_count} tracks for genome {genome_id} "
-                f"({created_count} created); dataset {config.dataset_id}; release {release}. "
-                "Datafiles use bucket-relative paths and rnaseq-coverage renderer settings."
+                f"({created_count} created); "
+                f"retired {len(stale_tracks)} previous coverage tracks; "
+                f"release association {release}. "
+                "Datafiles use bucket-relative paths and "
+                "rnaseq-coverage renderer settings."
             )
         )

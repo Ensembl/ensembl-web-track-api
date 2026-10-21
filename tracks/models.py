@@ -157,16 +157,10 @@ class DatasetRelease(models.Model):
 
 
 class TranscriptomicConfiguration(models.Model):
-    genome_id = HyphenatedUUIDField()
-    dataset_id = HyphenatedUUIDField(default=uuid.uuid4, editable=False)
-    specification = models.ForeignKey(Specifications, on_delete=models.PROTECT)
+    genome_id = HyphenatedUUIDField(unique=True)
+    specification = models.ForeignKey(
+        Specifications,
+        on_delete=models.PROTECT,
+    )
     track_count = models.PositiveIntegerField(default=0)
     configuration = models.JSONField(default=dict)
-
-    class Meta:
-        constraints: ClassVar = [
-            models.UniqueConstraint(
-                fields=["genome_id", "dataset_id"],
-                name="unique_transcriptomic_genome_dataset",
-            ),
-        ]

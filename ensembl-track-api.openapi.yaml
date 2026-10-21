@@ -30,8 +30,12 @@ paths:
     get:
       summary: Get transcriptomic track configuration
       description: >
-        Selections, tissue/sample groups, filters and counts for the client.
-        Use the track endpoints for datafiles and renderer settings.
+        Returns the current expression catalogue for the requested genome,
+        independently of release. Includes selections, tissue/sample groups,
+        filters and counts. Counts are occurrences across handover records,
+        grouped case-insensitively, and do not change with selection.
+        Each selection product includes a track_id referencing the registered
+        track. Use the track endpoints for datafiles and renderer settings.
       parameters:
         - name: genome_id
           in: path
@@ -39,33 +43,16 @@ paths:
           schema:
             type: string
             format: uuid
-        - name: dataset_id
-          in: query
-          description: Dataset UUID. Use either dataset_id or release.
-          schema:
-            type: string
-            format: uuid
-        - name: release
-          in: query
-          description: Release date; defaults to the latest release.
-          schema:
-            type: string
-            format: date
       responses:
-        '400':
-          description: Invalid or conflicting parameters.
         '200':
           description: Transcriptomic configuration.
           content:
             application/json:
               schema:
                 type: object
-                required: [genome_id, dataset_id, track_count, selections, selection_hierarchy, filters]
+                required: [genome_id, track_count, selections, selection_hierarchy, filters]
                 properties:
                   genome_id:
-                    type: string
-                    format: uuid
-                  dataset_id:
                     type: string
                     format: uuid
                   track_count:
@@ -95,8 +82,10 @@ paths:
     get:
       summary: Get track categories and tracks
       description: >
-        Latest track versions for the requested release and browser.
-        Transcriptomic categories have an empty track_list; use the configuration endpoint.
+        Returns inline tracks selected by release and browser, deduplicated
+        by overlapping specifications. Transcriptomic categories reflect
+        current expression availability independently of the requested release
+        and have an empty track_list; use the configuration endpoint.
       parameters:
         - name: genome_id
           in: path
@@ -118,7 +107,7 @@ paths:
         - name: release
           in: query
           required: false
-          description: Include tracks up to this date; defaults to the latest release.
+          description: Include inline tracks up to this date; defaults to the latest release. Does not affect transcriptomic availability.
           schema:
             type: string
             pattern: '^\d{4}-\d{2}-\d{2}$'

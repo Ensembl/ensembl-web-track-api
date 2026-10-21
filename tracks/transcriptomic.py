@@ -45,8 +45,7 @@ def build_selection_hierarchy(selections):
 
 
 def prepare_configuration(records):
-    """Validate the transcriptomic tracks handover JSON and count records.
-    """
+    """Validate the transcriptomic tracks handover JSON and count records."""
     if not isinstance(records, list) or not records:
         raise ValueError("Expected a non-empty list of selection records.")
 

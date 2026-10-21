@@ -245,14 +245,13 @@ def combine_track_and_specification(
     return data
 
 
-def get_transcriptomic_category(genome_id: str, browser: str, dataset_ids):
+def get_transcriptomic_category(genome_id: str, browser: str):
     if browser != "GenomeBrowser":
         return None
 
     configuration = (
         TranscriptomicConfiguration.objects.filter(
             genome_id=genome_id,
-            dataset_id__in=dataset_ids,
             track_count__gt=0,
             specification__browser=browser,
             specification__discovery_mode="configured",
@@ -262,14 +261,13 @@ def get_transcriptomic_category(genome_id: str, browser: str, dataset_ids):
         .first()
     )
 
-    if (
-        configuration is None
-        or not Track.objects.filter(
-            genome_id=genome_id,
-            dataset_id=configuration.dataset_id,
-            specifications=configuration.specification,
-        ).exists()
-    ):
+    if configuration is None:
+        return None
+
+    if not Track.objects.filter(
+        genome_id=genome_id,
+        specifications=configuration.specification,
+    ).exists():
         return None
 
     return {
@@ -283,18 +281,21 @@ def get_transcriptomic_category(genome_id: str, browser: str, dataset_ids):
 
 class GenomeTrackList(APIView):
     """
-    Retrieve or remove all tracks for a genome at a specific release.
+    Retrieve inline tracks at a release and current expression availability,
+    or remove all tracks for a genome.
 
     GET params:
         - browser: "GenomeBrowser" or "StructuralVariant" (default: GenomeBrowser)
-        - release: Release label YYYY-MM-DD (default: most recent)
+        - release: Inline-track release label (default: most recent).
+          Expression availability is independent of this parameter.
     """
 
     http_method_names: list[str] = ["get", "delete"]  # noqa: RUF012
 
     # Defaults must match the query parameter handling below.
     @redis_cache(
-        "track_category", params=(("browser", "GenomeBrowser"), ("release", ""))
+        "track_category_current_expression",
+        params=(("browser", "GenomeBrowser"), ("release", "")),
     )
     def get(self, request, genome_id):
         browser = request.query_params.get("browser", "GenomeBrowser")
@@ -307,17 +308,50 @@ class GenomeTrackList(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        try:
-            # Step 1: Determine target release
-            target_release = get_target_release(genome_id, release_param)
+        # Get transcriptomic category
+        configured_category = get_transcriptomic_category(genome_id, browser)
 
-            # Step 2: Get all datasets up to target release
-            datasets = get_datasets_up_to_release(genome_id, target_release)
-            if not datasets:
+        try:
+            try:
+                # Step 1: Determine target release
+                target_release = get_target_release(genome_id, release_param)
+            except ValueError:
+                if configured_category is None:
+                    raise
+                datasets = []
+            else:
+                # Step 2: Get all datasets up to target release
+                datasets = get_datasets_up_to_release(genome_id, target_release)
+
+            if not datasets and configured_category is None:
                 return Response(
                     {"error": "No datasets found for this genome and release."},
                     status=status.HTTP_404_NOT_FOUND,
                 )
+
+            # Exclude expression-only datasets from inline deduplication.
+            expression_dataset_ids = set(
+                Track.objects.filter(
+                    genome_id=genome_id,
+                    specifications__discovery_mode="configured",
+                    specifications__category__track_category_id="transcriptomic",
+                ).values_list("dataset_id", flat=True)
+            )
+
+            # Preserve any dataset that also supplies existing inline tracks.
+            inline_dataset_ids = set(
+                Track.objects.filter(
+                    genome_id=genome_id,
+                    specifications__discovery_mode="inline",
+                ).values_list("dataset_id", flat=True)
+            )
+
+            expression_only_dataset_ids = expression_dataset_ids - inline_dataset_ids
+            datasets = [
+                dataset
+                for dataset in datasets
+                if dataset["dataset_id"] not in expression_only_dataset_ids
+            ]
 
             # Step 3: Get specifications for each dataset
             dataset_ids = [d["dataset_id"] for d in datasets]
@@ -344,7 +378,7 @@ class GenomeTrackList(APIView):
             )
 
             tracks = list(tracks)
-            if not tracks:
+            if not tracks and configured_category is None:
                 return Response(
                     {"error": "No tracks found for this genome."},
                     status=status.HTTP_404_NOT_FOUND,
@@ -379,10 +413,7 @@ class GenomeTrackList(APIView):
             for cat_data in categories.values():
                 cat_data["track_list"].sort(key=lambda x: x["display_order"])
 
-            # Step 8: Get transcriptomic category
-            configured_category = get_transcriptomic_category(
-                genome_id, browser, selected_dataset_ids
-            )
+            # Step 8: Add transcriptomic category if applicable
             if configured_category is not None:
                 existing = next(
                     (
@@ -436,7 +467,7 @@ def browser_tracks(browser):
     return Track.objects.prefetch_related(
         Prefetch(
             "specifications",
-            queryset=Specifications.objects.filter(browser=browser),
+            queryset=Specifications.objects.filter(browser=browser).order_by("pk"),
             to_attr="browser_specs",
         ),
         "sources",
@@ -646,76 +677,26 @@ class LinkTypeToTrack(APIView):
 
 
 class TranscriptomicConfigurationView(APIView):
-    """
-    Return the prepared catalogue for a pinned dataset or resolved release.
-    """
+    """Return the current expression catalogue for a genome."""
 
     http_method_names: list[str] = ["get"]  # noqa: RUF012
 
-    @redis_cache(
-        "transcriptomic_configuration",
-        params=(("dataset_id", None), ("release", None)),
-    )
+    @redis_cache("transcriptomic_configuration_current")
     def get(self, request, genome_id):
-        dataset_param = request.query_params.get("dataset_id")
-        release_param = request.query_params.get("release")
-        if dataset_param is not None and release_param is not None:
-            return Response(
-                {"error": "Use dataset_id or release, not both."}, status=400
-            )
-        if dataset_param is not None:
-            try:
-                dataset_id = UUID(dataset_param)
-            except ValueError:
-                return Response({"error": "dataset_id must be a UUID."}, status=400)
-            # A pinned link keeps resolving its historical configuration after a new release.
-            dataset_ids = list(
-                DatasetRelease.objects.filter(
-                    genome_id=genome_id,
-                    dataset_id=dataset_id,
-                ).values_list("dataset_id", flat=True)
-            )
-        else:
-            try:
-                target_release = get_target_release(genome_id, release_param)
-            except ValueError:
-                return Response(
-                    {"error": "No releases found for this genome."},
-                    status=status.HTTP_404_NOT_FOUND,
-                )
-
-            datasets = get_datasets_up_to_release(genome_id, target_release)
-            if not datasets:
-                return Response(
-                    {"error": "No datasets found for this genome and release."},
-                    status=status.HTTP_404_NOT_FOUND,
-                )
-
-            dataset_specs = get_specifications_for_datasets(
-                [dataset["dataset_id"] for dataset in datasets],
-                "GenomeBrowser",
-            )
-            bins = bin_datasets_by_overlapping_specs(datasets, dataset_specs)
-            dataset_ids = select_latest_dataset_from_bins(bins)
-
         configuration = TranscriptomicConfiguration.objects.filter(
             genome_id=genome_id,
-            dataset_id__in=dataset_ids,
             track_count__gt=0,
-            specification__browser="GenomeBrowser",
-            specification__discovery_mode="configured",
         ).first()
+
         if configuration is None:
             return Response(
-                {
-                    "error": "No transcriptomic configuration for this genome and dataset/release."
-                },
+                {"error": "No transcriptomic configuration for this genome."},
                 status=status.HTTP_404_NOT_FOUND,
             )
+
         return Response(
             {
                 **configuration.configuration,
                 "genome_id": str(configuration.genome_id),
-                "dataset_id": str(configuration.dataset_id),
             }
         )

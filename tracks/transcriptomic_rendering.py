@@ -2,8 +2,6 @@
 
 from copy import deepcopy
 
-from django.db.models import Q
-
 from tracks.models import TranscriptomicConfiguration
 
 
@@ -52,22 +50,19 @@ def rendering_metadata_for_tracks(tracks):
     }
     if not coverage:
         return {}
-    scope = Q()
-    for genome_id, dataset_id in {
-        (track.genome_id, track.dataset_id) for track in coverage.values()
-    }:
-        scope |= Q(genome_id=genome_id, dataset_id=dataset_id)
+
+    genome_ids = {track.genome_id for track in coverage.values()}
+
     metadata = {}
     for configuration in TranscriptomicConfiguration.objects.select_related(
         "specification"
-    ).filter(scope):
+    ).filter(genome_id__in=genome_ids):
         entries = coverage_track_entries(configuration.configuration)
         orders = lane_orders(entries)
         for track_id in coverage.keys() & entries.keys():
             track = coverage[track_id]
             if (
                 track.genome_id != configuration.genome_id
-                or track.dataset_id != configuration.dataset_id
                 or configuration.specification_id
                 not in {spec.pk for spec in track.browser_specs}
             ):
