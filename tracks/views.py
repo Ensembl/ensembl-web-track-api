@@ -118,7 +118,9 @@ def get_specifications_for_datasets(
     tracks = Track.objects.filter(dataset_id__in=dataset_ids).prefetch_related(
         Prefetch(
             "specifications",
-            queryset=Specifications.objects.filter(browser=browser),
+            queryset=Specifications.objects.filter(
+                browser=browser, discovery_mode="inline"
+            ),
             to_attr="browser_specifications",
         )
     )

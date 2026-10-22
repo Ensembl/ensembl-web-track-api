@@ -30,12 +30,8 @@ paths:
     get:
       summary: Get transcriptomic track configuration
       description: >
-        Returns the current expression catalogue for the requested genome,
-        independently of release. Includes selections, tissue/sample groups,
-        filters and counts. Counts are occurrences across handover records,
-        grouped case-insensitively, and do not change with selection.
-        Each selection product includes a track_id referencing the registered
-        track. Use the track endpoints for datafiles and renderer settings.
+        Current selections, tissue/sample groups and filters, independent of release.
+        Filter counts cover all runs. Use the track endpoints for rendering metadata.
       parameters:
         - name: genome_id
           in: path
@@ -82,10 +78,8 @@ paths:
     get:
       summary: Get track categories and tracks
       description: >
-        Returns inline tracks selected by release and browser, deduplicated
-        by overlapping specifications. Transcriptomic categories reflect
-        current expression availability independently of the requested release
-        and have an empty track_list; use the configuration endpoint.
+        Latest track versions for the requested release and browser.
+        Transcriptomic categories have an empty track_list; use the configuration endpoint.
       parameters:
         - name: genome_id
           in: path
@@ -107,7 +101,7 @@ paths:
         - name: release
           in: query
           required: false
-          description: Include inline tracks up to this date; defaults to the latest release. Does not affect transcriptomic availability.
+          description: Release date; defaults to latest. Does not affect transcriptomic tracks.
           schema:
             type: string
             pattern: '^\d{4}-\d{2}-\d{2}$'
@@ -449,7 +443,7 @@ components:
         lane_order:
           type: integer
           minimum: 0
-          description: Lane position within the transcriptomic dataset.
+          description: Lane position within the genome's transcriptomic tracks.
         track_id:
           type: string
           format: uuid
