@@ -121,25 +121,4 @@ Fallback:
     NS: ${FALLBACK_NS}
     NFS_SERVER: ${HX_NFS_SERVER_CODON}
     NFS_PATH: ${HX_NFS_PATH_CODON}
-
-Prod:
-  stage: deploy-prod
-  extends: .deploy-main
-  environment:
-    name: production
-  when: manual
-  variables:
-    AGENT: ${PROD_AGENT}
-    NS: ${PROD_NS}
-
-Fallback:
-  stage: deploy-prod
-  extends: .deploy-main
-  environment:
-    name: fallback
-  when: manual
-  variables:
-    AGENT: ${FALLBACK_AGENT}
-    NS: ${FALLBACK_NS}
-    NFS_SERVER: ${HX_NFS_SERVER_CODON}
-    NFS_PATH: ${HX_NFS_PATH_CODON}
+  
