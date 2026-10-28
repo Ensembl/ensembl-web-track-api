@@ -1,7 +1,19 @@
+# include template to setup review app
+include:
+  - project: 'ensembl-web/ensembl-gitlab-ci-templates'
+    ref: 'main'
+    file:
+      - 'branch-rules/.branch-rules-template.yaml'
+      - 'deploy/.deploy-main-template.yaml'
+      - 'deploy/.deploy-review-template.yaml'
+      - 'review/.setup-BE-review-template.yaml'
+
 stages:
   - setup
   - build
+  - deploy-review
   - deploy-test
+  - deploy-stage
   - deploy-prod
 
 variables:
@@ -9,61 +21,6 @@ variables:
   DOCKER_TLS_CERTDIR: ""
   NFS_SERVER: ${HL_NFS_SERVER_CODON}
   NFS_PATH: ${HL_NFS_PATH_CODON}
-
-.branch-rules-main:
-  rules:
-    - if: $CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH == "main"
-      when: on_success
-
-.branch-rules-review:
-  extends: .branch-rules-main
-  rules:
-    - if: $CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH != "dev" && $CI_COMMIT_BRANCH != "main"
-      when: on_success
-
-#Base templates
-.deploy:
-  image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
-  before_script:
-    - kubectl config use-context ${AGENT}
-    - kubectl config set-context --current --namespace=${NS}
-  script:
-    - git clone --depth 1 --branch k8s123-migration https://gitlab.ebi.ac.uk/ensembl-web/ensembl-k8s-manifests.git
-    - cd ensembl-k8s-manifests/ensembl-web-track-api
-    - sed -i "s#<NFS_SERVER>#${NFS_SERVER}#g" ./deployment.yaml
-    - sed -i "s#<NFS_PATH>#${NFS_PATH}#g" ./deployment.yaml
-    - kustomize edit set image DOCKER_IMAGE=${DOCKER_IMAGE}
-    - kubectl apply -k .
-
-.deploy-main:
-  extends:
-    - .deploy
-    - .branch-rules-main
-
-.deploy-review:
-  extends:
-    - .deploy
-    - .branch-rules-review
-
-# Setup Review app in its own namespace named by branch name (CI_COMMIT_REF_SLUG)
-Setup:Review:
-  stage: setup
-  image: dockerhub.ebi.ac.uk/ensembl-web/deploy-tools:latest
-  environment:
-    name: development
-  before_script:
-    - kubectl config use-context ${AGENT}
-    - kubectl config set-context --current --namespace=${NS}
-  variables:
-    AGENT: ${REVIEW_AGENT}
-    NS: ${CI_COMMIT_REF_SLUG}
-  script:
-    - kubectl create configmap metadata-api-configmap --from-env-file=.env.sample --dry-run=client -o yaml | kubectl apply -f -
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "push" &&
-        $CI_COMMIT_BEFORE_SHA == "0000000000000000000000000000000000000000" &&
-        $CI_COMMIT_REF_NAME !~  "/^nodeploy\/.*$/"
-      when: always
 
 #Build docker image
 Docker:
@@ -79,7 +36,70 @@ Docker:
     - docker rmi ${DOCKER_IMAGE}
     - docker logout $CI_REGISTRY
 
+# Jobs extended from templates to setup and deploy review environment, dev, staging, prod and fallback environments
+# Create a review deployment (runs once per new branch)
+Setup Review:
+  extends: .setup-review-newk8s
+  stage: setup
+  environment:
+    name: development
+  variables:
+    GIT_STRATEGY: none
+    AGENT: ${DEV_AGENT}
+    DEV_NS: ${DEV_NS}
+    REVIEW_NS: ${CI_COMMIT_REF_SLUG}
+    BE_INGRESS: ""
+
+# Deploy review environment
+Deploy Review:
+  extends: .deploy-review
+  stage: deploy-review
+  variables:
+    AGENT: ${DEV_AGENT}
+    REVIEW_NS: ${CI_COMMIT_REF_SLUG}
+  environment:
+    name: development
+    url: https://${REVIEW_NS}.review.ensembl.org
+    on_stop: Stop Review
+
+Stop Review:
+  extends: .stop-review
+  stage: deploy-review
+  variables:
+    # Must match deploy-review; its job variables are not inherited here.
+    AGENT: ${DEV_AGENT}
+    REVIEW_NS: ${CI_COMMIT_REF_SLUG}
+    GIT_STRATEGY: none
+  rules:
+    - if: $CI_DEPLOY_FREEZE == null && $CI_COMMIT_BRANCH && $CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BRANCH != "dev"
+      when: manual
+      allow_failure: true
+  environment:
+    name: development
+    action: stop
+
 #Deploy to k8s
+# Deploy Dev
+Dev:
+  stage: deploy-test
+  extends: .deploy-main
+  environment:
+    name: development
+  variables:
+    AGENT: ${DEV_AGENT}
+    NS: ${DEV_NS}
+
+# Deploy Stage
+Staging:
+  stage: deploy-stage
+  extends: .deploy-main
+  environment:
+    name: staging
+  variables:
+    AGENT: ${STAGING_AGENT}
+    NS: ${STAGING_NS}
+
+#Deploy prod & fallback environment
 Prod:
   stage: deploy-prod
   extends: .deploy-main
@@ -101,30 +121,4 @@ Fallback:
     NS: ${FALLBACK_NS}
     NFS_SERVER: ${HX_NFS_SERVER_CODON}
     NFS_PATH: ${HX_NFS_PATH_CODON}
-
-Staging:
-  stage: deploy-test
-  extends: .deploy-main
-  environment:
-    name: staging
-  variables:
-    AGENT: ${STAGING_AGENT}
-    NS: ${STAGING_NS}
-
-Dev:
-  stage: deploy-test
-  extends: .deploy-main
-  environment:
-    name: development
-  variables:
-    AGENT: ${DEV_AGENT}
-    NS: ${DEV_NS}
-
-Review:
-  stage: deploy-test
-  extends: .deploy-review
-  environment:
-    name: development
-  variables:
-    AGENT: ${REVIEW_AGENT}
-    NS: ${CI_COMMIT_REF_SLUG}
+  
