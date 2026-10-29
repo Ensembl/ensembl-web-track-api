@@ -54,6 +54,10 @@ class Specifications(models.Model):
         GENOME_BROWSER = "GenomeBrowser", "GenomeBrowser"
         STRUCTURAL_VARIANT = "StructuralVariant", "StructuralVariant"
 
+    class DiscoveryMode(models.TextChoices):
+        INLINE = "inline", "Inline"
+        CONFIGURED = "configured", "Configured"
+
     name = models.CharField(max_length=50, unique=True)
     label = models.CharField(max_length=50)
 
@@ -87,6 +91,12 @@ class Specifications(models.Model):
     browser = models.CharField(
         choices=BrowserType.choices,
         max_length=20,
+    )
+
+    discovery_mode = models.CharField(
+        max_length=20,
+        choices=DiscoveryMode.choices,
+        default=DiscoveryMode.INLINE,
     )
 
 
@@ -144,3 +154,13 @@ class DatasetRelease(models.Model):
         indexes: ClassVar = [
             models.Index(fields=["genome_id", "-release_label"]),
         ]
+
+
+class TranscriptomicConfiguration(models.Model):
+    genome_id = HyphenatedUUIDField(unique=True)
+    specification = models.ForeignKey(
+        Specifications,
+        on_delete=models.PROTECT,
+    )
+    track_count = models.PositiveIntegerField(default=0)
+    configuration = models.JSONField(default=dict)

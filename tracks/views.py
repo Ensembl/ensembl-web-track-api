@@ -24,12 +24,18 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from tracks.models import DatasetRelease, Specifications, Track
+from tracks.models import (
+    DatasetRelease,
+    Specifications,
+    Track,
+    TranscriptomicConfiguration,
+)
 from tracks.serializers import (
     CategorySerializer,
     CreateTrackSerializer,
     LinkTypeToTrackSerializer,
 )
+from tracks.transcriptomic_rendering import rendering_metadata_for_tracks
 from utils.redis_cache import redis_cache
 
 logger = logging.getLogger(__name__)
@@ -112,7 +118,9 @@ def get_specifications_for_datasets(
     tracks = Track.objects.filter(dataset_id__in=dataset_ids).prefetch_related(
         Prefetch(
             "specifications",
-            queryset=Specifications.objects.filter(browser=browser),
+            queryset=Specifications.objects.filter(
+                browser=browser, discovery_mode="inline"
+            ),
             to_attr="browser_specifications",
         )
     )
@@ -239,45 +247,113 @@ def combine_track_and_specification(
     return data
 
 
+def get_transcriptomic_category(genome_id: str, browser: str):
+    if browser != "GenomeBrowser":
+        return None
+
+    configuration = (
+        TranscriptomicConfiguration.objects.filter(
+            genome_id=genome_id,
+            track_count__gt=0,
+            specification__browser=browser,
+            specification__discovery_mode="configured",
+        )
+        .select_related("specification__category")
+        .defer("configuration")
+        .first()
+    )
+
+    if configuration is None:
+        return None
+
+    if not Track.objects.filter(
+        genome_id=genome_id,
+        specifications=configuration.specification,
+    ).exists():
+        return None
+
+    return {
+        **CategorySerializer(configuration.specification.category).data,
+        "track_list": [],
+    }
+
+
 # ── Views ─────────────────────────────────────────────────────────────────────
 
 
 class GenomeTrackList(APIView):
     """
-    Retrieve or remove all tracks for a genome at a specific release.
+    Retrieve inline tracks at a release and current expression availability,
+    or remove all tracks for a genome.
 
     GET params:
         - browser: "GenomeBrowser" or "StructuralVariant" (default: GenomeBrowser)
-        - release: Release label YYYY-MM-DD (default: most recent)
+        - release: Inline-track release label (default: most recent).
+          Expression availability is independent of this parameter.
     """
 
     http_method_names: list[str] = ["get", "delete"]  # noqa: RUF012
 
     # Defaults must match the query parameter handling below.
     @redis_cache(
-        "track_category", params=(("browser", "GenomeBrowser"), ("release", ""))
+        "track_category_current_expression",
+        params=(("browser", "GenomeBrowser"), ("release", "")),
     )
     def get(self, request, genome_id):
         browser = request.query_params.get("browser", "GenomeBrowser")
         release_param = request.query_params.get("release")
+
         # Validate browser
         if browser not in ["GenomeBrowser", "StructuralVariant"]:
             return Response(
                 {"error": "browser must be 'GenomeBrowser' or 'StructuralVariant'"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+        # Get transcriptomic category
+        configured_category = get_transcriptomic_category(genome_id, browser)
+
         try:
-            # Step 1: Determine target release
-            target_release = get_target_release(genome_id, release_param)
+            try:
+                # Step 1: Determine target release
+                target_release = get_target_release(genome_id, release_param)
+            except ValueError:
+                if configured_category is None:
+                    raise
+                datasets = []
+            else:
+                # Step 2: Get all datasets up to target release
+                datasets = get_datasets_up_to_release(genome_id, target_release)
 
-            # Step 2: Get all datasets up to target release
-            datasets = get_datasets_up_to_release(genome_id, target_release)
-
-            if not datasets:
+            if not datasets and configured_category is None:
                 return Response(
                     {"error": "No datasets found for this genome and release."},
                     status=status.HTTP_404_NOT_FOUND,
                 )
+
+            # Exclude expression-only datasets from inline deduplication.
+            expression_dataset_ids = set(
+                Track.objects.filter(
+                    genome_id=genome_id,
+                    specifications__discovery_mode="configured",
+                    specifications__category__track_category_id="transcriptomic",
+                ).values_list("dataset_id", flat=True)
+            )
+
+            # Preserve any dataset that also supplies existing inline tracks.
+            inline_dataset_ids = set(
+                Track.objects.filter(
+                    genome_id=genome_id,
+                    specifications__discovery_mode="inline",
+                ).values_list("dataset_id", flat=True)
+            )
+
+            expression_only_dataset_ids = expression_dataset_ids - inline_dataset_ids
+            datasets = [
+                dataset
+                for dataset in datasets
+                if dataset["dataset_id"] not in expression_only_dataset_ids
+            ]
 
             # Step 3: Get specifications for each dataset
             dataset_ids = [d["dataset_id"] for d in datasets]
@@ -289,14 +365,14 @@ class GenomeTrackList(APIView):
             # Step 5: Select latest dataset from each bin
             selected_dataset_ids = select_latest_dataset_from_bins(bins)
 
-            # Step 6: Get all tracks from selected datasets
+            # Step 6: Get all inline tracks from selected datasets
             tracks = Track.objects.filter(
                 genome_id=genome_id, dataset_id__in=selected_dataset_ids
             ).prefetch_related(
                 Prefetch(
                     "specifications",
                     queryset=Specifications.objects.filter(
-                        browser=browser
+                        browser=browser, discovery_mode="inline"
                     ).select_related("category"),
                     to_attr="browser_specifications",
                 ),
@@ -304,13 +380,13 @@ class GenomeTrackList(APIView):
             )
 
             tracks = list(tracks)
-            if not tracks:
+            if not tracks and configured_category is None:
                 return Response(
                     {"error": "No tracks found for this genome."},
                     status=status.HTTP_404_NOT_FOUND,
                 )
 
-            # Step 7: For each track, get specification and group by category
+            # Step 7: For each inline track, get specification and group by category
             categories = {}
 
             for track in tracks:
@@ -335,17 +411,33 @@ class GenomeTrackList(APIView):
                 track_data = combine_track_and_specification(track, spec)
                 categories[category_id]["track_list"].append(track_data)
 
+            # Sort track_list by display_order within each category
+            for cat_data in categories.values():
+                cat_data["track_list"].sort(key=lambda x: x["display_order"])
+
+            # Step 8: Add transcriptomic category if applicable
+            if configured_category is not None:
+                existing = next(
+                    (
+                        category
+                        for category in categories.values()
+                        if category["track_category_id"]
+                        == configured_category["track_category_id"]
+                    ),
+                    None,
+                )
+                if existing is None:
+                    categories[configured_category["track_category_id"]] = (
+                        configured_category
+                    )
+
             if not categories:
                 return Response(
                     {"error": "No tracks found for this genome."},
                     status=status.HTTP_404_NOT_FOUND,
                 )
 
-            # Sort track_list by display_order within each category
-            for cat_data in categories.values():
-                cat_data["track_list"].sort(key=lambda x: x["display_order"])
-
-            # Step 8: Return
+            # Step 9: Return
             return Response(
                 {"track_categories": list(categories.values())},
                 status=status.HTTP_200_OK,
@@ -373,6 +465,88 @@ class GenomeTrackList(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+def browser_tracks(browser):
+    return Track.objects.prefetch_related(
+        Prefetch(
+            "specifications",
+            queryset=Specifications.objects.filter(browser=browser).order_by("pk"),
+            to_attr="browser_specs",
+        ),
+        "sources",
+    )
+
+
+def track_payload(track, specification, rendering):
+    data = combine_track_and_specification(track, specification, include_datafiles=True)
+    data.pop("description", None)
+    data.pop("additional_info", None)
+    if rendering is not None:
+        data.update(rendering)
+    return data
+
+
+class TrackBatch(APIView):
+    """Backend-facing bulk form of /track/{UUID}; every requested UUID must resolve."""
+
+    http_method_names = ["get"]  # noqa: RUF012
+
+    @redis_cache(
+        "tracks_bulk", params=(("browser", "GenomeBrowser"), ("track_ids", ""))
+    )
+    def get(self, request):
+        browser = request.query_params.get("browser", "GenomeBrowser")
+        if browser not in ("GenomeBrowser", "StructuralVariant"):
+            return Response(
+                {"error": "browser must be 'GenomeBrowser' or 'StructuralVariant'"},
+                status=400,
+            )
+        values = request.query_params.get("track_ids", "").split(",")
+        if not 1 <= len(values) <= 100:
+            return Response(
+                {"error": "Provide between 1 and 100 track UUIDs."}, status=400
+            )
+        try:
+            track_ids = list(dict.fromkeys(str(UUID(value)) for value in values))
+        except ValueError:
+            return Response(
+                {"error": "track_ids must be comma-separated UUIDs."}, status=400
+            )
+        tracks = {
+            str(track.track_id): track
+            for track in browser_tracks(browser).filter(track_id__in=track_ids)
+        }
+        missing = [track_id for track_id in track_ids if track_id not in tracks]
+        if missing:
+            return Response(
+                {"error": "Some tracks were not found.", "track_ids": missing},
+                status=404,
+            )
+        unconfigured = [
+            track_id for track_id, track in tracks.items() if not track.browser_specs
+        ]
+        if unconfigured:
+            return Response(
+                {
+                    "error": f"Tracks have no configuration for browser '{browser}'.",
+                    "track_ids": unconfigured,
+                },
+                status=404,
+            )
+        rendering = rendering_metadata_for_tracks(tracks.values())
+        return Response(
+            {
+                "tracks": [
+                    track_payload(
+                        tracks[track_id],
+                        tracks[track_id].browser_specs[0],
+                        rendering.get(track_id),
+                    )
+                    for track_id in track_ids
+                ]
+            }
+        )
+
+
 class TrackObject(APIView):
     """
     Retrieve a single track by track_id.
@@ -395,9 +569,7 @@ class TrackObject(APIView):
             )
 
         try:
-            track = Track.objects.prefetch_related("specifications", "sources").get(
-                track_id=track_id
-            )
+            track = browser_tracks(browser).get(track_id=track_id)
         except Track.DoesNotExist:
             return Response(
                 {"error": "No track found with this track id."},
@@ -405,7 +577,7 @@ class TrackObject(APIView):
             )
 
         # Filter by browser and spec name
-        spec = track.specifications.filter(browser=browser).first()
+        spec = track.browser_specs[0] if track.browser_specs else None
 
         if not spec:
             return Response(
@@ -413,16 +585,8 @@ class TrackObject(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        # Combine track + spec data
-        track_data = combine_track_and_specification(
-            track, spec, include_datafiles=True
-        )
-
-        # Remove description and additional_info from single track view
-        track_data.pop("description", None)
-        track_data.pop("additional_info", None)
-
-        return Response(track_data)
+        rendering = rendering_metadata_for_tracks([track])
+        return Response(track_payload(track, spec, rendering.get(str(track.track_id))))
 
     def delete(self, request, track_id):
         try:
@@ -511,4 +675,30 @@ class LinkTypeToTrack(APIView):
         return Response(
             {"error": "Validation failed", "details": serializer.errors},
             status=status.HTTP_400_BAD_REQUEST,
+        )
+
+
+class TranscriptomicConfigurationView(APIView):
+    """Return the current expression catalogue for a genome."""
+
+    http_method_names: list[str] = ["get"]  # noqa: RUF012
+
+    @redis_cache("transcriptomic_configuration_current")
+    def get(self, request, genome_id):
+        configuration = TranscriptomicConfiguration.objects.filter(
+            genome_id=genome_id,
+            track_count__gt=0,
+        ).first()
+
+        if configuration is None:
+            return Response(
+                {"error": "No transcriptomic configuration for this genome."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        return Response(
+            {
+                **configuration.configuration,
+                "genome_id": str(configuration.genome_id),
+            }
         )
