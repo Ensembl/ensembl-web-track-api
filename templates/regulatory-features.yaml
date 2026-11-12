@@ -1,0 +1,20 @@
+genome_id: <genome_id>
+category:
+  track_category_id: regulatory-features
+  label: Regulation
+  type: Regulation
+type: regular
+label: Regulatory annotation
+display_order: 300
+on_by_default: true
+description: |-
+  Promoters, enhancers, and open chromatin regions are available for all species.
+  CTCF binding sites are only available for some species.
+sources:
+  - name: Ensembl Regulation
+    url: https://regulation.ensembl.org
+settings:
+  regulation:
+    scales: [1, 100, 3]
+datafiles:
+  regulation: regulatory-features.bb

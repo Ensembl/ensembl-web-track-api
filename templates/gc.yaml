@@ -1,0 +1,18 @@
+genome_id: <genome_id>
+category:
+  track_category_id: assembly
+  label: Assembly
+  type: Genomic
+type: regular
+label: "%GC"
+display_order: 200
+on_by_default: false
+description: Shows the percentage of Gs and Cs in a region
+sources:
+  - name: Ensembl
+    url: https://www.ensembl.org/index.html
+settings:
+  gc:
+    scales: [0, 100, 3]
+datafiles:
+  gc: gc.bw
