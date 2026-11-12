@@ -30,8 +30,9 @@ paths:
     get:
       summary: Get transcriptomic track configuration
       description: >
-        Current selections, tissue/sample groups and filters, independent of release.
-        Filter counts cover all runs. Use the track endpoints for rendering metadata.
+        Current selections, data-defined hierarchy and filters, independent of release.
+        Filter counts cover individual tracks, including aggregates.
+        Use the track endpoints for rendering metadata.
       parameters:
         - name: genome_id
           in: path
@@ -71,7 +72,7 @@ paths:
                   selection_hierarchy:
                     type: array
                     items:
-                      $ref: '#/components/schemas/TranscriptomicTissueGroup'
+                      $ref: '#/components/schemas/TranscriptomicHierarchyNode'
         '404':
           description: Configuration not found.
   /track_categories/{genome_id}:
@@ -333,39 +334,40 @@ components:
             - Variation
             - Regulation
 
-    TranscriptomicTissueGroup:
+    TranscriptomicHierarchyNode:
       type: object
       additionalProperties: false
-      required: [tissue, display_label, samples]
+      required: [level, value, display_label, selection_ids, children]
       properties:
-        tissue:
+        level:
           type: string
-          description: Tissue key; empty if unspecified.
+          description: Grouping dimension declared by the input hierarchy.
+        value:
+          type: string
+          nullable: true
+          description: Exact grouping value; null when absent.
         display_label:
           type: string
-          description: Tissue label, or Unspecified tissue.
-        samples:
+          nullable: true
+          description: Group label, preserving the supplied value.
+        selection_ids:
           type: array
           items:
-            type: object
-            additionalProperties: false
-            required: [sample_id, selection_ids]
-            properties:
-              sample_id:
-                type: string
-                description: Matches parent_sample_id in selections.
-              selection_ids:
-                type: array
-                items:
-                  type: string
-                description: References to selections[].selection_id.
+            type: string
+          description: >
+            References to selections[].selection_id attached directly to this node.
+            Render these before child groups.
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/TranscriptomicHierarchyNode'
+          description: Child groups in hierarchy order.
 
     TranscriptomicSelection:
       type: object
       additionalProperties: false
       required:
         - selection_id
-        - parent_sample_id
         - display_label
         - selection_level
         - data_type
@@ -374,13 +376,10 @@ components:
       properties:
         selection_id:
           type: string
-        parent_sample_id:
-          type: string
         display_label:
           type: string
         selection_level:
           type: string
-          enum: [run]
         data_type:
           type: string
           enum: [rnaseq]
@@ -404,7 +403,7 @@ components:
       properties:
         track_type:
           type: string
-          enum: [rnaseq_coverage]
+          enum: [bigwig, bigbed]
         track_id:
           type: string
           format: uuid
@@ -435,9 +434,6 @@ components:
           type: string
           format: uuid
           description: Transcriptomic dataset UUID.
-        run_id:
-          type: string
-          description: Transcriptomic run ID.
         tissue:
           type: string
         lane_order:

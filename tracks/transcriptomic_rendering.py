@@ -5,69 +5,98 @@ from copy import deepcopy
 from tracks.models import TranscriptomicConfiguration
 
 
-def coverage_track_entries(payload):
+def transcriptomic_track_entries(payload):
     entries = {}
     for selection in payload["selections"]:
-        if selection["selection_level"] != "run" or selection["data_type"] != "rnaseq":
-            continue
         for product in selection["track_products"]:
-            if product["track_type"] == "rnaseq_coverage":
-                entries.setdefault(product["track_id"], selection)
+            entries[product["track_id"]] = selection
     return entries
 
 
-def lane_orders(entries):
-    def key(track_id):
-        selection = entries[track_id]
-        tissue = (selection["metadata"].get("tissue") or "").strip().casefold()
-        return not bool(tissue), tissue, selection["selection_id"].casefold(), track_id
+def lane_orders(payload):
+    """Order tracks by walking the selection hierarchy."""
+    selections = {
+        selection["selection_id"]: selection for selection in payload["selections"]
+    }
+    orders = {}
 
-    return {track_id: order for order, track_id in enumerate(sorted(entries, key=key))}
+    def visit(nodes):
+        for node in nodes:
+            for selection_id in node["selection_ids"]:
+                selection = selections[selection_id]
+                for product in selection["track_products"]:
+                    track_id = product["track_id"]
+                    orders[track_id] = len(orders)
+
+            visit(node["children"])
+
+    visit(payload["selection_hierarchy"])
+    return orders
 
 
 def rendering_metadata(track, selection, specification, lane_order):
-    tissue = (selection["metadata"].get("tissue") or "").strip()
-    return {
+    metadata = {
         "genome_id": str(track.genome_id),
         "dataset_id": str(track.dataset_id),
-        "label": selection["selection_id"],
-        "run_id": selection["selection_id"],
-        "tissue": tissue,
-        "additional_info": tissue,
+        "label": selection["display_label"],
         "display_order": specification.display_order,
         "lane_order": lane_order,
         "datafiles": dict(track.datafiles),
         "settings": deepcopy(specification.settings),
     }
 
+    if "tissue" in selection["metadata"]:
+        tissue = selection["metadata"]["tissue"]
+        metadata["tissue"] = tissue
+        metadata["additional_info"] = tissue
+
+    return metadata
+
 
 def rendering_metadata_for_tracks(tracks):
-    """Resolve configurations once per batch."""
-    coverage = {
-        str(track.track_id): track
-        for track in tracks
-        if "rnaseq-coverage" in track.datafiles
+    """Resolve configurations once per batch using each track's specification."""
+    specification_names = {
+        "rnaseq-coverage-genomebrowser",
+        "rnaseq-bigbed-genomebrowser",
     }
-    if not coverage:
+
+    candidates = {}
+    specifications = {}
+
+    for track in tracks:
+        specification = next(
+            (spec for spec in track.browser_specs if spec.name in specification_names),
+            None,
+        )
+        if specification is None:
+            continue
+
+        track_id = str(track.track_id)
+        candidates[track_id] = track
+        specifications[track_id] = specification
+
+    if not candidates:
         return {}
 
-    genome_ids = {track.genome_id for track in coverage.values()}
-
+    genome_ids = {track.genome_id for track in candidates.values()}
     metadata = {}
-    for configuration in TranscriptomicConfiguration.objects.select_related(
-        "specification"
-    ).filter(genome_id__in=genome_ids):
-        entries = coverage_track_entries(configuration.configuration)
-        orders = lane_orders(entries)
-        for track_id in coverage.keys() & entries.keys():
-            track = coverage[track_id]
-            if (
-                track.genome_id != configuration.genome_id
-                or configuration.specification_id
-                not in {spec.pk for spec in track.browser_specs}
-            ):
+
+    for configuration in TranscriptomicConfiguration.objects.filter(
+        genome_id__in=genome_ids
+    ):
+        entries = transcriptomic_track_entries(configuration.configuration)
+        orders = lane_orders(configuration.configuration)
+
+        for track_id in candidates.keys() & entries.keys():
+            track = candidates[track_id]
+            if track.genome_id != configuration.genome_id:
                 continue
+
             metadata[track_id] = rendering_metadata(
-                track, entries[track_id], configuration.specification, orders[track_id]
+                track,
+                entries[track_id],
+                specifications[track_id],
+                orders[track_id],
             )
+
     return metadata

@@ -268,7 +268,9 @@ def get_transcriptomic_category(genome_id: str, browser: str):
 
     if not Track.objects.filter(
         genome_id=genome_id,
-        specifications=configuration.specification,
+        specifications__category_id=configuration.specification.category_id,
+        specifications__browser=browser,
+        specifications__discovery_mode="configured",
     ).exists():
         return None
 
