@@ -11,7 +11,7 @@ jobs:
       github.event.ref != 'dev'
     runs-on: ubuntu-latest
     env:
-      REPO: ensembl-web%2F${{ github.event.repository.name }}
+      REPO: ensembl-web%2Fensembl-track-api
       TOKEN: ${{ secrets.GITLAB_TOKEN }}
       BRANCH: ${{ github.event.ref }}
     steps:
