@@ -21,7 +21,6 @@ variables:
   DOCKER_TLS_CERTDIR: ""
   NFS_SERVER: ${HL_NFS_SERVER_CODON}
   NFS_PATH: ${HL_NFS_PATH_CODON}
-  BE_INGRESS: ensembl-track-api-ingress-${CI_COMMIT_REF_SLUG}
 
 #Build docker image
 Docker:
@@ -49,7 +48,7 @@ Setup Review:
     AGENT: ${DEV_AGENT}
     DEV_NS: ${DEV_NS}
     REVIEW_NS: ${CI_COMMIT_REF_SLUG}
-    BE_INGRESS: ""
+    BE_INGRESS: ensembl-track-api-ingress-${CI_COMMIT_REF_SLUG}
 
 # Deploy review environment
 Deploy Review:
