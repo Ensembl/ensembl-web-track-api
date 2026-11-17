@@ -15,6 +15,8 @@
 
 import logging
 from collections import defaultdict
+from copy import deepcopy
+from pathlib import PurePosixPath
 from typing import TypedDict
 from uuid import UUID
 
@@ -685,7 +687,7 @@ class TranscriptomicConfigurationView(APIView):
 
     http_method_names: list[str] = ["get"]  # noqa: RUF012
 
-    @redis_cache("transcriptomic_configuration_current")
+    @redis_cache("transcriptomic_configuration_v3")
     def get(self, request, genome_id):
         configuration = TranscriptomicConfiguration.objects.filter(
             genome_id=genome_id,
@@ -698,9 +700,23 @@ class TranscriptomicConfigurationView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        return Response(
-            {
-                **configuration.configuration,
-                "genome_id": str(configuration.genome_id),
-            }
-        )
+        payload = deepcopy(configuration.configuration)
+        track_ids = [
+            product["track_id"]
+            for selection in payload["selections"]
+            for product in selection["track_products"]
+        ]
+        datafiles = {
+            str(track_id): files
+            for track_id, files in Track.objects.filter(
+                genome_id=genome_id, track_id__in=track_ids
+            ).values_list("track_id", "datafiles")
+        }
+        for selection in payload["selections"]:
+            for product in selection["track_products"]:
+                filepath = next(iter(datafiles[product["track_id"]].values()))
+                product["display_label"] = (
+                    PurePosixPath(filepath).parent.name.replace("_", " ").capitalize()
+                )
+        payload["genome_id"] = str(configuration.genome_id)
+        return Response(payload)

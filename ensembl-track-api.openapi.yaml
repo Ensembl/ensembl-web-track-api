@@ -400,6 +400,7 @@ components:
       required:
         - track_type
         - track_id
+        - display_label
       properties:
         track_type:
           type: string
@@ -407,6 +408,9 @@ components:
         track_id:
           type: string
           format: uuid
+        display_label:
+          type: string
+          example: Coverage forward
 
     TrackList:
       type: object
