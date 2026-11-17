@@ -11,3 +11,16 @@ def parse_cache_ttl(value):
             "CACHE_TTL must be a positive integer in seconds or a duration such as 24h."
         )
     return int(match[1]) * {"": 1, "s": 1, "m": 60, "h": 3600, "d": 86400}[match[2]]
+
+
+def parse_allowed_methods(value):
+    """Parse a comma-separated list of allowed HTTP methods."""
+    methods = {m.strip().lower() for m in value.split(",")}
+    valid_methods = {"get", "post", "delete"}
+
+    if not methods or not methods.issubset(valid_methods):
+        raise ImproperlyConfigured(
+            "ALLOWED_METHODS must be a non-empty, comma-separated list of valid HTTP methods."
+        )
+
+    return sorted(methods)

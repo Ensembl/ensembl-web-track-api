@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 
-from utils.helpers import parse_cache_ttl
+from utils.helpers import parse_allowed_methods, parse_cache_ttl
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,7 +32,7 @@ DEBUG = os.getenv("DJANGO_DEBUG", "false").strip().lower() == "true"
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
 
-ALLOWED_METHODS = os.getenv("ALLOWED_METHODS", "get").split(",")
+ALLOWED_METHODS = parse_allowed_methods(os.getenv("ALLOWED_METHODS", "get"))
 
 # Application definition
 

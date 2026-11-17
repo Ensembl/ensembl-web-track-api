@@ -37,8 +37,20 @@ See the [OpenAPI specification](https://editor.swagger.io/?url=https://raw.githu
 5. Stop the service:
     - `$ docker compose down` #or Ctrl+C if running in foreground
 
+### Allowed HTTP methods
+
+`ALLOWED_METHODS` controls which HTTP methods the API permits. When unset, it defaults to `get` (read-only).
+
+Values are comma-separated and case-insensitive; surrounding whitespace is ignored. Only get, post and delete are accepted. Empty values, empty entries and unsupported methods prevent application startup.
+Each endpoint retains its own method restrictions. Excluded methods return HTTP 405 before the endpoint handler runs. HEAD and OPTIONS are unsupported and return HTTP 405; GET does not implicitly enable HEAD.
+
 ### Data updates
 
-The `track/:track_id` REST endpoint supports `DELETE`/`POST` requests for adding/removing track entries. 
-For bulk/automated updates, use `./utils/submit_tracks.py` script. See the accompanied readme for more details.
+The following endpoints modify track data and require their HTTP method to be enabled in `ALLOWED_METHODS`:
 
+| Method | Endpoint | Operation |
+| --- | --- | --- |
+| POST | `/tracks/create` | Create a track |
+| POST | `/tracks/link_type` | Link an additional type to a track |
+| DELETE | `/track/{track_id}` | Delete a track |
+| DELETE | `/track_categories/{genome_id}` | Delete all tracks for a genome |

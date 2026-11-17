@@ -18,6 +18,7 @@ from collections import defaultdict
 from typing import TypedDict
 from uuid import UUID
 
+from django.conf import settings
 from django.db import IntegrityError
 from django.db.models import Prefetch
 from rest_framework import status
@@ -242,7 +243,21 @@ def combine_track_and_specification(
 # ── Views ─────────────────────────────────────────────────────────────────────
 
 
-class GenomeTrackList(APIView):
+class TrackAPIView(APIView):
+    """
+    Base class for track API views with allowed method validation.
+    """
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.http_method_names = [
+            method
+            for method in self.http_method_names
+            if method in settings.ALLOWED_METHODS
+        ]
+
+
+class GenomeTrackList(TrackAPIView):
     """
     Retrieve or remove all tracks for a genome at a specific release.
 
@@ -373,7 +388,7 @@ class GenomeTrackList(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class TrackObject(APIView):
+class TrackObject(TrackAPIView):
     """
     Retrieve a single track by track_id.
 
@@ -439,7 +454,7 @@ class TrackObject(APIView):
 # ── Ingress Views ─────────────────────────────────────────────────────────────
 
 
-class CreateTrack(APIView):
+class CreateTrack(TrackAPIView):
     """
     Create a new track with associated types.
 
@@ -476,7 +491,7 @@ class CreateTrack(APIView):
         )
 
 
-class LinkTypeToTrack(APIView):
+class LinkTypeToTrack(TrackAPIView):
     """
     Link an additional type to an existing track.
     Validates that the type's files match existing types.
