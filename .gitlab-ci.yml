@@ -21,6 +21,7 @@ variables:
   DOCKER_TLS_CERTDIR: ""
   NFS_SERVER: ${HL_NFS_SERVER_CODON}
   NFS_PATH: ${HL_NFS_PATH_CODON}
+  BE_INGRESS: ensembl-track-api-ingress-${CI_COMMIT_REF_SLUG}
 
 #Build docker image
 Docker:
@@ -58,7 +59,6 @@ Deploy Review:
     AGENT: ${DEV_AGENT}
     REVIEW_NS: ${CI_COMMIT_REF_SLUG}
   environment:
-    name: development
     url: https://${REVIEW_NS}.review.ensembl.org
     on_stop: Stop Review
 
@@ -75,7 +75,6 @@ Stop Review:
       when: manual
       allow_failure: true
   environment:
-    name: development
     action: stop
 
 #Deploy to k8s
