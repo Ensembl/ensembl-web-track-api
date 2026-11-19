@@ -7,10 +7,13 @@ include:
       - 'deploy/.deploy-main-template.yaml'
       - 'deploy/.deploy-review-template.yaml'
       - 'review/.setup-BE-review-template.yaml'
+      - 'security-scan/.ensembl-security-jobs.yaml'
 
 stages:
+  - security-scan
   - setup
   - build
+  - container-scan
   - deploy-review
   - deploy-test
   - deploy-stage
