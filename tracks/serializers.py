@@ -211,7 +211,7 @@ class BaseTrackSerializer(serializers.Serializer):
 
     track_id = serializers.UUIDField()
     label = serializers.CharField()  # type: ignore[assignment]
-    trigger = serializers.ListField()
+    trigger = serializers.ListField()  # TODO: remove this field
     type = serializers.CharField()
     display_order = serializers.IntegerField()
     on_by_default = serializers.BooleanField()
@@ -230,3 +230,9 @@ class ReadTrackSerializer(BaseTrackSerializer):
 
     datafiles = serializers.DictField()
     settings = serializers.DictField()
+    # Optional fields for transcriptomic coverage tracks
+    genome_id = serializers.UUIDField(required=False)
+    dataset_id = serializers.UUIDField(required=False)
+    run_id = serializers.CharField(required=False)
+    tissue = serializers.CharField(required=False, allow_blank=True)
+    lane_order = serializers.IntegerField(required=False, min_value=0)
