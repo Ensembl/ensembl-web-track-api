@@ -20,7 +20,7 @@ from tracks.transcriptomic import prepare_configuration
 
 
 def assembly_datafiles(record):
-    """Preserve file paths beneath the assembly accession."""
+    """Map handover files to assembly/product/filename bucket paths."""
     assembly_id = record["assembly_uuid"]
     assembly = record["track_metadata_payload"]["target_genome"]["assembly"]
     datafiles = {}
@@ -33,10 +33,12 @@ def assembly_datafiles(record):
             )
 
         suffix = parts[parts.index(assembly) + 1 :]
-        if not suffix:
-            raise CommandError(f"Missing file path after {assembly!r}.")
+        if len(suffix) < 2:
+            raise CommandError(
+                f"Missing product directory or filename after {assembly!r}."
+            )
 
-        datafiles[role] = str(PurePosixPath(assembly_id[:3], assembly_id, *suffix))
+        datafiles[role] = str(PurePosixPath(assembly_id[:3], assembly_id, *suffix[-2:]))
 
     return datafiles
 
@@ -168,9 +170,6 @@ class Command(BaseCommand):
                         f"{product['track_type']!r}."
                     )
 
-                # # Change absolute (handover) file paths to relative paths for Track API
-                # filepath = f"{str(genome_id)[:3]}/{genome_id}/{PurePosixPath(product['track_file']).name}"
-                # TO DO: check validity
                 datafiles = assembly_datafiles(record)
 
                 if product["track_type"] == "bigwig":
