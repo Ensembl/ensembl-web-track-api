@@ -1,44 +1,55 @@
-# Track API endpoint
+# Ensembl Track API
 
-REST service providing genome browser track data for [Ensembl Beta](https://www.ensembl.org).
+Django REST service providing track metadata for Ensembl clients and the Genome
+Browser. Track records, specifications and dataset/release mappings are stored in SQLite.
 
-## REST API endpoints
+## API
 
-REST API supports viewing/adding/removing tracks and track categories.
+Paths below are relative to the service root (`/api/tracks` in Ensembl deployments).
+See the [OpenAPI specification](ensembl-track-api.openapi.yaml) for parameters and payloads.
 
-Example query (get the list of available tracks for human): https://www.ensembl.org/api/tracks/track_categories/a7335667-93e7-11ec-a39d-005056b38ce3
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/track_categories/{genome_id}` | Categories and discoverable tracks for a genome |
+| GET | `/configuration/{genome_id}/transcriptomic` | Transcriptomic selections, hierarchy, filters and counts for the client |
+| GET | `/track/{track_id}` | Rendering metadata for one track (for Genome Browser) |
+| GET | `/track?track_ids={uuid},{uuid}` | Rendering metadata for multiple tracks |
+| POST | `/tracks/create` | Create a track from registered specifications |
+| POST | `/tracks/link_type` | Link another specification to a track |
 
-See the [OpenAPI specification](https://editor.swagger.io/?url=https://raw.githubusercontent.com/Ensembl/ensembl-web-track-api/refs/heads/dev/ensembl-track-api.openapi.yaml) (source file [here](https://github.com/Ensembl/ensembl-web-track-api/blob/dev/ensembl-track-api.openapi.yaml)) for more examples and details.
+## Local development
 
-## Quickstart on local machine
+Requires Python 3.10 or later. From the repository root:
 
-1. Clone the repo:
+```sh
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e ".[dev]"
+python manage.py migrate
+python manage.py runserver 127.0.0.1:8000
+```
 
-    - `$ git clone https://gitlab.ebi.ac.uk/ensembl-web/ensembl-track-api.git`
-    - `$ cd ensembl-track-api`
-    - `$ pip install -e ".[dev]"` # installs dependencies from pyproject.toml
+The service uses `db.sqlite3` by default; set `DATABASE_PATH` to use another database.
+Migrations create the schema, but does not populate the track records. Use an existing
+track catalogue or the [track loader](src/ensembl/production/tracks/load_tracks.py).
+The `populate_dataset_releases` management command loads dataset/release mappings;
+run it with `--help` for options.
 
-2. Build the database:
+Response caching is disabled by default. To enable it, set `ENABLE_CACHE=true` and
+`REDIS_URL`; `CACHE_TTL` controls expiry. Other settings include
+`DJANGO_ALLOWED_HOSTS`, `DJANGO_DEBUG` and `ALLOWED_METHODS` (default `get`).
 
-    - `$ docker compose run web python manage.py makemigrations`
-    - `$ docker compose run web python manage.py migrate`
-    - `$ ./utils/submit_track_templates.py -t transcripts -g [genome_id]`
+Alternatively, `docker compose up --build` starts the API on port 8000 and Redis,
+using `.env` and the mounted `db.sqlite3`, and applies migrations automatically.
+Stop it with `docker compose down`.
 
-    See below for more information.
+Run tests with `python -m pytest`; the tests mock Redis and do not require a server.
 
-3. Start the service:
+## Transcriptomic PoC
 
-    - `$ docker compose up` #add '-d' to run in background
+Run-level RNA-seq coverage selections are grouped by tissue and sample. The client
+configuration contains selection/filter metadata and track UUIDs; Genome Browser
+loads datafiles and renderer settings through the single or bulk track endpoint.
 
-4. Usage:
-
-    - `http://localhost:8000/track_categories/:genome_id`
-
-5. Stop the service:
-    - `$ docker compose down` #or Ctrl+C if running in foreground
-
-### Data updates
-
-The `track/:track_id` REST endpoint supports `DELETE`/`POST` requests for adding/removing track entries. 
-For bulk/automated updates, use `./utils/submit_tracks.py` script. See the accompanied readme for more details.
-
+The `seed_transcriptomic_configuration` management command prepares the transcriptomic track catalogue from the Genebuild handover JSON. Run
+`python manage.py seed_transcriptomic_configuration --help` for options.
