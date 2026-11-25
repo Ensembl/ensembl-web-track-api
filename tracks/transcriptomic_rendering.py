@@ -3,6 +3,8 @@
 from copy import deepcopy
 
 from tracks.models import TranscriptomicConfiguration
+from tracks.serializers import SourceSerializer
+from tracks.transcriptomic import TRANSCRIPTOMIC_PROGRAMS
 
 
 def transcriptomic_track_entries(payload):
@@ -35,10 +37,17 @@ def lane_orders(payload):
 
 
 def rendering_metadata(track, selection, specification, lane_order):
+    product = next(
+        product
+        for product in selection["track_products"]
+        if product["track_id"] == str(track.track_id)
+    )
     metadata = {
         "genome_id": str(track.genome_id),
         "dataset_id": str(track.dataset_id),
         "label": selection["display_label"],
+        "description": product["description"],
+        "sources": SourceSerializer(track.sources.all(), many=True).data,
         "display_order": specification.display_order,
         "lane_order": lane_order,
         "datafiles": dict(track.datafiles),
@@ -56,8 +65,7 @@ def rendering_metadata(track, selection, specification, lane_order):
 def rendering_metadata_for_tracks(tracks):
     """Resolve configurations once per batch using each track's specification."""
     specification_names = {
-        "rnaseq-coverage-genomebrowser",
-        "rnaseq-bigbed-genomebrowser",
+        f"{program}-genomebrowser" for program in TRANSCRIPTOMIC_PROGRAMS.values()
     }
 
     candidates = {}

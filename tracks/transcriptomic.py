@@ -1,6 +1,13 @@
-"""Preparation of the current run-level RNA-seq coverage handover."""
+"""Preparation of the transcriptomic tracks handover."""
 
 from collections import Counter, defaultdict
+
+TRANSCRIPTOMIC_PROGRAMS = {
+    "coverage_forward": "rnaseq-coverage",
+    "coverage_reverse": "rnaseq-coverage",
+    "gene_model": "rnaseq-gene-model",
+    "splice_junction": "rnaseq-splice-junction",
+}
 
 
 def hierarchy_value(selection, level):
@@ -143,6 +150,8 @@ def prepare_configuration(records):
             raise TypeError(f"{selection_id}: provenance must be an object.")
 
         source_record = records[index]
+        if not isinstance(source_record.get("description", ""), str):
+            raise TypeError(f"{selection_id}: description must be a string.")
         dataset_source = source_record.get("dataset_source")
         if not isinstance(dataset_source, dict):
             raise TypeError(f"{selection_id}: missing or invalid dataset_source.")
@@ -158,7 +167,7 @@ def prepare_configuration(records):
         for role, path in track_files.items():
             if not isinstance(path, str) or not path:
                 raise ValueError(
-                    f"{selection_id}: missing or invalid file path " f"for {role!r}."
+                    f"{selection_id}: missing or invalid file path for {role!r}."
                 )
 
         metadata = record.get("metadata")
@@ -196,7 +205,10 @@ def prepare_configuration(records):
                     key: entry["value"] for key, entry in selection["metadata"].items()
                 },
                 "track_products": [
-                    {"track_type": records[index]["dataset_source"]["type"]}
+                    {
+                        "track_type": records[index]["dataset_source"]["type"],
+                        "description": records[index].get("description", ""),
+                    }
                 ],
             }
             for index, selection in enumerate(selections)

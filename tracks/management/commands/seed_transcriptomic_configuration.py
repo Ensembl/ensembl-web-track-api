@@ -1,4 +1,4 @@
-"""Register the coverage pilot and its prepared discovery configuration."""
+"""Register transcriptomic tracks and their discovery configuration."""
 
 import json
 import re
@@ -12,11 +12,13 @@ from django.db import transaction
 from tracks.models import (
     Category,
     DatasetRelease,
+    Source,
     Specifications,
     Track,
     TranscriptomicConfiguration,
 )
-from tracks.transcriptomic import prepare_configuration
+from tracks.transcriptomic import TRANSCRIPTOMIC_PROGRAMS, prepare_configuration
+from tracks.serializers import CreateSourceSerializer
 
 
 def assembly_datafiles(record):
@@ -44,7 +46,7 @@ def assembly_datafiles(record):
 
 
 class Command(BaseCommand):
-    help = "Seed run-level coverage tracks and static counts from the Genebuild JSON."
+    help = "Seed transcriptomic tracks and configuration from the Genebuild JSON."
 
     def add_arguments(self, parser):
         parser.add_argument("--genome-id", required=True, type=uuid.UUID)
@@ -84,69 +86,47 @@ class Command(BaseCommand):
                 defaults={"label": "Transcriptomic data", "type": "Genomic"},
             )
 
-            spec, _ = Specifications.objects.get_or_create(
-                name="rnaseq-coverage-genomebrowser",
-                defaults={
-                    "label": "RNA-seq coverage",
-                    "category": category,
-                    "browser": "GenomeBrowser",
-                    "type": "regular",
-                    "discovery_mode": "configured",
-                    "files": ["rnaseq-coverage"],
-                    "trigger": [],
-                    "settings": {"rnaseq-coverage": {"scales": [0, 100, 3]}},
-                    "on_by_default": False,
-                    "description": "Run-level RNA-seq coverage supplied by Genebuild.",
-                },
-            )
-            if (
-                spec.category_id != category.pk
-                or spec.browser != "GenomeBrowser"
-                or spec.discovery_mode != "configured"
-                or spec.files != ["rnaseq-coverage"]
-            ):
-                raise CommandError(
-                    "Existing coverage specification conflicts with this importer."
-                )
-
-            bigbed_spec, _ = Specifications.objects.get_or_create(
-                name="rnaseq-bigbed-genomebrowser",
-                defaults={
-                    "label": "RNA-seq features",
-                    "category": category,
-                    "browser": "GenomeBrowser",
-                    "type": "regular",
-                    "discovery_mode": "configured",
-                    "files": ["details"],
-                    "trigger": [],
-                    "settings": {},
-                    "on_by_default": False,
-                    "description": (
-                        "RNA-seq gene models and splice junctions "
-                        "supplied by Genebuild."
-                    ),
-                },
-            )
-            if (
-                bigbed_spec.category_id != category.pk
-                or bigbed_spec.browser != "GenomeBrowser"
-                or bigbed_spec.discovery_mode != "configured"
-                or bigbed_spec.files != ["details"]
-            ):
-                raise CommandError(
-                    "Existing BigBed specification conflicts with this importer."
-                )
-
-            specifications_by_format = {
-                "bigwig": spec,
-                "bigbed": bigbed_spec,
+            labels = {
+                "rnaseq-coverage": "RNA-seq coverage",
+                "rnaseq-gene-model": "RNA-seq gene models",
+                "rnaseq-splice-junction": "RNA-seq splice junctions",
             }
+            specifications = {}
+            for program, label in labels.items():
+                spec, _ = Specifications.objects.get_or_create(
+                    name=f"{program}-genomebrowser",
+                    defaults={
+                        "label": label,
+                        "category": category,
+                        "browser": "GenomeBrowser",
+                        "type": "regular",
+                        "discovery_mode": "configured",
+                        "files": [program],
+                        "trigger": [],
+                        "settings": {program: {"scales": [0, 100, 3]}},
+                        "display_order": 2000,
+                        "on_by_default": False,
+                        "description": f"{label} supplied by Genebuild.",
+                    },
+                )
+                if (
+                    spec.category_id != category.pk
+                    or spec.browser != "GenomeBrowser"
+                    or spec.discovery_mode != "configured"
+                    or spec.files != [program]
+                ):
+                    raise CommandError(
+                        f"Existing {program} specification conflicts with this importer."
+                    )
+                specifications[program] = spec
+
+            coverage_spec = specifications["rnaseq-coverage"]
 
             config, _ = TranscriptomicConfiguration.objects.get_or_create(
                 genome_id=genome_id,
-                defaults={"specification": spec},
+                defaults={"specification": coverage_spec},
             )
-            if config.specification_id != spec.pk:
+            if config.specification_id != coverage_spec.pk:
                 raise CommandError(
                     "This genome already has a different configured specification."
                 )
@@ -163,17 +143,19 @@ class Command(BaseCommand):
                 selection = selections_by_id[selection_id]
                 product = selection["track_products"][0]
 
-                track_spec = specifications_by_format.get(product["track_type"])
-                if track_spec is None:
-                    raise CommandError(
-                        f"{selection_id}: unsupported track type "
-                        f"{product['track_type']!r}."
-                    )
-
                 datafiles = assembly_datafiles(record)
-
-                if product["track_type"] == "bigwig":
-                    datafiles["rnaseq-coverage"] = datafiles.pop("summary")
+                if len(datafiles) != 1:
+                    raise CommandError(f"{selection_id}: expected one datafile.")
+                filepath = next(iter(datafiles.values()))
+                directory = PurePosixPath(filepath).parent.name
+                program = TRANSCRIPTOMIC_PROGRAMS.get(directory)
+                expected_format = "bigwig" if program == "rnaseq-coverage" else "bigbed"
+                if program is None or product["track_type"] != expected_format:
+                    raise CommandError(
+                        f"{selection_id}: unsupported product directory or file format."
+                    )
+                track_spec = specifications[program]
+                datafiles = {program: filepath}
 
                 product_key = f"{selection_id}:{product['track_type']}"
 
@@ -192,7 +174,17 @@ class Command(BaseCommand):
                         "datafiles": datafiles,
                     },
                 )
-                track.specifications.add(track_spec)
+                track.specifications.set([track_spec])
+                sources = []
+                if record.get("track_source") is not None:
+                    source_data = CreateSourceSerializer(data=record["track_source"])
+                    if not source_data.is_valid():
+                        raise CommandError(f"{selection_id}: {source_data.errors}")
+                    source, _ = Source.objects.get_or_create(
+                        **source_data.validated_data
+                    )
+                    sources.append(source)
+                track.sources.set(sources)
                 created_count += int(created)
 
                 product["track_id"] = str(track.track_id)

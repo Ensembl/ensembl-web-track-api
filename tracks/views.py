@@ -36,6 +36,7 @@ from tracks.serializers import (
     CategorySerializer,
     CreateTrackSerializer,
     LinkTypeToTrackSerializer,
+    SourceSerializer,
 )
 from tracks.transcriptomic_rendering import rendering_metadata_for_tracks
 from utils.redis_cache import redis_cache
@@ -706,17 +707,23 @@ class TranscriptomicConfigurationView(APIView):
             for selection in payload["selections"]
             for product in selection["track_products"]
         ]
-        datafiles = {
-            str(track_id): files
-            for track_id, files in Track.objects.filter(
+        tracks = {
+            str(track.track_id): track
+            for track in Track.objects.filter(
                 genome_id=genome_id, track_id__in=track_ids
-            ).values_list("track_id", "datafiles")
+            )
+            .only("track_id", "datafiles")
+            .prefetch_related("sources")
         }
         for selection in payload["selections"]:
             for product in selection["track_products"]:
-                filepath = next(iter(datafiles[product["track_id"]].values()))
+                track = tracks[product["track_id"]]
+                filepath = next(iter(track.datafiles.values()))
                 product["display_label"] = (
                     PurePosixPath(filepath).parent.name.replace("_", " ").capitalize()
                 )
+                product["sources"] = SourceSerializer(
+                    track.sources.all(), many=True
+                ).data
         payload["genome_id"] = str(configuration.genome_id)
         return Response(payload)

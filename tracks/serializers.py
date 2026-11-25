@@ -195,7 +195,7 @@ class LinkTypeToTrackSerializer(serializers.Serializer):
 class SourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Source
-        fields: ClassVar = ["name", "url"]
+        fields: ClassVar = ["name", "url", "details"]
         validators: ClassVar[list[UniqueTogetherValidator]] = []
 
 
